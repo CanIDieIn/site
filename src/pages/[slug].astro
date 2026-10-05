@@ -1,0 +1,124 @@
+---
+import DeathDefinition from "@/components/DeathDefinition.astro";
+import Layout from "@/layouts/Layout.astro";
+import { canDieIn, findGame, reasonFor } from "../lib/catalogue";
+
+// Rendered per request, so no page is built for each of the 300,000 games.
+export const prerender = false;
+
+const game = findGame(Astro.params.slug);
+if (!game) Astro.response.status = 404;
+
+// "Unsure" covers every game with no entry in deaths.json yet.
+const canDie = game ? canDieIn(game) : undefined;
+const answer = canDie === undefined ? "Unsure" : canDie ? "Yes" : "No";
+// Why the game got that answer, when someone has written it down.
+const reason = game ? reasonFor(game) : undefined;
+// Where corrections are sent. The link is left out while this is blank.
+const githubUrl = (import.meta.env.PUBLIC_GITHUB_URL ?? "").trim();
+const correctionUrl =
+  URL.canParse(githubUrl) && new URL(githubUrl).protocol.startsWith("http")
+    ? githubUrl
+    : undefined;
+
+const pageTitle = game ? `Can I Die In ${game.name}?` : "Game not found";
+
+// "Browse all games" returns to the list exactly as the visitor left it, with
+// their search, sort and page. The browser says which page linked here in the
+// Referer header. If that was this site's main list, link back to that same
+// address. A visitor who arrived any other way, such as from a search engine
+// or a bookmark, gets the plain list.
+let listHref = "/";
+let listLabel = "Browse all games";
+const referrer = Astro.request.headers.get("referer");
+if (referrer && URL.canParse(referrer)) {
+  const from = new URL(referrer);
+  if (from.host === Astro.url.host) {
+    if (from.pathname === "/") {
+      listHref = `/${from.search}`;
+    } else if (from.pathname === "/no-deaths") {
+      listHref = `/no-deaths${from.search}`;
+      listLabel = "Back to games you can't die in";
+    }
+  }
+}
+// The page differs by where the visitor came from, so caches must not share it.
+Astro.response.headers.set("Vary", "Referer");
+
+// The answer is set like a rubber stamp: capitals in a heavy box, knocked
+// slightly off straight. Each answer has its own colour, from theme.css, and
+// its own tilt. "Unsure" gets a dashed box and smaller type, as a longer word
+// that also deserves less confidence.
+const stamps = {
+  Yes: "text-yes -rotate-3 text-[clamp(4.5rem,20vw,11rem)]",
+  No: "text-no rotate-2 text-[clamp(4.5rem,20vw,11rem)]",
+  Unsure: "text-unsure -rotate-1 border-dashed text-[clamp(3rem,13vw,7.5rem)]",
+};
+const stamp = stamps[answer];
+
+const description = game
+  ? `Can you die in ${game.name}? ${answer === "Unsure" ? "We are not sure yet." : `${answer}.`}`
+  : undefined;
+---
+
+<Layout title={pageTitle} description={description}>
+  <main
+    class="mx-auto flex min-h-dvh w-full max-w-4xl flex-col items-center justify-center gap-8 px-4 py-12 text-center"
+  >
+    <p class="small-print">
+      <a href="/" class="ink-link">
+        <span class="text-primary-accent" aria-hidden="true">†</span> Can I Die In...
+      </a>
+    </p>
+    {
+      game ? (
+        <>
+          {/* The whole question in one style. It only wraps when the name is too long
+              for the screen, and then breaks into lines of similar length. */}
+          <h1 class="text-3xl leading-tight font-semibold tracking-tight text-balance wrap-anywhere sm:text-5xl">
+            {pageTitle}
+          </h1>
+          <p
+            class:list={[
+              "my-2 border-[0.07em] border-current px-[0.2em] pt-[0.02em] pb-[0.08em] leading-none font-black tracking-tight uppercase",
+              stamp,
+            ]}
+          >
+            {answer}
+          </p>
+          {reason && <p class="max-w-xl text-xl leading-snug text-pretty italic sm:text-2xl">{reason}</p>}
+          <div class="text-muted-foreground flex flex-col gap-1.5 font-mono text-sm">
+            {/* The API has no answer for an unsure game, so there is nothing to link to. */}
+            {canDie !== undefined && (
+              <p>
+                Using Streamer.bot?{" "}
+                <a href={`/api/game/${game.slug}`} class="ink-link text-foreground">
+                  You want this link
+                </a>
+                .
+              </p>
+            )}
+            {correctionUrl && (
+              <p>
+                {canDie === undefined ? "Know the answer?" : "Not right?"}{" "}
+                <a href={correctionUrl} rel="noopener" class="ink-link text-foreground">
+                  {canDie === undefined ? "Tell us on GitHub" : "Suggest a correction on GitHub"}
+                </a>
+                , quoting game ID {game.id}.
+              </p>
+            )}
+          </div>
+          <DeathDefinition class="max-w-md text-left" />
+        </>
+      ) : (
+        <>
+          <h1 class="text-3xl font-semibold tracking-tight sm:text-5xl">{pageTitle}</h1>
+          <p class="text-xl italic">There is no game at this address.</p>
+        </>
+      )
+    }
+    <p>
+      <a href={listHref} class="small-print ink-link">← {listLabel}</a>
+    </p>
+  </main>
+</Layout>

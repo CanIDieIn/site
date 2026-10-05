@@ -1,17 +1,45 @@
 ---
+import DeathDefinition from "@/components/DeathDefinition.astro";
+import GameBrowser from "@/components/GameBrowser.astro";
+import Layout from "@/layouts/Layout.astro";
+import { browse } from "@/lib/browse";
 
+// Rendered per request, so search and paging work across the whole catalogue
+// without building thousands of static pages or shipping the list to the browser.
+export const prerender = false;
+
+const view = browse(Astro.request, Astro.url, "/", "all");
+if (view.redirect) return Astro.redirect(view.redirect, 302);
+// Dates are written in the visitor's language, so caches must not share the
+// page between languages.
+Astro.response.headers.set("Vary", "Accept-Language");
+
+// The same on every view of this page. The game pages complete the question.
+const pageTitle = "Can I Die In...";
+
+const description =
+  "Search hundreds of thousands of video games to find out whether you can die in them.";
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<Layout title={pageTitle} description={description}>
+  <main class="mx-auto w-full max-w-3xl px-4 py-10 sm:py-16">
+    <header class="border-foreground mb-8 border-b-4 pb-7">
+      <p class="small-print text-muted-foreground mb-4">A register of video game mortality</p>
+      <h1 class="text-[clamp(2.75rem,10vw,5.5rem)] leading-[0.95] font-black tracking-tight">
+        <a href="/">
+          {/* The dagger is the printer's mark for a death. */}
+          <span class="text-primary-accent mr-[0.12em]" aria-hidden="true">†</span>
+          {pageTitle}
+        </a>
+      </h1>
+      <p class="mt-5 max-w-xl text-xl leading-snug italic">
+        Pick a game to find out whether you can die in it.
+        <br />
+        Or see the <a href="/no-deaths" class="ink-link">games you can't die in</a>.
+      </p>
+      <DeathDefinition class="mt-5 max-w-xl" />
+    </header>
+
+    <GameBrowser view={view} />
+  </main>
+</Layout>

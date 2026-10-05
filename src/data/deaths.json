@@ -1,0 +1,530 @@
+{
+  "1": {
+    "deaths": true,
+    "reason": "Guards and hazards can kill Garrett, which fails the mission."
+  },
+  "56": {
+    "deaths": true,
+    "reason": "Your character can be killed in combat, and you reload a save."
+  },
+  "74": {
+    "deaths": true,
+    "reason": "Shepard can be killed in combat, which fails the mission. The final mission can also kill Shepard for good."
+  },
+  "115": {
+    "deaths": true,
+    "reason": "Champions are killed in fights and wait out a respawn timer."
+  },
+  "472": {
+    "deaths": true,
+    "reason": "Your character can be killed in combat or by falls, and you reload a save."
+  },
+  "1020": {
+    "deaths": true,
+    "reason": "You can be killed, shown as \"Wasted\", and respawn outside a hospital."
+  },
+  "1877": {
+    "deaths": true,
+    "reason": "V can be killed in combat, and you reload from a checkpoint."
+  },
+  "1905": {
+    "deaths": true,
+    "reason": "Other players or the storm can eliminate you, ending your match."
+  },
+  "1942": {
+    "deaths": true,
+    "reason": "Geralt can be killed in combat or by falls, and you reload a save."
+  },
+  "2410": {
+    "deaths": true,
+    "reason": "Your character has health, and dies when it runs out."
+  },
+  "3212": {
+    "deaths": true,
+    "reason": "Your Sims can die from fire, drowning, hunger, old age and more."
+  },
+  "6172": {
+    "deaths": true,
+    "reason": "A shooter where alien creatures can destroy your fighter jet."
+  },
+  "7346": {
+    "deaths": true,
+    "reason": "Link can be killed by enemies, falls and the elements, giving a game over."
+  },
+  "9116": {
+    "deaths": false,
+    "reason": "A radio-controlled car racing game with nothing that can kill you."
+  },
+  "9894": {
+    "deaths": false,
+    "reason": "An off-road racing game. Vehicles take damage, but nothing can kill you."
+  },
+  "9899": {
+    "deaths": false,
+    "reason": "A minigolf game with nothing that can kill you."
+  },
+  "11156": {
+    "deaths": true,
+    "reason": "Aloy can be killed by machines and bandits, and you restart from your last save."
+  },
+  "11198": {
+    "deaths": false,
+    "reason": "A demolished car is back on the pitch seconds later. Nobody dies."
+  },
+  "11642": {
+    "deaths": true,
+    "reason": "Touching any obstacle destroys you and restarts the level."
+  },
+  "12628": {
+    "deaths": true,
+    "reason": "A side-scrolling shooter where enemy fire and collisions cost you lives."
+  },
+  "14593": {
+    "deaths": true,
+    "reason": "The Knight can be killed, dropping all its Geo and respawning at the last bench."
+  },
+  "15536": {
+    "deaths": true,
+    "reason": "You can be killed in a raid, losing the gear you brought in."
+  },
+  "17000": {
+    "deaths": false,
+    "reason": "Running out of health only makes you pass out. You wake up having lost items and money, but nobody dies."
+  },
+  "17143": {
+    "deaths": false,
+    "reason": "A hidden-object adventure with no way to die or fail."
+  },
+  "17269": {
+    "deaths": true,
+    "reason": "Characters can be killed in most experiences and respawn at a spawn point."
+  },
+  "18866": {
+    "deaths": true,
+    "reason": "Survivors can be sacrificed or killed by the Killer, ending their trial."
+  },
+  "19560": {
+    "deaths": true,
+    "reason": "Kratos can be killed in combat, and you restart from a checkpoint."
+  },
+  "19564": {
+    "deaths": true,
+    "reason": "Sam can be killed, and then finds his way back to life."
+  },
+  "25076": {
+    "deaths": true,
+    "reason": "Arthur can be killed, shown as \"Dead\", and you restart from a checkpoint."
+  },
+  "26226": {
+    "deaths": true,
+    "reason": "Spikes, pits and enemies kill Madeline and restart the current screen. The game counts your deaths."
+  },
+  "26472": {
+    "deaths": true,
+    "reason": "Harry can die when his health or morale runs out. It can happen in the opening minutes."
+  },
+  "27734": {
+    "deaths": true,
+    "reason": "An online role-playing game where monsters and other players can kill your character."
+  },
+  "30555": {
+    "deaths": true,
+    "reason": "A VR shooter where enemies can kill you."
+  },
+  "30954": {
+    "deaths": true,
+    "reason": "A side-scrolling shooter where enemies and hazards can kill the wizard."
+  },
+  "31139": {
+    "deaths": false,
+    "reason": "A chess game. You can lose a match, but nobody dies."
+  },
+  "32199": {
+    "deaths": false,
+    "reason": "A hidden-object adventure with no way to die or fail."
+  },
+  "34568": {
+    "deaths": true,
+    "reason": "Your character can die, and risks losing everything."
+  },
+  "35265": {
+    "deaths": false,
+    "reason": "A hidden-object adventure with no way to die or fail."
+  },
+  "36344": {
+    "deaths": true,
+    "reason": "A tactical combat game where your mercenary can be shot dead."
+  },
+  "38521": {
+    "deaths": true,
+    "reason": "Being caught or shot by the guards costs a life."
+  },
+  "45106": {
+    "deaths": false,
+    "reason": "A BMX, skateboard and skating racing game. You can crash, but nothing can kill you."
+  },
+  "45356": {
+    "deaths": true,
+    "reason": "Enemy fire wears down your shield until your aircraft is destroyed."
+  },
+  "47206": {
+    "deaths": true,
+    "reason": "A shoot 'em up where enemy fire costs you lives."
+  },
+  "50081": {
+    "deaths": true,
+    "reason": "A side-scrolling action game where enemies can kill your character."
+  },
+  "50471": {
+    "deaths": false,
+    "reason": "A pinball game. Losing your last ball ends the game, but there is no character to die."
+  },
+  "51654": {
+    "deaths": true,
+    "reason": "A shoot 'em up where your ship can be destroyed."
+  },
+  "52355": {
+    "deaths": false,
+    "reason": "A hidden-object adventure with no way to die or fail."
+  },
+  "55079": {
+    "deaths": false,
+    "reason": "A pool game with nothing that can kill you."
+  },
+  "55486": {
+    "deaths": false,
+    "reason": "A surreal walking adventure with no enemies and no way to fail."
+  },
+  "60982": {
+    "deaths": true,
+    "reason": "You pilot a zeppelin past obstacles that can destroy it."
+  },
+  "62542": {
+    "deaths": true,
+    "reason": "A zero-gravity deathmatch where players kill each other."
+  },
+  "66920": {
+    "deaths": true,
+    "reason": "A tank battle game where your tank can be destroyed."
+  },
+  "76882": {
+    "deaths": true,
+    "reason": "Wolf can be killed, and dying for good costs you money and experience."
+  },
+  "81579": {
+    "deaths": false,
+    "reason": "A point-and-click adventure with no way to die."
+  },
+  "84210": {
+    "deaths": false,
+    "reason": "The game ends when the tiles reach the top of the screen, but there is no character to die."
+  },
+  "93756": {
+    "deaths": true,
+    "reason": "A ship combat game where fighters are destroyed until one is left."
+  },
+  "105343": {
+    "deaths": true,
+    "reason": "Enemies and lasers can kill you."
+  },
+  "109462": {
+    "deaths": false,
+    "reason": "Wasp, tarantula and scorpion attacks only make you faint and wake up at home."
+  },
+  "113112": {
+    "deaths": true,
+    "reason": "Zagreus dies often, returning to the House of Hades to start a new escape attempt."
+  },
+  "114283": {
+    "deaths": true,
+    "reason": "The protagonist can be killed in battle, which is a game over."
+  },
+  "115085": {
+    "deaths": true,
+    "reason": "A first-person action game where alien parasites can kill you."
+  },
+  "115289": {
+    "deaths": true,
+    "reason": "Hornet can be killed, dropping her rosaries and respawning at the last bench."
+  },
+  "116975": {
+    "deaths": false,
+    "reason": "A marble race with nothing to kill. Every marble simply finishes in order."
+  },
+  "118319": {
+    "deaths": false,
+    "reason": "A playful VR experience with no enemies and no way to fail."
+  },
+  "119133": {
+    "deaths": true,
+    "reason": "You can be killed, shown as \"You Died\", dropping your runes and respawning at a site of grace."
+  },
+  "119171": {
+    "deaths": true,
+    "reason": "Characters can be killed in combat, and the game ends if the whole party falls."
+  },
+  "119277": {
+    "deaths": true,
+    "reason": "Characters fall in battle, and losing the whole party sends you back to a waypoint."
+  },
+  "119388": {
+    "deaths": true,
+    "reason": "Link can be killed by enemies, falls and the elements, giving a game over."
+  },
+  "120001": {
+    "deaths": true,
+    "reason": "A zero-gravity deathmatch between space marines."
+  },
+  "122797": {
+    "deaths": true,
+    "reason": "A wave shooter where enemies can destroy you."
+  },
+  "122809": {
+    "deaths": true,
+    "reason": "The Infected can kill you before you reach safety."
+  },
+  "125174": {
+    "deaths": true,
+    "reason": "Heroes are eliminated in fights and respawn after a short wait."
+  },
+  "125633": {
+    "deaths": true,
+    "reason": "An action-adventure where Kliff can be killed in combat."
+  },
+  "126459": {
+    "deaths": true,
+    "reason": "Agents are killed in gunfights and sit out the rest of the round."
+  },
+  "127026": {
+    "deaths": true,
+    "reason": "A hardcore platformer where hazards kill you and restart the level."
+  },
+  "133615": {
+    "deaths": false,
+    "reason": "A target practice tool. Nothing shoots back."
+  },
+  "135400": {
+    "deaths": true,
+    "reason": "Mobs, falls, lava and hunger can kill you, dropping your items before you respawn."
+  },
+  "135741": {
+    "deaths": false,
+    "reason": "A logic puzzle with no way to die or fail."
+  },
+  "136625": {
+    "deaths": true,
+    "reason": "Your character can be defeated in combat, and you restart from your last save."
+  },
+  "139323": {
+    "deaths": true,
+    "reason": "An action role-playing game where monsters can kill your character."
+  },
+  "139900": {
+    "deaths": true,
+    "reason": "A creature hunts you through the estate and can kill you."
+  },
+  "143644": {
+    "deaths": false,
+    "reason": "A visual toy with no goals, no enemies and no way to fail."
+  },
+  "148083": {
+    "deaths": true,
+    "reason": "A platformer where hazards and pitfalls can kill your climber."
+  },
+  "151665": {
+    "deaths": true,
+    "reason": "Pals, raids, hunger and the cold can kill you, dropping your items."
+  },
+  "154422": {
+    "deaths": false,
+    "reason": "An arcade puzzle game. You can get a game over, but there is no character to die."
+  },
+  "175634": {
+    "deaths": true,
+    "reason": "Enemies in the maze can catch you, costing a life."
+  },
+  "182241": {
+    "deaths": false,
+    "reason": "A Twitch chat game about catching and battling Pokémon. Nothing happens to the player."
+  },
+  "185258": {
+    "deaths": true,
+    "reason": "Machines or other players can kill you, losing the gear you brought in."
+  },
+  "186946": {
+    "deaths": false,
+    "reason": "A block-pushing puzzle with no way to die."
+  },
+  "188080": {
+    "deaths": true,
+    "reason": "A shooter where the other player can eliminate you."
+  },
+  "194422": {
+    "deaths": true,
+    "reason": "A wave shooter where enemies can destroy you, ending your run."
+  },
+  "202956": {
+    "deaths": true,
+    "reason": "Characters fall in battle, and losing the whole team sends you back."
+  },
+  "214394": {
+    "deaths": true,
+    "reason": "Other players, sandworms, thirst and the sun can all kill you."
+  },
+  "221740": {
+    "deaths": false,
+    "reason": "The game ends when the pile of fruit overflows, but there is no character to die."
+  },
+  "229199": {
+    "deaths": true,
+    "reason": "A monster chases you and can kill you."
+  },
+  "229251": {
+    "deaths": false,
+    "reason": "A logic puzzle with no way to die or fail."
+  },
+  "241723": {
+    "deaths": false,
+    "reason": "A poker game. You can lose chips, but nothing dies."
+  },
+  "249535": {
+    "deaths": false,
+    "reason": "A number puzzle with no way to die or fail."
+  },
+  "264371": {
+    "deaths": true,
+    "reason": "A Tyrannosaurus rex hunts you through the maze and eats you if it catches you."
+  },
+  "264501": {
+    "deaths": false,
+    "reason": "A rally racing game with nothing that can kill you."
+  },
+  "269174": {
+    "deaths": false,
+    "reason": "A mahjong game for beginners. You can lose a hand, but nothing dies."
+  },
+  "269175": {
+    "deaths": false,
+    "reason": "A shogi game for beginners. You can lose a match, but nothing dies."
+  },
+  "274920": {
+    "deaths": false,
+    "reason": "A shop management game with nothing that can kill you."
+  },
+  "277810": {
+    "deaths": true,
+    "reason": "A Five Nights at Freddy's fan game. The animatronics get you if you slip up."
+  },
+  "281479": {
+    "deaths": true,
+    "reason": "The ghosts can catch Pac-Man, costing a life."
+  },
+  "281532": {
+    "deaths": true,
+    "reason": "A zombie shooter where the undead can kill you."
+  },
+  "287116": {
+    "deaths": false,
+    "reason": "A 3D printing business simulator with nothing that can kill you."
+  },
+  "289127": {
+    "deaths": true,
+    "reason": "The snake dies if it crashes into a wall, a tombstone or its own body."
+  },
+  "290165": {
+    "deaths": false,
+    "reason": "A mahjong game for beginners. You can lose a hand, but nothing dies."
+  },
+  "292376": {
+    "deaths": true,
+    "reason": "A four-against-one fight to the death between survivors and zombies."
+  },
+  "293101": {
+    "deaths": false,
+    "reason": "A Blender tutorial in game form, with no way to fail."
+  },
+  "293238": {
+    "deaths": false,
+    "reason": "A pool game with nothing that can kill you."
+  },
+  "294041": {
+    "deaths": true,
+    "reason": "Heroes are knocked out in fights and respawn after a short wait."
+  },
+  "301042": {
+    "deaths": true,
+    "reason": "An action role-playing game where monsters can kill your character."
+  },
+  "302156": {
+    "deaths": true,
+    "reason": "You can be killed in the campaign, in multiplayer and in Zombies."
+  },
+  "305152": {
+    "deaths": true,
+    "reason": "Party members are killed in battle, and losing the whole party is a game over."
+  },
+  "311949": {
+    "deaths": true,
+    "reason": "Turrets, toxic goo, long falls and neurotoxin can all kill you."
+  },
+  "319524": {
+    "deaths": false,
+    "reason": "A chess game. You can lose a match, but nobody dies."
+  },
+  "319602": {
+    "deaths": true,
+    "reason": "Asteroids destroy your ship on contact."
+  },
+  "320805": {
+    "deaths": false,
+    "reason": "An idle clicker with no way to lose."
+  },
+  "329489": {
+    "deaths": false,
+    "reason": "A mouse-skills game for toddlers, with no way to fail."
+  },
+  "332780": {
+    "deaths": true,
+    "reason": "Monsters can kill you during a job. Teammates can revive you by recovering your head."
+  },
+  "338067": {
+    "deaths": false,
+    "reason": "A kart racing game. Falling off the track or being hit only costs you time."
+  },
+  "344916": {
+    "deaths": false,
+    "reason": "A car customising tool with nothing that can kill you."
+  },
+  "348330": {
+    "deaths": false,
+    "reason": "A racing game. Crashes cost you time, and nothing can kill you."
+  },
+  "349124": {
+    "deaths": false,
+    "reason": "A card game. You can lose a round, but nothing dies."
+  },
+  "363561": {
+    "deaths": true,
+    "reason": "A shooter in the style of Zaxxon, where your craft can be destroyed."
+  },
+  "399046": {
+    "deaths": true,
+    "reason": "A horror shooter where enemies can kill you."
+  },
+  "403530": {
+    "deaths": true,
+    "reason": "An arena survival game where hordes of enemies can overwhelm and kill you."
+  },
+  "405028": {
+    "deaths": true,
+    "reason": "Hiders who are found get shot by the Seekers."
+  },
+  "411260": {
+    "deaths": true,
+    "reason": "An arena shooter where players and bots kill each other with lasers."
+  },
+  "413623": {
+    "deaths": true,
+    "reason": "An endless arcade shooter that ends when your ship is destroyed."
+  }
+}

@@ -1,0 +1,53 @@
+---
+import DeathDefinition from "@/components/DeathDefinition.astro";
+import GameBrowser from "@/components/GameBrowser.astro";
+import Layout from "@/layouts/Layout.astro";
+import { browse } from "@/lib/browse";
+import { gamesWithoutDeaths } from "@/lib/catalogue";
+
+// Rendered per request, like the other pages. Being a fixed address, this page
+// takes priority over a game whose slug happens to be "no-deaths".
+export const prerender = false;
+
+// The same search, sort and paging as the main list, over only the games
+// explicitly marked as having no deaths.
+const view = browse(Astro.request, Astro.url, "/no-deaths", "no-deaths");
+if (view.redirect) return Astro.redirect(view.redirect, 302);
+// Dates are written in the visitor's language, so caches must not share the
+// page between languages.
+Astro.response.headers.set("Vary", "Accept-Language");
+
+const pageTitle = "Games You Can't Die In";
+const description =
+  "Every video game we have confirmed you cannot die in, so there are no deaths to count.";
+const count = new Intl.NumberFormat("en");
+---
+
+<Layout title={pageTitle} description={description}>
+  <main class="mx-auto w-full max-w-3xl px-4 py-10 sm:py-16">
+    <header class="border-foreground mb-8 border-b-4 pb-7">
+      <p class="small-print mb-4">
+        <a href="/" class="ink-link">
+          <span class="text-primary-accent" aria-hidden="true">†</span> Can I Die In...
+        </a>
+      </p>
+      <h1 class="text-[clamp(2.5rem,8vw,4.5rem)] leading-[0.95] font-black tracking-tight text-balance">
+        <a href="/no-deaths">{pageTitle}</a>
+      </h1>
+      <p class="mt-5 max-w-xl text-xl leading-snug text-balance italic">
+        {
+          gamesWithoutDeaths.length === 1
+            ? "The one game we have confirmed has no deaths to count."
+            : `The ${count.format(gamesWithoutDeaths.length)} games we have confirmed have no deaths to count.`
+        }
+      </p>
+      <DeathDefinition class="mt-5 max-w-xl" />
+    </header>
+
+    <GameBrowser view={view} />
+
+    <p class="mt-10">
+      <a href="/" class="small-print ink-link">← Browse all games</a>
+    </p>
+  </main>
+</Layout>

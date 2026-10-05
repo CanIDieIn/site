@@ -1,0 +1,11 @@
+{
+  "overrides": [
+    {
+      "files": "src/data/deaths.json",
+      "options": {
+        "plugins": ["prettier-plugin-sort-json"],
+        "jsonSortOrder": "{\"/.*/\": \"numeric\"}"
+      }
+    }
+  ]
+}

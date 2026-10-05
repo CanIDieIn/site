@@ -1,0 +1,224 @@
+---
+import { Button } from "@/components/starwind/button";
+import { Input } from "@/components/starwind/input";
+import { Label } from "@/components/starwind/label";
+import { NativeSelect, NativeSelectOption } from "@/components/starwind/native-select";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/starwind/pagination";
+import type { BrowseView } from "@/lib/browse";
+import { DEFAULT_SORT, DIRECTIONS, SORTS } from "@/lib/catalogue";
+
+// The search bar, the list of games and the page controls. Every page that
+// lists games uses this, so they all search, sort and page the same way.
+// The `view` comes from `browse` in lib/browse.ts.
+//
+// The list is set like a printed register: a numbered entry per line, with a
+// dotted leader running from the name across to the date.
+interface Props {
+  view: BrowseView;
+}
+const { view } = Astro.props;
+const { basePath, query, sort, direction, defaultDirection, page, totalPages, total, start, games } =
+  view;
+
+const count = new Intl.NumberFormat("en");
+
+// Entry numbers are padded to the same width, so the names line up.
+const digits = Math.max(2, String(start + games.length).length);
+const entryNumber = (index: number) => String(start + index + 1).padStart(digits, "0");
+
+// Shared looks for the form controls: square, ruled in ink, no shadows.
+const field = "border-foreground rounded-none border-2 bg-transparent shadow-none dark:bg-transparent";
+const smallPrint = "font-mono text-xs tracking-wider uppercase";
+const pageLink = `${smallPrint} rounded-none hover:bg-transparent hover:text-primary-accent hover:underline underline-offset-4`;
+---
+
+<form method="get" action={basePath} role="search" class="flex flex-wrap items-center gap-2">
+  <Input
+    type="search"
+    name="q"
+    value={query}
+    placeholder="Search by name"
+    aria-label="Search games by name"
+    maxlength="100"
+    autocomplete="off"
+    size="lg"
+    class={`${field} w-auto min-w-0 grow basis-full text-lg sm:basis-56`}
+  />
+  <Label for="sort" size="sm" class={`${smallPrint} text-muted-foreground pl-1 font-normal`}>
+    Sort by
+  </Label>
+  {/* Changing the sort drops the direction, so the new sort starts in its own default. */}
+  <NativeSelect
+    id="sort"
+    name="sort"
+    size="lg"
+    class={`${field} ${smallPrint}`}
+    onchange="this.form.elements.dir.disabled = true; this.form.submit()"
+  >
+    {
+      SORTS.map(({ value, label }) => (
+        <NativeSelectOption value={value} selected={value === sort}>
+          {label}
+        </NativeSelectOption>
+      ))
+    }
+  </NativeSelect>
+  <NativeSelect
+    name="dir"
+    size="lg"
+    class={`${field} ${smallPrint}`}
+    aria-label="Sort direction"
+    onchange="this.form.submit()"
+  >
+    {
+      DIRECTIONS.map(({ value, label }) => (
+        <NativeSelectOption value={value} selected={value === direction}>
+          {label}
+        </NativeSelectOption>
+      ))
+    }
+  </NativeSelect>
+  <Button
+    type="submit"
+    size="lg"
+    class={`${smallPrint} hover:bg-primary hover:text-primary-foreground rounded-none px-6`}
+  >
+    Search
+  </Button>
+</form>
+
+<p class={`${smallPrint} text-muted-foreground mt-8 mb-2`}>
+  {
+    total === 0
+      ? query
+        ? `Nothing matches "${query}".`
+        : "Nothing to show yet."
+      : `${count.format(start + 1)} to ${count.format(start + games.length)} of ${count.format(total)} ${total === 1 ? "game" : "games"}${query ? ` matching "${query}"` : ""}`
+  }
+  {
+    query && (
+      <a href={view.pageHref(1, false)} class="ink-link text-foreground ml-2">
+        Clear search
+      </a>
+    )
+  }
+</p>
+
+{
+  games.length > 0 && (
+    <ol class="border-foreground border-t-2">
+      {games.map(({ game, released }, index) => (
+        <li class="border-border border-b">
+          <a href={`/${game.slug}`} class="group flex items-baseline gap-3 py-2.5">
+            <span
+              class={`${smallPrint} text-muted-foreground shrink-0 tabular-nums`}
+              aria-hidden="true"
+            >
+              {entryNumber(index)}
+            </span>
+            <span class="group-hover:text-primary-accent min-w-0 text-lg leading-snug decoration-1 underline-offset-4 wrap-anywhere group-hover:underline">
+              {game.name}
+            </span>
+            <span
+              class="border-muted-foreground/50 min-w-4 flex-1 -translate-y-1 border-b border-dotted"
+              aria-hidden="true"
+            />
+            {released && (
+              <time
+                class={`${smallPrint} text-muted-foreground shrink-0 tabular-nums`}
+                datetime={released.iso}
+                title="First release date"
+              >
+                {released.text}
+              </time>
+            )}
+          </a>
+        </li>
+      ))}
+    </ol>
+  )
+}
+
+{
+  totalPages > 1 && (
+    <Pagination class="mt-8" aria-label="Pagination">
+      <PaginationContent class="flex-wrap justify-center gap-y-2">
+        <PaginationItem>
+          <PaginationLink size="sm" class={pageLink} href={view.pageHref(1)} disabled={page === 1}>
+            First
+          </PaginationLink>
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationPrevious
+            size="sm"
+            class={pageLink}
+            href={view.pageHref(page - 1)}
+            rel="prev"
+            disabled={page === 1}
+          >
+            Previous
+          </PaginationPrevious>
+        </PaginationItem>
+        <PaginationItem>
+          <form method="get" action={basePath} class="flex items-center gap-2 px-2">
+            {query && <input type="hidden" name="q" value={query} />}
+            {sort !== DEFAULT_SORT && <input type="hidden" name="sort" value={sort} />}
+            {direction !== defaultDirection && <input type="hidden" name="dir" value={direction} />}
+            <Label for="page" size="sm" class={`${smallPrint} text-muted-foreground font-normal`}>
+              Page
+            </Label>
+            <Input
+              id="page"
+              type="number"
+              name="page"
+              size="sm"
+              value={page}
+              min="1"
+              max={totalPages}
+              class={`${field} w-20 font-mono text-sm`}
+            />
+            <span class={`${smallPrint} text-muted-foreground whitespace-nowrap`}>
+              of {count.format(totalPages)}
+            </span>
+            <Button
+              type="submit"
+              variant="outline"
+              size="sm"
+              class={`${field} ${smallPrint} hover:bg-foreground hover:text-background dark:hover:bg-foreground`}
+            >
+              Go
+            </Button>
+          </form>
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationNext
+            size="sm"
+            class={pageLink}
+            href={view.pageHref(page + 1)}
+            rel="next"
+            disabled={page === totalPages}
+          >
+            Next
+          </PaginationNext>
+        </PaginationItem>
+        <PaginationItem>
+          <PaginationLink
+            size="sm"
+            class={pageLink}
+            href={view.pageHref(totalPages)}
+            disabled={page === totalPages}
+          >
+            Last
+          </PaginationLink>
+        </PaginationItem>
+      </PaginationContent>
+    </Pagination>
+  )
+}

@@ -1,0 +1,100 @@
+/*
+ * Every colour the site uses is defined here, as a CSS variable.
+ * Change a value in this file to restyle the whole site.
+ *
+ * The look is a printed register: ink on paper, with one red for emphasis.
+ * The first block is the light theme (ink on paper). The second is the dark
+ * theme (paper-coloured ink on near-black), which applies automatically when
+ * the visitor's device is set to dark mode.
+ *
+ * Values can be any CSS colour, such as #a4161a or oklch(60% 0.2 25).
+ */
+
+:root {
+  /* The paper and the ink. */
+  --background: #f4efe4;
+  --foreground: #1b1815;
+
+  /* Panels and form fields sit directly on the paper. */
+  --card: #f4efe4;
+  --card-foreground: #1b1815;
+
+  /* The one accent: the dagger mark, link hovers and button hovers. */
+  --primary: #a4161a;
+  --primary-foreground: #f4efe4;
+  --primary-accent: #a4161a;
+
+  /* Small print, such as dates and notes, and faint backgrounds. */
+  --muted: #e9e2d3;
+  --muted-foreground: #6b6358;
+
+  /* The background of a button or field while hovered. */
+  --accent: #e9e2d3;
+  --accent-foreground: #1b1815;
+
+  /* Lines. Heavy rules and field borders use the ink colour itself; these are
+     the lighter ones: the rules between rows and the focus ring. */
+  --border: #cfc6b4;
+  --input: #1b1815;
+  --outline: #1b1815;
+
+  /* The stamped answer on a game page. */
+  --yes: #a4161a;
+  --no: #2c5f3b;
+  --unsure: #857c6e;
+
+  /* Colours the component library defines. The site does not use them yet. */
+  --popover: #f4efe4;
+  --popover-foreground: #1b1815;
+  --secondary: #e9e2d3;
+  --secondary-foreground: #1b1815;
+  --secondary-accent: #1b1815;
+  --info: #b9d4e3;
+  --info-foreground: #12303f;
+  --success: #bcd9c2;
+  --success-foreground: #14321d;
+  --warning: #ecd9a0;
+  --warning-foreground: #3d2f07;
+  --error: #a4161a;
+  --error-foreground: #f4efe4;
+
+  /* How rounded corners are. Not a colour, but it belongs with the theme.
+     0 gives the square, printed look. Try 0.5rem for a softer one. */
+  --radius: 0rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #151311;
+    --foreground: #ece4d4;
+
+    --card: #151311;
+    --card-foreground: #ece4d4;
+
+    --primary: #ff6b5e;
+    --primary-foreground: #151311;
+    --primary-accent: #ff6b5e;
+
+    --muted: #24201c;
+    --muted-foreground: #a0978a;
+
+    --accent: #24201c;
+    --accent-foreground: #ece4d4;
+
+    --border: #3a342d;
+    --input: #ece4d4;
+    --outline: #ece4d4;
+
+    --yes: #ff6b5e;
+    --no: #86c995;
+    --unsure: #8c8375;
+
+    --popover: #151311;
+    --popover-foreground: #ece4d4;
+    --secondary: #24201c;
+    --secondary-foreground: #ece4d4;
+    --secondary-accent: #ece4d4;
+    --error: #ff6b5e;
+    --error-foreground: #151311;
+  }
+}

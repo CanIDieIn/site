@@ -1,0 +1,41 @@
+{
+  // Format with Prettier on every save. This is also what sorts
+  // src/data/deaths.json by game ID (see .prettierrc.json).
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[json]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[jsonc]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[typescript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  "[javascript]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+  // Prettier cannot read .astro files without an extra plugin, so the Astro
+  // extension formats those with its own built-in copy.
+  "[astro]": { "editor.defaultFormatter": "astro-build.astro-vscode" },
+
+  // Stylesheets use Tailwind syntax such as @theme and @apply. Treating them as
+  // Tailwind CSS stops the editor flagging those as errors, and enables class
+  // name suggestions through the Tailwind extension.
+  "files.associations": { "*.css": "tailwindcss" },
+  "[tailwindcss]": { "editor.defaultFormatter": "esbenp.prettier-vscode" },
+
+  // Use the project's own Prettier and its sort plugin, never a global one.
+  "prettier.resolveGlobalModules": false,
+
+  // Match the code style already used throughout: two spaces, LF line endings.
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": false,
+  "files.eol": "\n",
+  "files.insertFinalNewline": true,
+
+  // src/data/games.json is a generated file of about 225,000 games. Keep it,
+  // and build output, out of search results.
+  "search.exclude": {
+    "src/data/games.json": true,
+    "dist": true,
+    ".astro": true
+  },
+  "files.watcherExclude": {
+    "**/dist/**": true,
+    "**/.astro/**": true
+  }
+}
