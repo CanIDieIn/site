@@ -149,20 +149,14 @@ const description = game
             )}
           </div>
           <div class="text-muted-foreground flex flex-col gap-2 text-sm">
-            {/* The API has no answer for an unsure game, so there is nothing to link to. */}
-            {canDie !== undefined && (
-              <p>
-                Using Streamer.bot?{" "}
-                <a href={`/api/${game.slug}`} class="link text-foreground">
-                  You want this link
-                  <span class="sr-only">
-                    {" "}
-                    to this game's answer as plain text
-                  </span>
-                </a>
-                .
-              </p>
-            )}
+            {/* The guide to the plain-text API, in pages/api/index.astro. */}
+            <p>
+              Streaming?{" "}
+              <a href="/api" class="link text-foreground">
+                Connect your stream bot
+              </a>
+              .
+            </p>
             {correctionUrl && (
               <p>
                 {canDie === undefined ? "Know the answer?" : "Not right?"}{" "}

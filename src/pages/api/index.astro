@@ -1,0 +1,222 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { canDieIn, findGame, findGameByName } from "@/lib/catalogue";
+
+// The guide to the plain-text API in [...slug].ts, for people setting up a
+// stream bot. Being a fixed address, this page takes priority over that route,
+// so /api shows the guide and /api/<anything> gives an answer.
+//
+// Rendered per request, like the other pages, so the example answers below
+// always match what the API says today.
+export const prerender = false;
+
+const origin = (Astro.site ?? Astro.url).origin;
+const api = `${origin}/api/`;
+
+const pageTitle = "Use It On Your Stream";
+const description =
+  "Ask whether you can die in a game by its Twitch category name, from Nightbot, StreamElements, Fossabot or Streamer.bot.";
+
+// Names to show in the examples table, each with what it demonstrates. `path`
+// is how the name looks in an address when it differs from the name itself.
+// The answer beside each one is looked up now, the same way the API does it,
+// so the table cannot go out of date.
+const examples: { name: string; path?: string; note: string }[] = [
+  {
+    name: "Portal",
+    note: "A plain name. Capitals do not matter, so “portal” and “PORTAL” work too.",
+  },
+  {
+    name: "Pokémon Red Version",
+    path: "Pok%C3%A9mon%20Red%20Version",
+    note: "Accents are optional. “Pokemon Red Version” finds the same game.",
+  },
+  {
+    name: "Animal Crossing: New Horizons",
+    path: "Animal%20Crossing:%20New%20Horizons",
+    note: "Punctuation is ignored, so the colon can be left out.",
+  },
+  {
+    name: "Baldur's Gate III",
+    path: "Baldur's%20Gate%20III",
+    note: "Apostrophes are optional. “Baldurs Gate III” works as well.",
+  },
+  {
+    name: "Baldur's Gate 3",
+    path: "Baldur's%20Gate%203",
+    note: "Twitch names this category with a 3, but our data has it as III. Numbers are not converted, so this one finds nothing. Use the slug for games like this.",
+  },
+  {
+    name: "Fate/Grand Order",
+    path: "Fate%2FGrand%20Order",
+    note: "A slash in the name works, written as it is or as %2F.",
+  },
+  {
+    name: "100% Orange Juice!",
+    path: "100%25%20Orange%20Juice!",
+    note: "A percent sign has to be sent as %25. Bots do this for you when you use their encoding variable.",
+  },
+  {
+    name: "Dead Space",
+    path: "Dead%20Space",
+    note: "Several games share this name. You get the one we have an answer for, and the most popular of those.",
+  },
+  {
+    name: "Just Chatting",
+    path: "Just%20Chatting",
+    note: "Not a game, so there is no answer.",
+  },
+  {
+    name: "baldurs-gate-iii",
+    note: "A slug, taken from the address of the game's page here. It always finds exactly that game.",
+  },
+];
+
+const answered = examples.map((example) => {
+  const game = findGame(example.name) ?? findGameByName(example.name);
+  const canDie = game && canDieIn(game);
+  return {
+    ...example,
+    href: `/api/${example.path ?? example.name}`,
+    response: canDie === undefined ? "404, empty" : String(canDie),
+  };
+});
+
+// Styles shared by the headings, the commands to copy and the inline code.
+const sectionHeading = "mt-14 text-2xl font-semibold tracking-tight";
+const botHeading = "mt-10 text-lg font-semibold";
+const block =
+  "bg-muted mt-3 overflow-x-auto rounded-md border p-4 font-mono text-sm leading-relaxed";
+const inline = "bg-muted rounded px-1.5 py-0.5 font-mono text-[0.9em]";
+---
+
+<Layout title={pageTitle} description={description}>
+  <main id="main" class="mx-auto w-full max-w-2xl px-5 py-14 sm:py-24">
+    <header>
+      <p class="mb-6">
+        <a href="/" class="link inline-flex min-h-11 items-center">Can I Die In...</a>
+      </p>
+      <h1 class="text-4xl font-semibold tracking-tight text-balance sm:text-5xl">{pageTitle}</h1>
+      <p class="mt-5 text-lg text-pretty">
+        Send us the name of your Twitch category and we will tell you whether you can die in that
+        game. Your bot can use the answer to switch a death counter on or off.
+      </p>
+    </header>
+
+    <h2 class={sectionHeading}>The request</h2>
+    <p class="mt-4 text-pretty">
+      It is one GET request, with the category name on the end of the address. No key or sign-up is
+      needed.
+    </p>
+    <pre class={block}><code>GET {api}&lt;category name&gt;</code></pre>
+    <p class="mt-4 text-pretty">The reply is plain text, and one of three things:</p>
+    <dl class="mt-3 grid grid-cols-[auto_1fr] gap-x-4 gap-y-2">
+      <dt><code class={inline}>true</code></dt>
+      <dd>You can die in this game.</dd>
+      <dt><code class={inline}>false</code></dt>
+      <dd>You cannot die in this game.</dd>
+      <dt><code class={inline}>404</code></dt>
+      <dd>
+        An empty reply with the status 404. We found no game with that name, or we have no answer
+        for it yet.
+      </dd>
+    </dl>
+    <p class="mt-4 text-pretty">
+      A game's slug works in place of its name. The slug is the last part of the address of the
+      game's page here, such as <code class={inline}>baldurs-gate-iii</code>.
+    </p>
+
+    <h2 class={sectionHeading}>Setting up your bot</h2>
+    <p class="mt-4 text-pretty">
+      Each example below reads your current category and asks about it, so the answer follows you
+      when you change game. Chat bots post the answer as the word “true” or “false”.
+    </p>
+
+    <h3 class={botHeading}>Streamer.bot</h3>
+    <p class="mt-2 text-pretty">Add these two sub-actions to an action, in this order:</p>
+    <ol class="mt-3 list-decimal space-y-3 pl-6 text-pretty">
+      <li>
+        <strong class="font-semibold">Twitch › User › Get User Info for Target</strong>, with User
+        Login set to <code class={inline}>%broadcastUserName%</code>. This puts your category in
+        <code class={inline}>%game%</code>. If the action is not started by a Twitch trigger, put
+        <strong class="font-semibold">Add Broadcaster Information</strong> before it.
+      </li>
+      <li>
+        <strong class="font-semibold">Core › Network › Fetch URL</strong>, with Variable Name set to
+        <code class={inline}>canDie</code> and this as the URL:
+        <pre class={block}><code>{api}%game%</code></pre>
+      </li>
+    </ol>
+    <p class="mt-3 text-pretty">
+      <code class={inline}>%canDie%</code> then holds <code class={inline}>true</code>,
+      <code class={inline}>false</code>, or nothing when there is no answer. Test it with an If/Else
+      sub-action.
+    </p>
+
+    <h3 class={botHeading}>Nightbot</h3>
+    <p class="mt-2 text-pretty">Send this in your chat to add a <code class={inline}>!candie</code> command:</p>
+    <pre
+      class={block}><code>!commands add !candie Can you die in $(twitch $(channel) "{`{{game}}`}")? $(urlfetch {api}$(querystring $(twitch $(channel) "{`{{game}}`}")))</code></pre>
+    <p class="mt-3 text-pretty">
+      When there is no answer, Nightbot posts an error message of its own in place of the answer.
+    </p>
+
+    <h3 class={botHeading}>StreamElements</h3>
+    <p class="mt-2 text-pretty">Send this in your chat:</p>
+    <pre
+      class={block}><code>!command add !candie Can you die in $(game)? $(customapi {api}$(pathescape $(game)))</code></pre>
+    <p class="mt-3 text-pretty">
+      When there is no answer, StreamElements posts “The remote server returned status code 404”.
+    </p>
+
+    <h3 class={botHeading}>Fossabot</h3>
+    <p class="mt-2 text-pretty">Create a command with this as its response:</p>
+    <pre
+      class={block}><code>Can you die in $(game)? $(customapi {api}$(pathencode $(game)))</code></pre>
+    <p class="mt-3 text-pretty">When there is no answer, Fossabot leaves the answer blank.</p>
+
+    <h3 class={botHeading}>Anything else</h3>
+    <p class="mt-2 text-pretty">
+      Any tool that can fetch a web address will work. Browser sources and overlays can call it too,
+      from any site.
+    </p>
+    <pre class={block}><code>curl "{api}Pok%C3%A9mon%20Red%20Version"</code></pre>
+
+    <h2 class={sectionHeading}>How names are matched</h2>
+    <p class="mt-4 text-pretty">
+      Our game names come from IGDB, which is also where Twitch gets its categories, so most names
+      match as they are. Capitals, accents and punctuation are ignored. Here is what some names
+      return right now:
+    </p>
+    <div class="mt-4 overflow-x-auto">
+      <table class="w-full text-left text-sm">
+        <thead>
+          <tr class="border-b">
+            <th scope="col" class="py-2 pr-4 font-semibold">Name sent</th>
+            <th scope="col" class="py-2 pr-4 font-semibold">Reply</th>
+            <th scope="col" class="py-2 font-semibold">Why</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            answered.map((example) => (
+              <tr class="border-b align-top">
+                <th scope="row" class="py-3 pr-4 font-normal">
+                  <a href={example.href} class="link">
+                    {example.name}
+                  </a>
+                </th>
+                <td class="py-3 pr-4 font-mono whitespace-nowrap">{example.response}</td>
+                <td class="text-muted-foreground py-3 text-pretty">{example.note}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+    </div>
+    <p class="text-muted-foreground mt-6 text-sm text-pretty">
+      If your category finds nothing, search for the game on <a href="/" class="link">the main list</a>
+      and use the slug from its page instead.
+    </p>
+  </main>
+</Layout>

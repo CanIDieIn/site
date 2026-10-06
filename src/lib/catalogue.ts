@@ -233,6 +233,35 @@ const gamesBySlug = new Map((games as Game[]).map((game) => [game.slug, game]));
 export const findGame = (slug: string | undefined): Game | undefined =>
   slug === undefined ? undefined : gamesBySlug.get(slug);
 
+// IGDB reuses names: a remake often shares its name with the original, and
+// there are four games called "Dead Space". When a name is looked up, a game
+// with an answer in `deaths.json` beats one without, then the more popular
+// game wins, then the older record.
+const preferredForName = (a: Game, b: Game) =>
+  Number(deathsById.has(b.id)) - Number(deathsById.has(a.id)) ||
+  (b.popularity ?? 0) - (a.popularity ?? 0) ||
+  a.id - b.id;
+
+// Keyed by normalised name, so case, accents and punctuation do not matter.
+// Names made only of symbols normalise to nothing and are left out.
+const gamesByName = new Map<string, Game>();
+for (const { game, key } of keyed) {
+  if (key === "") continue;
+  const current = gamesByName.get(key);
+  if (!current || preferredForName(game, current) < 0) {
+    gamesByName.set(key, game);
+  }
+}
+
+/**
+ * The game with this name, if it is in the catalogue. Meant for Twitch
+ * category names, which are taken from IGDB and so match the names here.
+ * "Baldur's Gate 3", "baldurs gate 3" and "BALDUR'S GATE 3" all find the same
+ * game.
+ */
+export const findGameByName = (name: string | undefined): Game | undefined =>
+  name === undefined ? undefined : gamesByName.get(normalise(name));
+
 /**
  * Whether you can die in the game: `true`, `false`, or `undefined` when the
  * game has no entry in `deaths.json` and nobody has decided yet.
