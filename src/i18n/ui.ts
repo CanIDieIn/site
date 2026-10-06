@@ -63,12 +63,22 @@ const en = {
     search: "Search by name",
     sortBy: "Sort by",
     order: "Order",
-    sorts: { popularity: "Popularity", name: "Alphabetical", release: "Release Date" },
+    sorts: {
+      popularity: "Popularity",
+      name: "Alphabetical",
+      release: "Release Date",
+    },
     directions: { asc: "Ascending", desc: "Descending" },
     submit: "Search",
     noMatch: (query: string) => `No games match "${query}".`,
     none: "No games to show yet.",
-    showing: (from: string, to: string, total: string, n: number, query: string) =>
+    showing: (
+      from: string,
+      to: string,
+      total: string,
+      n: number,
+      query: string,
+    ) =>
       `Showing ${from} to ${to} of ${total} ${n === 1 ? "game" : "games"}${query ? ` matching "${query}"` : ""}.`,
     clear: "Clear search",
     /** Read out before a release date, for people who cannot see where it sits. */
@@ -90,12 +100,15 @@ const en = {
     notFoundTitle: "Game not found",
     notFoundText: "There is no game at this address.",
     /** The one-line summary search engines show. `answer` is from `answerSentence`. */
-    description: (name: string, answer: string) => `Can you die in ${name}? ${answer}`,
-    answerSentence: { yes: "Yes.", no: "No.", unsure: "We are not sure yet." } as Record<
-      Answer,
-      string
-    >,
-    cardAlt: (name: string, answer: string) => `${name}, stamped with the answer: ${answer}.`,
+    description: (name: string, answer: string) =>
+      `Can you die in ${name}? ${answer}`,
+    answerSentence: {
+      yes: "Yes.",
+      no: "No.",
+      unsure: "We are not sure yet.",
+    } as Record<Answer, string>,
+    cardAlt: (name: string, answer: string) =>
+      `${name}, stamped with the answer: ${answer}.`,
     knowAnswer: "Know the answer?",
     notRight: "Not right?",
     tellUs: "Tell us on GitHub",
@@ -153,7 +166,11 @@ const fr: Ui = {
     search: "Rechercher par nom",
     sortBy: "Trier par",
     order: "Ordre",
-    sorts: { popularity: "Popularité", name: "Alphabétique", release: "Date de sortie" },
+    sorts: {
+      popularity: "Popularité",
+      name: "Alphabétique",
+      release: "Date de sortie",
+    },
     directions: { asc: "Croissant", desc: "Décroissant" },
     submit: "Rechercher",
     noMatch: (query) => `Aucun jeu ne correspond à « ${query} ».`,
@@ -179,8 +196,13 @@ const fr: Ui = {
     notFoundTitle: "Jeu introuvable",
     notFoundText: "Il n'y a aucun jeu à cette adresse.",
     description: (name, answer) => `Peut-on mourir dans ${name} ? ${answer}`,
-    answerSentence: { yes: "Oui.", no: "Non.", unsure: "Nous ne le savons pas encore." },
-    cardAlt: (name, answer) => `${name}, avec la réponse en tampon : ${answer}.`,
+    answerSentence: {
+      yes: "Oui.",
+      no: "Non.",
+      unsure: "Nous ne le savons pas encore.",
+    },
+    cardAlt: (name, answer) =>
+      `${name}, avec la réponse en tampon : ${answer}.`,
     knowAnswer: "Vous connaissez la réponse ?",
     notRight: "Ce n'est pas correct ?",
     tellUs: "Dites-le-nous sur GitHub",
@@ -236,7 +258,11 @@ const es: Ui = {
     search: "Buscar por nombre",
     sortBy: "Ordenar por",
     order: "Orden",
-    sorts: { popularity: "Popularidad", name: "Alfabético", release: "Fecha de lanzamiento" },
+    sorts: {
+      popularity: "Popularidad",
+      name: "Alfabético",
+      release: "Fecha de lanzamiento",
+    },
     directions: { asc: "Ascendente", desc: "Descendente" },
     submit: "Buscar",
     noMatch: (query) => `Ningún juego coincide con «${query}».`,
@@ -263,7 +289,8 @@ const es: Ui = {
     notFoundText: "No hay ningún juego en esta dirección.",
     description: (name, answer) => `¿Se puede morir en ${name}? ${answer}`,
     answerSentence: { yes: "Sí.", no: "No.", unsure: "Aún no lo sabemos." },
-    cardAlt: (name, answer) => `${name}, con la respuesta estampada: ${answer}.`,
+    cardAlt: (name, answer) =>
+      `${name}, con la respuesta estampada: ${answer}.`,
     knowAnswer: "¿Sabes la respuesta?",
     notRight: "¿No es correcto?",
     tellUs: "Cuéntanoslo en GitHub",
@@ -319,7 +346,11 @@ const de: Ui = {
     search: "Nach Namen suchen",
     sortBy: "Sortieren nach",
     order: "Reihenfolge",
-    sorts: { popularity: "Beliebtheit", name: "Alphabetisch", release: "Erscheinungsdatum" },
+    sorts: {
+      popularity: "Beliebtheit",
+      name: "Alphabetisch",
+      release: "Erscheinungsdatum",
+    },
     directions: { asc: "Aufsteigend", desc: "Absteigend" },
     submit: "Suchen",
     noMatch: (query) => `Kein Spiel passt zu „${query}“.`,
@@ -345,8 +376,13 @@ const de: Ui = {
     notFoundTitle: "Spiel nicht gefunden",
     notFoundText: "Unter dieser Adresse gibt es kein Spiel.",
     description: (name, answer) => `Kann man in ${name} sterben? ${answer}`,
-    answerSentence: { yes: "Ja.", no: "Nein.", unsure: "Das wissen wir noch nicht." },
-    cardAlt: (name, answer) => `${name}, gestempelt mit der Antwort: ${answer}.`,
+    answerSentence: {
+      yes: "Ja.",
+      no: "Nein.",
+      unsure: "Das wissen wir noch nicht.",
+    },
+    cardAlt: (name, answer) =>
+      `${name}, gestempelt mit der Antwort: ${answer}.`,
     knowAnswer: "Du kennst die Antwort?",
     notRight: "Stimmt nicht?",
     tellUs: "Sag es uns auf GitHub",
@@ -372,7 +408,8 @@ const ja: Ui = {
   },
 
   home: {
-    description: "数十万本のゲームから、そのゲームで死ぬことがあるかどうかを調べられます。",
+    description:
+      "数十万本のゲームから、そのゲームで死ぬことがあるかどうかを調べられます。",
     lead: "ゲームを選んで、死ぬことがあるかどうかを確かめましょう。",
     moreNav: "サイト内のその他のページ",
   },
@@ -388,8 +425,10 @@ const ja: Ui = {
 
   noDeaths: {
     title: "死なないゲーム",
-    description: "死ぬことがないと確認できたゲームの一覧です。数えるデス数はありません。",
-    lead: (count) => `デス数を数える必要がないと確認できたゲームは${count}本です。`,
+    description:
+      "死ぬことがないと確認できたゲームの一覧です。数えるデス数はありません。",
+    lead: (count) =>
+      `デス数を数える必要がないと確認できたゲームは${count}本です。`,
   },
 
   browser: {
@@ -423,7 +462,11 @@ const ja: Ui = {
     notFoundTitle: "ゲームが見つかりません",
     notFoundText: "このアドレスにゲームはありません。",
     description: (name, answer) => `${name}で死ぬことはある？${answer}`,
-    answerSentence: { yes: "はい。", no: "いいえ。", unsure: "まだわかっていません。" },
+    answerSentence: {
+      yes: "はい。",
+      no: "いいえ。",
+      unsure: "まだわかっていません。",
+    },
     cardAlt: (name, answer) => `${name}。スタンプで示された答え：${answer}。`,
     knowAnswer: "答えをご存じですか？",
     notRight: "間違っていますか？",

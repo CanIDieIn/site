@@ -1,4 +1,5 @@
 import type { APIRoute } from "astro";
+import { trackEvent } from "../../lib/analytics";
 import { canDieIn, findGame, findGameByName } from "../../lib/catalogue";
 
 // Answered per request, so no file is built for each of the 225,000 games.
@@ -46,10 +47,25 @@ const decoded = (value: string) => {
  * is no third value, so a caller only ever has to handle true, false, or no
  * answer.
  */
-export const GET: APIRoute = ({ params }) => {
-  const named = params.slug && decoded(params.slug);
+export const GET: APIRoute = (context) => {
+  const named = context.params.slug && decoded(context.params.slug);
   const game = findGame(named) ?? findGameByName(named);
   const canDie = game && canDieIn(game);
+
+  // What was asked for and what it got, as an "api" event in Umami. The
+  // address alone would say the first but not the second, and the two together
+  // are what shows which games are being watched with no answer written yet.
+  //
+  // `asked` is usually a Twitch category sent as it is by a stream bot, so it
+  // is cut to a sensible length. `game` is missing when nothing matched it at
+  // all, which tells a name the catalogue does not know from a game in it that
+  // nobody has answered for.
+  trackEvent(context, "api", {
+    asked: (named || "").slice(0, 100),
+    answer: canDie === undefined ? "unsure" : String(canDie),
+    ...(game ? { game: game.slug } : {}),
+  });
+
   if (canDie === undefined) return text(null, 404);
   return text(String(canDie));
 };

@@ -83,7 +83,10 @@ const ARTWORK_TYPE_PREFERENCE = [2];
  * landscape artwork, or failing that `cover`, the id of its portrait cover.
  * A game with neither gets nothing, and its card is drawn without an image.
  */
-const pickImage = ({ artworks = [], cover }: IgdbGame): { art?: string; cover?: string } => {
+const pickImage = ({
+  artworks = [],
+  cover,
+}: IgdbGame): { art?: string; cover?: string } => {
   const landscape = artworks.filter(
     (artwork) =>
       artwork.image_id &&
@@ -133,7 +136,7 @@ const IGDB_POPULARITY_TYPE = 3;
 // uses. The region is named by IGDB's own identifier for it. To add another,
 // add a line here, for example `ko: "ko-KR"`, and the language itself in
 // src/i18n/locales.ts.
-const IGDB_NAME_REGIONS: Record<string, string> = { ja: "ja-JP" };
+const IGDB_NAME_REGIONS: Record<string, string> = { ja: "ja-JP", ko: "ko-KR" };
 
 const sleep = (ms: number) =>
   new Promise<void>((resolve) => setTimeout(resolve, ms));
@@ -229,7 +232,9 @@ const fetchPopularity = async (token: string): Promise<Map<number, number>> => {
  * Returns, for each game id, the names it has: `{ ja: "..." }`. Most games
  * have none and are not in the result.
  */
-const fetchLocalNames = async (token: string): Promise<Map<number, Record<string, string>>> => {
+const fetchLocalNames = async (
+  token: string,
+): Promise<Map<number, Record<string, string>>> => {
   type Localization = { id: number; game?: number; name?: string };
   const namesById = new Map<number, Record<string, string>>();
   for (const [language, identifier] of Object.entries(IGDB_NAME_REGIONS)) {
@@ -238,7 +243,10 @@ const fetchLocalNames = async (token: string): Promise<Map<number, Record<string
       token,
       `fields identifier; where identifier = "${identifier}"; limit 1;`,
     );
-    if (!region) throw new Error(`IGDB has no region "${identifier}", needed for "${language}" names.`);
+    if (!region)
+      throw new Error(
+        `IGDB has no region "${identifier}", needed for "${language}" names.`,
+      );
     const filter = `region = ${region.id}`;
     const { count } = await igdbQuery<{ count: number }>(
       "game_localizations/count",
@@ -258,7 +266,10 @@ const fetchLocalNames = async (token: string): Promise<Map<number, Record<string
       for (const { game, name } of page) {
         // Some entries exist only to hold a regional cover, and have no name.
         if (typeof game !== "number" || !name?.trim()) continue;
-        namesById.set(game, { ...namesById.get(game), [language]: name.trim() });
+        namesById.set(game, {
+          ...namesById.get(game),
+          [language]: name.trim(),
+        });
       }
       lastId = page[page.length - 1].id;
       seen += page.length;
@@ -388,10 +399,17 @@ export const fetchAllGames = async (
     const localNames = Object.entries(namesById.get(id) ?? {}).filter(
       ([, localName]) => localName !== name,
     );
-    const names = localNames.length > 0 ? Object.fromEntries(localNames) : undefined;
+    const names =
+      localNames.length > 0 ? Object.fromEntries(localNames) : undefined;
     const sameImage = savedArt === art && savedCover === cover;
     const sameNames = JSON.stringify(savedNames) === JSON.stringify(names);
-    if (savedReleased === released && sameImage && savedPopularity === popularity && sameNames) continue;
+    if (
+      savedReleased === released &&
+      sameImage &&
+      savedPopularity === popularity &&
+      sameNames
+    )
+      continue;
     // Rebuild the record so these sit after the slug, ahead of any custom
     // fields.
     games[index] = {
@@ -413,7 +431,8 @@ export const fetchAllGames = async (
   console.log(
     `${added} games added, ${updated} updated, ${removed} removed, ${redated} release dates changed, ${reimaged} images changed, ${rescored} popularity scores changed, ${renamed} translated names changed`,
   );
-  if (added + updated + removed + redated + reimaged + rescored + renamed === 0) return games;
+  if (added + updated + removed + redated + reimaged + rescored + renamed === 0)
+    return games;
 
   // Compact JSON with one game per line. The file is not meant to be read or
   // edited by hand, but a line per game keeps the diff between runs small.

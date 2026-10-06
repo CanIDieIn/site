@@ -35,9 +35,12 @@ export const isLocale = (value: string | undefined): value is Locale =>
  * is itself a language code, such as the game "Es", whose English page cannot
  * live at /es because that is the Spanish home page. See `gameHref`.
  */
-export const splitLocale = (pathname: string): { locale: Locale; path: string; prefixed: boolean } => {
+export const splitLocale = (
+  pathname: string,
+): { locale: Locale; path: string; prefixed: boolean } => {
   const [, first, ...rest] = pathname.split("/");
-  if (!isLocale(first)) return { locale: DEFAULT_LOCALE, path: pathname, prefixed: false };
+  if (!isLocale(first))
+    return { locale: DEFAULT_LOCALE, path: pathname, prefixed: false };
   return { locale: first, path: `/${rest.join("/")}`, prefixed: true };
 };
 
@@ -55,4 +58,5 @@ export const localePath = (locale: Locale, path: string) => {
 };
 
 /** The address of a game's page in a language. */
-export const gameHref = (locale: Locale, slug: string) => localePath(locale, `/${slug}`);
+export const gameHref = (locale: Locale, slug: string) =>
+  localePath(locale, `/${slug}`);

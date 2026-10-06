@@ -30,19 +30,39 @@ const api = `${origin}/api/`;
 // streaming.ts that says what the example demonstrates. The answer beside each
 // one is looked up now, the same way the API does it, so the table cannot go
 // out of date.
-const examples: { name: string; path?: string; note: keyof StreamingText["matching"]["notes"] }[] = [
+const examples: {
+  name: string;
+  path?: string;
+  note: keyof StreamingText["matching"]["notes"];
+}[] = [
   { name: "Firewatch", note: "plain" },
-  { name: "Pokémon Red Version", path: "Pok%C3%A9mon%20Red%20Version", note: "accent" },
+  {
+    name: "Pokémon Red Version",
+    path: "Pok%C3%A9mon%20Red%20Version",
+    note: "accent",
+  },
   {
     name: "Animal Crossing: New Horizons",
     path: "Animal%20Crossing:%20New%20Horizons",
     note: "punctuation",
   },
-  { name: "Friday Night Funkin'", path: "Friday%20Night%20Funkin'", note: "apostrophe" },
+  {
+    name: "Friday Night Funkin'",
+    path: "Friday%20Night%20Funkin'",
+    note: "apostrophe",
+  },
   { name: "Baldur's Gate 3", path: "Baldur's%20Gate%203", note: "numeral" },
-  { name: "Forza Horizon V", path: "Forza%20Horizon%20V", note: "numeralReverse" },
+  {
+    name: "Forza Horizon V",
+    path: "Forza%20Horizon%20V",
+    note: "numeralReverse",
+  },
   { name: "Fate/Grand Order", path: "Fate%2FGrand%20Order", note: "slash" },
-  { name: "100% Orange Juice", path: "100%25%20Orange%20Juice", note: "percent" },
+  {
+    name: "100% Orange Juice",
+    path: "100%25%20Orange%20Juice",
+    note: "percent",
+  },
   { name: "Until Dawn", path: "Until%20Dawn", note: "shared" },
   { name: "Just Chatting", path: "Just%20Chatting", note: "notGame" },
   { name: "baldurs-gate-iii", note: "slug" },
@@ -58,7 +78,8 @@ const answered = examples.map((example) => {
     // Each reply has the colour of its answer, as on a game's page. The reply
     // is always written out too, so colour is never the only way to tell them
     // apart.
-    colour: canDie === undefined ? "text-unsure" : canDie ? "text-yes" : "text-no",
+    colour:
+      canDie === undefined ? "text-unsure" : canDie ? "text-yes" : "text-no",
     note: t.matching.notes[example.note],
   };
 });
@@ -99,17 +120,27 @@ const commands = {
   <main id="main" class="mx-auto w-full max-w-2xl px-5 py-14 sm:py-24">
     <header>
       <p class="mb-6">
-        <a href={localePath(locale, "/")} class="link inline-flex min-h-11 items-center">
+        <a
+          href={localePath(locale, "/")}
+          class="link inline-flex min-h-11 items-center"
+        >
           {site.siteName}
         </a>
       </p>
-      {/* The title, with the two answers stamped beside it. On a narrow screen
-          the stamps drop below the title. */}
+      {
+        /* The title, with the two answers stamped beside it. On a narrow screen
+          the stamps drop below the title. */
+      }
       <div class="flex flex-wrap items-center justify-between gap-x-8 gap-y-6">
-        <h1 class="max-w-sm text-5xl font-bold tracking-tight text-balance sm:text-6xl">
+        <h1
+          class="max-w-sm text-5xl font-bold tracking-tight text-balance sm:text-6xl"
+        >
           {t.title}
         </h1>
-        <div class="flex items-center gap-3 text-3xl sm:text-4xl" aria-hidden="true">
+        <div
+          class="flex items-center gap-3 text-3xl sm:text-4xl"
+          aria-hidden="true"
+        >
           <Stamp answer="yes" />
           <Stamp answer="no" />
         </div>
@@ -119,9 +150,12 @@ const commands = {
 
     <h2 class={sectionHeading}>{t.request.heading}</h2>
     <p class="mt-4 text-pretty">{t.request.text}</p>
-    <pre class={block}><code>GET {api}&lt;{t.request.placeholder}&gt;</code></pre>
+    <pre
+      class={block}><code>GET {api}&lt;{t.request.placeholder}&gt;</code></pre>
     <p class="mt-6 text-pretty">{t.request.repliesIntro}</p>
-    {/* The replies themselves are what the API sends, so they are not translated. */}
+    {
+      /* The replies themselves are what the API sends, so they are not translated. */
+    }
     <dl class="mt-3 grid gap-3 sm:grid-cols-3">
       <div class={panel}>
         <dt class="text-yes font-mono text-2xl font-bold" lang="en">true</dt>
@@ -162,7 +196,9 @@ const commands = {
         <h3 class={botHeading}>Nightbot</h3>
         <p class="mt-2 text-pretty" set:html={rich(t.bots.nightbot.intro)} />
         <pre class={block}><code>{commands.nightbot}</code></pre>
-        <p class="text-muted-foreground mt-3 text-sm text-pretty">{t.bots.nightbot.noAnswer}</p>
+        <p class="text-muted-foreground mt-3 text-sm text-pretty">
+          {t.bots.nightbot.noAnswer}
+        </p>
       </section>
 
       <section class={panel}>
@@ -178,13 +214,16 @@ const commands = {
         <h3 class={botHeading}>Fossabot</h3>
         <p class="mt-2 text-pretty">{t.bots.fossabot.intro}</p>
         <pre class={block}><code>{commands.fossabot}</code></pre>
-        <p class="text-muted-foreground mt-3 text-sm text-pretty">{t.bots.fossabot.noAnswer}</p>
+        <p class="text-muted-foreground mt-3 text-sm text-pretty">
+          {t.bots.fossabot.noAnswer}
+        </p>
       </section>
 
       <section class={panel}>
         <h3 class={botHeading}>{t.bots.other.heading}</h3>
         <p class="mt-2 text-pretty">{t.bots.other.text}</p>
-        <pre class={block}><code>curl "{api}Pok%C3%A9mon%20Red%20Version"</code></pre>
+        <pre
+          class={block}><code>curl "{api}Pok%C3%A9mon%20Red%20Version"</code></pre>
       </section>
     </div>
 
@@ -194,9 +233,15 @@ const commands = {
       <table class="w-full text-left text-sm">
         <thead>
           <tr class="border-b">
-            <th scope="col" class="py-2 pr-4 font-semibold">{t.matching.nameColumn}</th>
-            <th scope="col" class="py-2 pr-4 font-semibold">{t.matching.replyColumn}</th>
-            <th scope="col" class="py-2 font-semibold">{t.matching.whyColumn}</th>
+            <th scope="col" class="py-2 pr-4 font-semibold"
+              >{t.matching.nameColumn}</th
+            >
+            <th scope="col" class="py-2 pr-4 font-semibold"
+              >{t.matching.replyColumn}</th
+            >
+            <th scope="col" class="py-2 font-semibold"
+              >{t.matching.whyColumn}</th
+            >
           </tr>
         </thead>
         <tbody>
@@ -209,19 +254,28 @@ const commands = {
                   </a>
                 </th>
                 <td
-                  class:list={["py-3 pr-4 font-mono font-bold whitespace-nowrap", example.colour]}
+                  class:list={[
+                    "py-3 pr-4 font-mono font-bold whitespace-nowrap",
+                    example.colour,
+                  ]}
                 >
                   {example.response}
                 </td>
-                <td class="text-muted-foreground py-3 text-pretty">{example.note}</td>
+                <td class="text-muted-foreground py-3 text-pretty">
+                  {example.note}
+                </td>
               </tr>
             ))
           }
         </tbody>
       </table>
     </div>
-    <p class="text-muted-foreground border-unsure mt-8 border-l-2 pl-4 text-sm text-pretty">
-      <strong class="text-foreground font-semibold">{t.matching.helpQuestion}</strong>{" "}
+    <p
+      class="text-muted-foreground border-unsure mt-8 border-l-2 pl-4 text-sm text-pretty"
+    >
+      <strong class="text-foreground font-semibold"
+        >{t.matching.helpQuestion}</strong
+      >{" "}
       <Fragment set:html={rich(t.matching.help)} />
     </p>
   </main>

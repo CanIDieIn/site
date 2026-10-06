@@ -1,5 +1,6 @@
-import { defineMiddleware } from "astro:middleware";
+import { defineMiddleware, sequence } from "astro:middleware";
 import { DEFAULT_LOCALE, splitLocale } from "./i18n/locales";
+import { analytics } from "./lib/analytics";
 
 // Works out which language a request is for, from the code on the front of
 // its address, and stores it in `Astro.locals.locale` for the page to use.
@@ -7,7 +8,7 @@ import { DEFAULT_LOCALE, splitLocale } from "./i18n/locales";
 // A request for /fr/portal is then answered by the same page as /portal: the
 // code is taken off and the request passed on. The visitor's address bar still
 // shows /fr/portal. See src/i18n/locales.ts for how the addresses are laid out.
-export const onRequest = defineMiddleware((context, next) => {
+const locale = defineMiddleware((context, next) => {
   const { locale, path, prefixed } = splitLocale(context.url.pathname);
   context.locals.locale = locale;
   // The address the visitor asked for, without its language code. Pages use
@@ -24,3 +25,7 @@ export const onRequest = defineMiddleware((context, next) => {
 
   return next(new Request(new URL(`${path}${context.url.search}`, context.url), context.request));
 });
+
+// Analytics comes first, so it sees each request as it arrived: the address
+// with its language code, before the language work above takes it off again.
+export const onRequest = sequence(analytics, locale);

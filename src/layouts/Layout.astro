@@ -41,6 +41,10 @@ const {
   imageAlt = `${t.siteName} ${t.tagline}`,
 } = Astro.props;
 
+// Left where the middleware can read it once the page is drawn, so the page
+// view it reports is named rather than only addressed. See src/lib/analytics.ts.
+Astro.locals.title = title;
+
 // Sharing platforms need complete addresses. Use the site address from
 // astro.config.mjs, or the address being visited if that is not set.
 const origin = Astro.site ?? Astro.url.origin;

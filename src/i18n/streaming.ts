@@ -27,7 +27,8 @@ const en = {
     repliesIntro: "The reply is plain text, and one of three things:",
     yes: "You can die in this game.",
     no: "You cannot die in this game.",
-    notFound: "An empty reply. No game has that name, or we have no answer for it yet.",
+    notFound:
+      "An empty reply. No game has that name, or we have no answer for it yet.",
     slugNote:
       "A game's slug works in place of its name. The slug is the last part of the address of the game's page here, such as <code>baldurs-gate-iii</code>.",
   },
@@ -78,13 +79,17 @@ const en = {
     empty: "404, empty",
     /** One for each example in the table, by the `note` it names. */
     notes: {
-      plain: "A plain name. Capitals do not matter, so “firewatch” and “FIREWATCH” work too.",
-      accent: "Accents are optional. “Pokemon Red Version” finds the same game.",
+      plain:
+        "A plain name. Capitals do not matter, so “firewatch” and “FIREWATCH” work too.",
+      accent:
+        "Accents are optional. “Pokemon Red Version” finds the same game.",
       punctuation: "Punctuation is ignored, so the colon can be left out.",
-      apostrophe: "Apostrophes are optional. “Friday Night Funkin” works as well.",
+      apostrophe:
+        "Apostrophes are optional. “Friday Night Funkin” works as well.",
       numeral:
         "Twitch names this category with a 3, where our data has III. Roman numerals and ordinary numbers are treated as the same, so the Twitch name still finds it.",
-      numeralReverse: "The same the other way round. Our data has this game as “Forza Horizon 5”.",
+      numeralReverse:
+        "The same the other way round. Our data has this game as “Forza Horizon 5”.",
       slash: "A slash in the name works, written as it is or as %2F.",
       percent:
         "A percent sign has to be sent as %25. Bots do this for you when you use their encoding variable.",
@@ -111,7 +116,8 @@ const fr: StreamingText = {
     heading: "La requête",
     text: "C'est une simple requête GET, avec le nom de la catégorie à la fin de l'adresse. Aucune clé ni inscription n'est nécessaire.",
     placeholder: "nom de la catégorie",
-    repliesIntro: "La réponse est en texte brut, et prend l'une de ces trois formes :",
+    repliesIntro:
+      "La réponse est en texte brut, et prend l'une de ces trois formes :",
     yes: "On peut mourir dans ce jeu.",
     no: "On ne peut pas mourir dans ce jeu.",
     notFound:
@@ -135,7 +141,8 @@ const fr: StreamingText = {
         "<code>%canDie%</code> contient alors <code>true</code>, <code>false</code>, ou rien quand il n'y a pas de réponse. Testez-le avec une sous-action If/Else.",
     },
     nightbot: {
-      intro: "Envoyez ceci dans votre chat pour ajouter une commande <code>!candie</code> :",
+      intro:
+        "Envoyez ceci dans votre chat pour ajouter une commande <code>!candie</code> :",
       noAnswer:
         "Quand il n'y a pas de réponse, Nightbot publie son propre message d'erreur à la place.",
     },
@@ -146,7 +153,8 @@ const fr: StreamingText = {
     },
     fossabot: {
       intro: "Créez une commande avec ceci comme réponse :",
-      noAnswer: "Quand il n'y a pas de réponse, Fossabot laisse la réponse vide.",
+      noAnswer:
+        "Quand il n'y a pas de réponse, Fossabot laisse la réponse vide.",
     },
     other: {
       heading: "Tout autre outil",
@@ -165,13 +173,18 @@ const fr: StreamingText = {
     notes: {
       plain:
         "Un nom simple. Les majuscules ne comptent pas : « firewatch » et « FIREWATCH » fonctionnent aussi.",
-      accent: "Les accents sont facultatifs. « Pokemon Red Version » trouve le même jeu.",
-      punctuation: "La ponctuation est ignorée : les deux-points peuvent être omis.",
-      apostrophe: "Les apostrophes sont facultatives. « Friday Night Funkin » fonctionne aussi.",
+      accent:
+        "Les accents sont facultatifs. « Pokemon Red Version » trouve le même jeu.",
+      punctuation:
+        "La ponctuation est ignorée : les deux-points peuvent être omis.",
+      apostrophe:
+        "Les apostrophes sont facultatives. « Friday Night Funkin » fonctionne aussi.",
       numeral:
         "Twitch nomme cette catégorie avec un 3, là où nos données ont III. Chiffres romains et chiffres ordinaires sont traités de la même façon, donc le nom Twitch trouve quand même le jeu.",
-      numeralReverse: "Pareil dans l'autre sens. Nos données ont ce jeu sous « Forza Horizon 5 ».",
-      slash: "Une barre oblique dans le nom fonctionne, écrite telle quelle ou sous la forme %2F.",
+      numeralReverse:
+        "Pareil dans l'autre sens. Nos données ont ce jeu sous « Forza Horizon 5 ».",
+      slash:
+        "Une barre oblique dans le nom fonctionne, écrite telle quelle ou sous la forme %2F.",
       percent:
         "Un signe pour cent doit être envoyé sous la forme %25. Les bots le font pour vous quand vous utilisez leur variable d'encodage.",
       shared:
@@ -219,7 +232,8 @@ const es: StreamingText = {
         "<code>%canDie%</code> contiene entonces <code>true</code>, <code>false</code>, o nada cuando no hay respuesta. Compruébalo con una subacción If/Else.",
     },
     nightbot: {
-      intro: "Envía esto en tu chat para añadir un comando <code>!candie</code>:",
+      intro:
+        "Envía esto en tu chat para añadir un comando <code>!candie</code>:",
       noAnswer:
         "Cuando no hay respuesta, Nightbot publica su propio mensaje de error en su lugar.",
     },
@@ -230,7 +244,8 @@ const es: StreamingText = {
     },
     fossabot: {
       intro: "Crea un comando con esto como respuesta:",
-      noAnswer: "Cuando no hay respuesta, Fossabot deja la respuesta en blanco.",
+      noAnswer:
+        "Cuando no hay respuesta, Fossabot deja la respuesta en blanco.",
     },
     other: {
       heading: "Cualquier otra herramienta",
@@ -249,12 +264,16 @@ const es: StreamingText = {
     notes: {
       plain:
         "Un nombre sencillo. Las mayúsculas no importan: «firewatch» y «FIREWATCH» también funcionan.",
-      accent: "Los acentos son opcionales. «Pokemon Red Version» encuentra el mismo juego.",
-      punctuation: "La puntuación se ignora, así que los dos puntos pueden omitirse.",
-      apostrophe: "Los apóstrofos son opcionales. «Friday Night Funkin» también funciona.",
+      accent:
+        "Los acentos son opcionales. «Pokemon Red Version» encuentra el mismo juego.",
+      punctuation:
+        "La puntuación se ignora, así que los dos puntos pueden omitirse.",
+      apostrophe:
+        "Los apóstrofos son opcionales. «Friday Night Funkin» también funciona.",
       numeral:
         "Twitch nombra esta categoría con un 3, donde nuestros datos tienen III. Los números romanos y los normales se tratan igual, así que el nombre de Twitch lo encuentra de todos modos.",
-      numeralReverse: "Lo mismo al revés. Nuestros datos tienen este juego como «Forza Horizon 5».",
+      numeralReverse:
+        "Lo mismo al revés. Nuestros datos tienen este juego como «Forza Horizon 5».",
       slash: "Una barra en el nombre funciona, escrita tal cual o como %2F.",
       percent:
         "Un signo de porcentaje debe enviarse como %25. Los bots lo hacen por ti cuando usas su variable de codificación.",
@@ -279,7 +298,8 @@ const de: StreamingText = {
     heading: "Die Anfrage",
     text: "Es ist eine einzige GET-Anfrage, mit dem Kategorienamen am Ende der Adresse. Du brauchst weder Schlüssel noch Anmeldung.",
     placeholder: "Kategoriename",
-    repliesIntro: "Die Antwort ist reiner Text und eine von drei Möglichkeiten:",
+    repliesIntro:
+      "Die Antwort ist reiner Text und eine von drei Möglichkeiten:",
     yes: "In diesem Spiel kann man sterben.",
     no: "In diesem Spiel kann man nicht sterben.",
     notFound:
@@ -294,7 +314,8 @@ const de: StreamingText = {
       "Jedes Beispiel unten liest deine aktuelle Kategorie und fragt danach, sodass die Antwort mitwechselt, wenn du das Spiel wechselst. Chatbots posten die Antwort als das Wort „true“ oder „false“.",
     question: (game) => `Kann man in ${game} sterben?`,
     streamerBot: {
-      intro: "Füge einer Aktion diese beiden Sub-Actions hinzu, in dieser Reihenfolge:",
+      intro:
+        "Füge einer Aktion diese beiden Sub-Actions hinzu, in dieser Reihenfolge:",
       step1:
         "<strong>Twitch › User › Get User Info for Target</strong>, mit User Login auf <code>%broadcastUserName%</code> gesetzt. Damit steht deine Kategorie in <code>%game%</code>. Wird die Aktion nicht durch einen Twitch-Trigger gestartet, setze <strong>Add Broadcaster Information</strong> davor.",
       step2:
@@ -303,8 +324,10 @@ const de: StreamingText = {
         "<code>%canDie%</code> enthält dann <code>true</code>, <code>false</code> oder nichts, wenn es keine Antwort gibt. Prüfe es mit einer If/Else-Sub-Action.",
     },
     nightbot: {
-      intro: "Sende das in deinem Chat, um einen <code>!candie</code>-Befehl anzulegen:",
-      noAnswer: "Gibt es keine Antwort, postet Nightbot stattdessen eine eigene Fehlermeldung.",
+      intro:
+        "Sende das in deinem Chat, um einen <code>!candie</code>-Befehl anzulegen:",
+      noAnswer:
+        "Gibt es keine Antwort, postet Nightbot stattdessen eine eigene Fehlermeldung.",
     },
     streamElements: {
       intro: "Sende das in deinem Chat:",
@@ -332,13 +355,18 @@ const de: StreamingText = {
     notes: {
       plain:
         "Ein einfacher Name. Groß- und Kleinschreibung spielt keine Rolle: „firewatch“ und „FIREWATCH“ funktionieren auch.",
-      accent: "Akzente sind optional. „Pokemon Red Version“ findet dasselbe Spiel.",
-      punctuation: "Satzzeichen werden ignoriert, der Doppelpunkt kann also wegfallen.",
-      apostrophe: "Apostrophe sind optional. „Friday Night Funkin“ funktioniert ebenfalls.",
+      accent:
+        "Akzente sind optional. „Pokemon Red Version“ findet dasselbe Spiel.",
+      punctuation:
+        "Satzzeichen werden ignoriert, der Doppelpunkt kann also wegfallen.",
+      apostrophe:
+        "Apostrophe sind optional. „Friday Night Funkin“ funktioniert ebenfalls.",
       numeral:
         "Twitch schreibt diese Kategorie mit einer 3, in unseren Daten steht III. Römische und normale Zahlen werden gleich behandelt, der Twitch-Name findet das Spiel also trotzdem.",
-      numeralReverse: "Dasselbe andersherum. In unseren Daten heißt dieses Spiel „Forza Horizon 5“.",
-      slash: "Ein Schrägstrich im Namen funktioniert, so geschrieben oder als %2F.",
+      numeralReverse:
+        "Dasselbe andersherum. In unseren Daten heißt dieses Spiel „Forza Horizon 5“.",
+      slash:
+        "Ein Schrägstrich im Namen funktioniert, so geschrieben oder als %2F.",
       percent:
         "Ein Prozentzeichen muss als %25 gesendet werden. Bots erledigen das für dich, wenn du ihre Kodierungsvariable verwendest.",
       shared:
@@ -365,7 +393,8 @@ const ja: StreamingText = {
     repliesIntro: "返答はプレーンテキストで、次の3つのいずれかです。",
     yes: "このゲームでは死ぬことがあります。",
     no: "このゲームでは死ぬことがありません。",
-    notFound: "空の返答です。その名前のゲームがないか、まだ答えが登録されていません。",
+    notFound:
+      "空の返答です。その名前のゲームがないか、まだ答えが登録されていません。",
     slugNote:
       "名前の代わりに、ゲームのスラッグも使えます。スラッグは、このサイトのゲームページのアドレスの最後の部分です（例：<code>baldurs-gate-iii</code>）。",
   },
@@ -385,8 +414,10 @@ const ja: StreamingText = {
         "これで <code>%canDie%</code> に <code>true</code> か <code>false</code> が入ります。答えがない場合は空になります。If/Else サブアクションで判定してください。",
     },
     nightbot: {
-      intro: "チャットで次を送信すると、<code>!candie</code> コマンドが追加されます。",
-      noAnswer: "答えがない場合、Nightbotは代わりに独自のエラーメッセージを投稿します。",
+      intro:
+        "チャットで次を送信すると、<code>!candie</code> コマンドが追加されます。",
+      noAnswer:
+        "答えがない場合、Nightbotは代わりに独自のエラーメッセージを投稿します。",
     },
     streamElements: {
       intro: "チャットで次を送信します。",
@@ -414,13 +445,17 @@ const ja: StreamingText = {
     notes: {
       plain:
         "単純な名前です。大文字・小文字は区別されないので、「firewatch」や「FIREWATCH」でも大丈夫です。",
-      accent: "アクセント記号は省略できます。「Pokemon Red Version」でも同じゲームが見つかります。",
+      accent:
+        "アクセント記号は省略できます。「Pokemon Red Version」でも同じゲームが見つかります。",
       punctuation: "句読点は無視されるので、コロンは省略できます。",
-      apostrophe: "アポストロフィは省略できます。「Friday Night Funkin」でも大丈夫です。",
+      apostrophe:
+        "アポストロフィは省略できます。「Friday Night Funkin」でも大丈夫です。",
       numeral:
         "Twitchではこのカテゴリ名に「3」を使いますが、当サイトのデータでは「III」です。ローマ数字と通常の数字は同じものとして扱われるので、Twitchの名前でも見つかります。",
-      numeralReverse: "逆の場合も同じです。当サイトのデータでは、このゲームは「Forza Horizon 5」です。",
-      slash: "名前にスラッシュが入っていても大丈夫です。そのままでも、%2F と書いても構いません。",
+      numeralReverse:
+        "逆の場合も同じです。当サイトのデータでは、このゲームは「Forza Horizon 5」です。",
+      slash:
+        "名前にスラッシュが入っていても大丈夫です。そのままでも、%2F と書いても構いません。",
       percent:
         "パーセント記号は %25 として送る必要があります。ボットのエンコード用変数を使えば、自動的に変換されます。",
       shared:
