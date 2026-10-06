@@ -12,6 +12,7 @@ export default defineConfig({
   // Game pages used to live under /game/. Send those addresses to the root.
   redirects: {
     "/game/[slug]": "/[slug]",
+    "/api/game/[slug]": "/api/[slug]",
   },
 
   adapter: node({

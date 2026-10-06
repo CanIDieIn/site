@@ -1,5 +1,5 @@
 import type { APIRoute } from "astro";
-import { canDieIn, findGame } from "../../../lib/catalogue";
+import { canDieIn, findGame } from "../../lib/catalogue";
 
 // Answered per request, so no file is built for each of the 225,000 games.
 export const prerender = false;

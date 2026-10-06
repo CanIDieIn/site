@@ -75,11 +75,22 @@
   --tint-strength: 14%;
 
   /* On a game's page, its artwork sits behind everything, covered by a veil
-     of the page colour. This is how solid that veil is. Lower shows more of
-     the artwork and less contrast. At 88% every text pairing stays above
+     of the page colour. The veil has two strengths.
+
+     --backdrop-veil is how solid it is behind the column of text. Lower shows
+     more artwork and less contrast. At 88% every text pairing stays above
      4.5 to 1 even over pure black or pure white artwork. At 80% some fall
-     below it. Set to 100% to hide the artwork. */
+     below it. This is the one that protects readability.
+
+     --backdrop-veil-edge is how solid it is at the far left and right of the
+     screen, where there is no text. The veil fades from one to the other.
+     Lower shows the artwork more clearly at the sides. It does not affect
+     contrast, so it can be set freely. On a phone there are no sides, and the
+     whole screen gets the stronger veil.
+
+     Set both to 100% to hide the artwork. */
   --backdrop-veil: 88%;
+  --backdrop-veil-edge: 35%;
 }
 
 @media (prefers-color-scheme: dark) {

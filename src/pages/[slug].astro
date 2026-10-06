@@ -22,8 +22,11 @@ const reason = game ? reasonFor(game) : undefined;
 // Each name below other than `template` and `title` is the `id` of a field in
 // that form. If a field is renamed there, rename it here too. The `kind` value
 // must match one of the form's options word for word.
-const githubUrl = (import.meta.env.PUBLIC_GITHUB_URL ?? "").trim().replace(/\/+$/, "");
-const isGithubUrl = URL.canParse(githubUrl) && new URL(githubUrl).protocol.startsWith("http");
+const githubUrl = (import.meta.env.PUBLIC_GITHUB_URL ?? "")
+  .trim()
+  .replace(/\/+$/, "");
+const isGithubUrl =
+  URL.canParse(githubUrl) && new URL(githubUrl).protocol.startsWith("http");
 const correctionUrl =
   game && isGithubUrl
     ? `${githubUrl}/issues/new?${new URLSearchParams({
@@ -70,7 +73,10 @@ Astro.response.headers.set("Vary", "Referer");
 // The word itself always says the answer, so colour is never the only way to
 // tell them apart. `tint` is the matching wash of colour behind the page.
 const stamps = {
-  Yes: { tint: "yes", style: "text-yes -rotate-3 text-[clamp(4rem,20vw,9rem)]" },
+  Yes: {
+    tint: "yes",
+    style: "text-yes -rotate-3 text-[clamp(4rem,20vw,9rem)]",
+  },
   No: { tint: "no", style: "text-no rotate-2 text-[clamp(4rem,20vw,9rem)]" },
   Unsure: {
     tint: "unsure",
@@ -79,20 +85,25 @@ const stamps = {
 } as const;
 const stamp = stamps[answer];
 
-// The game's artwork from IGDB, laid softly behind the page. A landscape
-// artwork is used at a moderate size, as it is blurred anyway. A game with
-// only a portrait cover gets that, blurred heavily into a wash of its colours.
+// The game's image from IGDB, laid behind the page: its official key art, or
+// its cover if it has none. The layout blurs every backdrop lightly, the same
+// amount whichever kind it is.
 const igdbImage = (size: string, id: string) =>
   `https://images.igdb.com/igdb/image/upload/t_${size}/${id}.jpg`;
 const backdrop = game?.art
-  ? igdbImage("720p", game.art)
+  ? igdbImage("1080p", game.art)
   : game?.cover
-    ? igdbImage("cover_big", game.cover)
+    ? igdbImage("1080p", game.cover)
     : undefined;
 
-// The picture for social media: the game's artwork with the stamped answer,
-// drawn by src/pages/og/[slug].jpg.ts.
-const image = game ? `/og/${game.slug}.jpg` : undefined;
+// The picture for social media: the same artwork as the backdrop above, with
+// the stamped answer over it, drawn by src/pages/og/[slug].jpg.ts.
+//
+// Browsers and platforms keep these pictures for a long time. The `v` on the
+// end names the image and the answer the card was drawn from, so if either
+// changes the address changes too, and nobody is shown an out-of-date card.
+const cardVersion = `${game?.art ?? game?.cover ?? "none"}-${answer.toLowerCase()}`;
+const image = game ? `/og/${game.slug}.jpg?v=${cardVersion}` : undefined;
 const imageAlt = game
   ? `${game.name}, stamped with the answer: ${answer === "Unsure" ? "unsure" : answer.toLowerCase()}.`
   : undefined;
@@ -109,15 +120,11 @@ const description = game
   image={image}
   imageAlt={imageAlt}
   backdrop={backdrop}
-  backdropBlur={game?.art ? "soft" : "strong"}
 >
   <main
     id="main"
     class="mx-auto flex min-h-dvh w-full max-w-2xl flex-col items-center justify-center gap-10 px-5 py-14 text-center"
   >
-    <p>
-      <a href="/" class="link inline-flex min-h-11 items-center">Can I Die In...</a>
-    </p>
     {
       game ? (
         <>
@@ -135,16 +142,23 @@ const description = game
             >
               {answer}
             </p>
-            {reason && <p class="mx-auto mt-6 max-w-prose text-lg text-pretty">{reason}</p>}
+            {reason && (
+              <p class="mx-auto mt-6 max-w-prose text-lg text-pretty">
+                {reason}
+              </p>
+            )}
           </div>
           <div class="text-muted-foreground flex flex-col gap-2 text-sm">
             {/* The API has no answer for an unsure game, so there is nothing to link to. */}
             {canDie !== undefined && (
               <p>
                 Using Streamer.bot?{" "}
-                <a href={`/api/game/${game.slug}`} class="link text-foreground">
+                <a href={`/api/${game.slug}`} class="link text-foreground">
                   You want this link
-                  <span class="sr-only"> to this game's answer as plain text</span>
+                  <span class="sr-only">
+                    {" "}
+                    to this game's answer as plain text
+                  </span>
                 </a>
                 .
               </p>
@@ -152,24 +166,33 @@ const description = game
             {correctionUrl && (
               <p>
                 {canDie === undefined ? "Know the answer?" : "Not right?"}{" "}
-                <a href={correctionUrl} rel="noopener" class="link text-foreground">
-                  {canDie === undefined ? "Tell us on GitHub" : "Suggest a correction on GitHub"}
+                <a
+                  href={correctionUrl}
+                  rel="noopener"
+                  class="link text-foreground"
+                >
+                  {canDie === undefined
+                    ? "Tell us on GitHub"
+                    : "Suggest a correction on GitHub"}
                 </a>
                 . This is game ID {game.id}.
               </p>
             )}
           </div>
-          <DeathDefinition class="max-w-md" />
         </>
       ) : (
         <div>
-          <h1 class="text-3xl font-semibold tracking-tight sm:text-4xl">{pageTitle}</h1>
+          <h1 class="text-3xl font-semibold tracking-tight sm:text-4xl">
+            {pageTitle}
+          </h1>
           <p class="mt-4 text-lg">There is no game at this address.</p>
         </div>
       )
     }
     <p>
-      <a href={listHref} class="link inline-flex min-h-11 items-center">{listLabel}</a>
+      <a href={listHref} class="link inline-flex min-h-11 items-center"
+        >{listLabel}</a
+      >
     </p>
   </main>
 </Layout>

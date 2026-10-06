@@ -21,6 +21,10 @@ const WIDTH = 1200;
 const HEIGHT = 630;
 const PAGE_COLOUR = "#121212";
 
+// How much every card's image is blurred. Light enough that the game stays
+// recognisable. It matches the light blur on the game pages' backdrops.
+const BLUR = 4;
+
 /** Turns one of the `?inline` imports above, a data address, back into image bytes. */
 const bytes = (dataUrl: string) => Buffer.from(dataUrl.slice(dataUrl.indexOf(",") + 1), "base64");
 const stamps = { yes: bytes(stampYes), no: bytes(stampNo), unsure: bytes(stampUnsure) };
@@ -56,37 +60,24 @@ const drawCard = async (game: Game): Promise<Card> => {
   const { width: stampWidth = 820, height: stampHeight = 440 } = await sharp(stamp).metadata();
   const centred = { left: Math.round((WIDTH - stampWidth) / 2), top: Math.round((HEIGHT - stampHeight) / 2) };
 
-  // Best case: a landscape artwork. Fill the card with it and stamp the middle.
-  const art = game.art && (await download(igdbImage("1080p", game.art)));
-  if (art) {
+  // The same image the game's page uses as its backdrop: official key art, or
+  // the cover if there is none. Both get the same treatment, so every card is
+  // drawn alike: the image filling the card, lightly blurred and darkened,
+  // with the stamp in the middle. A portrait cover is the wrong shape for a
+  // wide card, so only a band across its middle shows.
+  const imageId = game.art ?? game.cover;
+  const picture = imageId && (await download(igdbImage("1080p", imageId)));
+  if (picture) {
     try {
-      const image = await sharp(art)
+      const image = await sharp(picture)
         .resize(WIDTH, HEIGHT, { fit: "cover" })
+        .blur(BLUR)
         .composite([shade(0.45), { input: stamp, ...centred }])
         .jpeg({ quality: 82, mozjpeg: true })
         .toBuffer();
       return { image, hasArtwork: true };
     } catch {
-      // Not a usable image. Fall through to the plainer cards.
-    }
-  }
-
-  // Next best: the portrait cover. It is the wrong shape for a wide card, so
-  // only a band across its middle fits, enlarged. A light blur hides the
-  // enlargement while leaving the picture recognisable. The layout is the same
-  // as every other card: a background and the stamp.
-  const cover = game.cover && (await download(igdbImage("1080p", game.cover)));
-  if (cover) {
-    try {
-      const image = await sharp(cover)
-        .resize(WIDTH, HEIGHT, { fit: "cover" })
-        .blur(5)
-        .composite([shade(0.45), { input: stamp, ...centred }])
-        .jpeg({ quality: 82, mozjpeg: true })
-        .toBuffer();
-      return { image, hasArtwork: true };
-    } catch {
-      // Fall through to the plain card.
+      // Not a usable image. Fall through to the plain card.
     }
   }
 

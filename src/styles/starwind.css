@@ -119,6 +119,28 @@
 }
 
 /*
+ * The veil over a page's backdrop picture. It is at full strength across the
+ * middle of the screen, in a band 44rem wide. Every page keeps its text inside
+ * a column narrower than that, so text always sits over the strong part.
+ * Outside the band it fades to the weaker edge strength, which lets the
+ * picture show clearly down the sides of a wide screen. On a screen narrower
+ * than the band, the whole veil is at full strength.
+ *
+ * If a page's text column is ever made wider than 44rem, widen this to match.
+ */
+.backdrop-veil {
+  --veil-centre: color-mix(in srgb, var(--background) var(--backdrop-veil), transparent);
+  --veil-edge: color-mix(in srgb, var(--background) var(--backdrop-veil-edge), transparent);
+  background: linear-gradient(
+    to right,
+    var(--veil-edge),
+    var(--veil-centre) calc(50% - 22rem),
+    var(--veil-centre) calc(50% + 22rem),
+    var(--veil-edge)
+  );
+}
+
+/*
  * Keyboard focus. Deliberately outside any layer, so that it wins over every
  * component's own styling: whatever is focused always gets the same clear
  * ring, in a colour that stands out from the page. It only shows for keyboard

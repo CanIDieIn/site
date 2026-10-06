@@ -13,10 +13,9 @@ import "@/styles/starwind.css";
 // people who cannot see it. Pages that do not set one get the site's own card.
 //
 // `backdrop` is the address of a picture to lay behind the whole page, such as
-// a game's artwork. It is blurred and veiled in the page colour, so it sets a
-// mood without getting in the way of the text. `backdropBlur` is how soft it
-// is: "strong" suits small or portrait pictures that would otherwise look
-// stretched.
+// a game's artwork. It is veiled in the page colour so the text over it stays
+// readable, and every backdrop gets the same light blur, so no page looks
+// sharper or softer than another.
 interface Props {
   title: string;
   description?: string;
@@ -24,14 +23,12 @@ interface Props {
   image?: string;
   imageAlt?: string;
   backdrop?: string;
-  backdropBlur?: "soft" | "strong";
 }
 const {
   title,
   description,
   tint = "unsure",
   backdrop,
-  backdropBlur = "soft",
   image = "/og.jpg",
   imageAlt = "Can I Die In... Find out whether a game can kill you.",
 } = Astro.props;
@@ -83,8 +80,8 @@ const imageUrl = new URL(image, origin).href;
     </a>
     {/* Decoration only, behind everything and hidden from screen readers: the
         backdrop picture, then a veil of the page colour that keeps the text
-        readable over it. The picture is enlarged a little so its blurred
-        edges fall outside the screen. */}
+        readable over it. The picture is lightly blurred, and enlarged a
+        little so its soft edges fall outside the screen. */}
     {
       backdrop && (
         <div class="pointer-events-none fixed inset-0 -z-30 overflow-hidden" aria-hidden="true">
@@ -94,31 +91,31 @@ const imageUrl = new URL(image, origin).href;
             decoding="async"
             fetchpriority="low"
             referrerpolicy="no-referrer"
-            class:list={[
-              "size-full scale-110 object-cover",
-              backdropBlur === "strong" ? "blur-3xl" : "blur-md",
-            ]}
+            class="size-full scale-105 object-cover blur-xs"
           />
         </div>
       )
     }
     {
       backdrop && (
+        <div class="backdrop-veil pointer-events-none fixed inset-0 -z-20" aria-hidden="true" />
+      )
+    }
+    {/* Decoration only: a wash of the page's colour, fading down from the top.
+        It sits behind everything and is hidden from screen readers.
+
+        A page with a backdrop picture does not get the wash as well. The
+        picture already gives the page its colour, and the two stacked darken
+        the page enough to take grey text below the contrast it needs. */}
+    {
+      !backdrop && (
         <div
-          class="pointer-events-none fixed inset-0 -z-20"
-          style="background: color-mix(in srgb, var(--background) var(--backdrop-veil), transparent)"
+          class="pointer-events-none fixed inset-0 -z-10"
+          style={`background: radial-gradient(70% 55% at 50% 0%, color-mix(in oklch, var(--${tint}) var(--tint-strength), transparent), transparent 75%)`}
           aria-hidden="true"
         />
       )
     }
-    {/* Decoration only: a wash of the page's colour, fading down from the top.
-        It sits behind everything and is hidden from screen readers. */}
-    <div
-      class="pointer-events-none fixed inset-0 -z-10"
-      style={`background: radial-gradient(70% 55% at 50% 0%, color-mix(in oklch, var(--${tint}) var(--tint-strength), transparent), transparent 75%)`}
-      aria-hidden="true"
-    >
-    </div>
     <slot />
   </body>
 </html>

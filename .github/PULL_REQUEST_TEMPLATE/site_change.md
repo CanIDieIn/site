@@ -14,7 +14,7 @@ data sync. For adding or correcting a game's answer, use the default template.
 ## Checklist
 
 - [ ] `npm run build` passes
-- [ ] The main list, a game page and `/api/game/<slug>` all still work
+- [ ] The main list, a game page and `/api/<slug>` all still work
 - [ ] Any new colour is a variable in `src/styles/theme.css`, not a fixed value in a page
 - [ ] This does not change any answers in `src/data/deaths.json`. Those go in their own pull request, with a Game ID and a reason for each
 

@@ -64,14 +64,18 @@ type IgdbGame = {
   cover?: { image_id?: string };
 };
 
-// Which artwork to use behind a game's page and social media card, most
-// preferred first. These are IGDB's artwork types: 2 is key art without the
-// game's logo, and 1 is general artwork.
+// Which artwork to use behind a game's page and social media card. This is a
+// list of IGDB's artwork types, most preferred first. Only one is allowed:
+// 2, key art without the game's logo. That is official publisher artwork.
 //
-// Type 3, key art WITH the logo, is deliberately left out: these images are
-// used as backgrounds, and a logo behind the page's own text is a distraction.
-// Logos, icons, covers and infographics are never used either.
-const ARTWORK_TYPE_PREFERENCE = [2, 1];
+// Two types are deliberately left out:
+//   1, general "Artwork". Anyone can upload to it, and it contains fan art.
+//      Only official artwork should represent a game here.
+//   3, key art WITH the logo. These images are used as backgrounds, and a
+//      logo behind the page's own text is a distraction.
+//
+// A game with no type 2 artwork uses its cover instead, which is official too.
+const ARTWORK_TYPE_PREFERENCE = [2];
 
 /**
  * Picks the image for a game's social media card. Returns `art`, the id of a
