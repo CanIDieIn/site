@@ -16,8 +16,8 @@ page's address to get the right template.
 ## The games
 
 <!--
-One row per game. The Game ID is on the game's page, in the line that ends
-"quoting game ID 1234". It is the number IGDB gives the game, and it is how the
+One row per game. The Game ID is on the game's page, in the line that says
+"This is game ID 1234". It is the number IGDB gives the game, and it is how the
 site tells apart games that share a name.
 -->
 

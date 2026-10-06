@@ -1,0 +1,57 @@
+name: Report a problem with the site
+description: Something is broken, looks wrong, or could work better. Not for game answers.
+title: "Site: "
+labels: ["site"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This form is for the site itself: pages, search, design or the API.
+
+        Is a game's answer wrong or missing? Use **Add or correct a game's answer** instead, so we get the Game ID and a reason.
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Where is the problem?
+      options:
+        - The main list or search
+        - A game's page
+        - The games you can't die in page
+        - The API, such as for Streamer.bot
+        - Something else
+    validations:
+      required: true
+
+  - type: input
+    id: address
+    attributes:
+      label: Address
+      description: The address of the page or API call where you saw it.
+      placeholder: https://can-i-die.in/portal--2
+    validations:
+      required: false
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What you did, and what you saw.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+    validations:
+      required: false
+
+  - type: input
+    id: device
+    attributes:
+      label: Browser and device
+      description: Only needed if something looks wrong on screen.
+      placeholder: Firefox on Windows
+    validations:
+      required: false

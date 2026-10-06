@@ -14,23 +14,27 @@ const canDie = game ? canDieIn(game) : undefined;
 const answer = canDie === undefined ? "Unsure" : canDie ? "Yes" : "No";
 // Why the game got that answer, when someone has written it down.
 const reason = game ? reasonFor(game) : undefined;
-// Where corrections are sent: GitHub's editor, opened on the answers file.
-// GitHub walks the visitor through saving the edit as a pull request, and that
-// pull request opens with the default template in .github, which asks for the
-// Game ID and a reason. The link is left out while PUBLIC_GITHUB_URL is blank.
+// Where corrections are sent: the "Add or correct a game's answer" issue form
+// on GitHub, in .github/ISSUE_TEMPLATE/game_answer.yml. The link fills in what
+// this page already knows, so the visitor only has to give the answer and a
+// reason. The link is left out while PUBLIC_GITHUB_URL is blank.
 //
-// GitHub can only pick a different template by link once a contributor already
-// has a branch, so the default template is the one for game answers. What this
-// page can vary is the suggested change message, which names the game and says
-// whether it is a new answer or a correction.
-const DATA_FILE = "src/data/deaths.json";
-const DEFAULT_BRANCH = "main";
+// Each name below other than `template` and `title` is the `id` of a field in
+// that form. If a field is renamed there, rename it here too. The `kind` value
+// must match one of the form's options word for word.
 const githubUrl = (import.meta.env.PUBLIC_GITHUB_URL ?? "").trim().replace(/\/+$/, "");
 const isGithubUrl = URL.canParse(githubUrl) && new URL(githubUrl).protocol.startsWith("http");
 const correctionUrl =
   game && isGithubUrl
-    ? `${githubUrl}/edit/${DEFAULT_BRANCH}/${DATA_FILE}?${new URLSearchParams({
-        message: `${canDie === undefined ? "Add an answer for" : "Correct the answer for"} ${game.name} (game ID ${game.id})`,
+    ? `${githubUrl}/issues/new?${new URLSearchParams({
+        template: "game_answer.yml",
+        title: `Answer: ${game.name} (${game.id})`,
+        kind:
+          canDie === undefined
+            ? "A new answer, for a game that shows Unsure"
+            : "A correction, because the answer is wrong",
+        "game-id": String(game.id),
+        game: game.name,
       })}`
     : undefined;
 
@@ -117,7 +121,7 @@ const description = game
                 <a href={correctionUrl} rel="noopener" class="ink-link text-foreground">
                   {canDie === undefined ? "Tell us on GitHub" : "Suggest a correction on GitHub"}
                 </a>
-                , quoting game ID {game.id}.
+                . This is game ID {game.id}.
               </p>
             )}
           </div>

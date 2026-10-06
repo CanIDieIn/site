@@ -1,0 +1,68 @@
+name: Add or correct a game's answer
+description: Tell us whether you can die in a game, or fix an answer we got wrong.
+title: "Answer: "
+labels: ["game answer"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping out. You do not need to know how to code for this one.
+
+        **The one rule:** would it make a fun moment to call this a death? Killed, knocked out, blown up, game over: all **Yes**. If nothing in the game could ever earn a "you died", it is a **No**.
+
+  - type: dropdown
+    id: kind
+    attributes:
+      label: What is this?
+      options:
+        - A new answer, for a game that shows Unsure
+        - A correction, because the answer is wrong
+        - A better reason, because the answer is right but the reason is not
+    validations:
+      required: true
+
+  - type: input
+    id: game-id
+    attributes:
+      label: Game ID
+      description: The number on the game's page, in the line that says "This is game ID 1234". It is how we tell apart games that share a name. If you came here from a game's page, it is already filled in.
+      placeholder: "311949"
+    validations:
+      required: true
+
+  - type: input
+    id: game
+    attributes:
+      label: Game
+      description: The game's name, as the site shows it.
+      placeholder: Portal
+    validations:
+      required: true
+
+  - type: dropdown
+    id: answer
+    attributes:
+      label: Can you die in it?
+      options:
+        - "Yes"
+        - "No"
+    validations:
+      required: true
+
+  - type: textarea
+    id: reason
+    attributes:
+      label: Reason
+      description: One or two short sentences saying what actually happens in the game. Write it for someone who has never played. This is shown under the answer on the site.
+      placeholder: Turrets, toxic goo, long falls and neurotoxin can all kill you.
+    validations:
+      required: true
+
+  - type: input
+    id: source
+    attributes:
+      label: How do you know?
+      description: Say you have played it, or link to something that shows it, such as a wiki page or a clip.
+      placeholder: I have played it. Or https://...
+    validations:
+      required: false
