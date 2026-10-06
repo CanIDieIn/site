@@ -1,10 +1,9 @@
 ---
 // The site's definition of dying, in one place so every page words it the same
-// way. It matches the rule used when filling in deaths.json. It is set as a
-// footnote: small monospace type beside a ruled line.
+// way. It is set as a footnote: small monospace type beside a ruled line.
 //
-// The site exists so streamers know whether a game needs a death counter, and
-// the definition is written with that in mind.
+// Keep it this simple. The same rule decides every answer in deaths.json:
+// would it make a fun moment to call this a death?
 interface Props {
   class?: string;
 }
@@ -19,6 +18,5 @@ const { class: className } = Astro.props;
 >
   <strong class="text-foreground font-medium tracking-wider uppercase">What counts as dying?</strong
   >{" "}
-  Your character being killed: the kind of death a streamer would add to their death counter. Losing
-  a round, a match or a puzzle does not count.
+  Anything that would be fun to call a death. Killed, knocked out, blown up, game over: it all counts.
 </p>

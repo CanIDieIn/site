@@ -14,11 +14,24 @@ const canDie = game ? canDieIn(game) : undefined;
 const answer = canDie === undefined ? "Unsure" : canDie ? "Yes" : "No";
 // Why the game got that answer, when someone has written it down.
 const reason = game ? reasonFor(game) : undefined;
-// Where corrections are sent. The link is left out while this is blank.
-const githubUrl = (import.meta.env.PUBLIC_GITHUB_URL ?? "").trim();
+// Where corrections are sent: GitHub's editor, opened on the answers file.
+// GitHub walks the visitor through saving the edit as a pull request, and that
+// pull request opens with the default template in .github, which asks for the
+// Game ID and a reason. The link is left out while PUBLIC_GITHUB_URL is blank.
+//
+// GitHub can only pick a different template by link once a contributor already
+// has a branch, so the default template is the one for game answers. What this
+// page can vary is the suggested change message, which names the game and says
+// whether it is a new answer or a correction.
+const DATA_FILE = "src/data/deaths.json";
+const DEFAULT_BRANCH = "main";
+const githubUrl = (import.meta.env.PUBLIC_GITHUB_URL ?? "").trim().replace(/\/+$/, "");
+const isGithubUrl = URL.canParse(githubUrl) && new URL(githubUrl).protocol.startsWith("http");
 const correctionUrl =
-  URL.canParse(githubUrl) && new URL(githubUrl).protocol.startsWith("http")
-    ? githubUrl
+  game && isGithubUrl
+    ? `${githubUrl}/edit/${DEFAULT_BRANCH}/${DATA_FILE}?${new URLSearchParams({
+        message: `${canDie === undefined ? "Add an answer for" : "Correct the answer for"} ${game.name} (game ID ${game.id})`,
+      })}`
     : undefined;
 
 const pageTitle = game ? `Can I Die In ${game.name}?` : "Game not found";

@@ -233,12 +233,9 @@ export const findGame = (slug: string | undefined): Game | undefined =>
  * Whether you can die in the game: `true`, `false`, or `undefined` when the
  * game has no entry in `deaths.json` and nobody has decided yet.
  *
- * Dying means the player's character being killed, or their ship or vehicle
- * being destroyed: a death a streamer would add to their death counter. That
- * is what the site and its API are for. A game over, a lost round or match,
- * or a failed puzzle is not a death by itself. Suika Game is a no, and Super
- * Mario Land is a yes. The wording visitors see is in
- * components/DeathDefinition.astro.
+ * The rule is one question: would it make a fun moment to call this a death?
+ * Killed, knocked out, blown up, game over: all yes. If nothing in the game
+ * could ever earn a "you died", it is a no.
  */
 export const canDieIn = (game: Game): boolean | undefined =>
   deathsById.get(game.id)?.deaths;

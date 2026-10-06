@@ -68,8 +68,8 @@
     "reason": "Aloy can be killed by machines and bandits, and you restart from your last save."
   },
   "11198": {
-    "deaths": false,
-    "reason": "A demolished car is back on the pitch seconds later. Nobody dies."
+    "deaths": true,
+    "reason": "Getting demolished blows your car to pieces. It is back in seconds, but it counts."
   },
   "11642": {
     "deaths": true,
@@ -88,8 +88,8 @@
     "reason": "You can be killed in a raid, losing the gear you brought in."
   },
   "17000": {
-    "deaths": false,
-    "reason": "Running out of health only makes you pass out. You wake up having lost items and money, but nobody dies."
+    "deaths": true,
+    "reason": "Run out of health and you pass out, waking up short of items and money. That counts."
   },
   "17143": {
     "deaths": false,
@@ -143,6 +143,10 @@
     "deaths": false,
     "reason": "A hidden-object adventure with no way to die or fail."
   },
+  "34228": {
+    "deaths": true,
+    "reason": "A hard platformer. You will fail a lot, and each failure throws you into a different level."
+  },
   "34568": {
     "deaths": true,
     "reason": "Your character can die, and risks losing everything."
@@ -176,8 +180,8 @@
     "reason": "A side-scrolling action game where enemies can kill your character."
   },
   "50471": {
-    "deaths": false,
-    "reason": "A pinball game. Losing your last ball ends the game, but there is no character to die."
+    "deaths": true,
+    "reason": "Draining your last ball ends the game."
   },
   "51654": {
     "deaths": true,
@@ -216,8 +220,8 @@
     "reason": "A point-and-click adventure with no way to die."
   },
   "84210": {
-    "deaths": false,
-    "reason": "The game ends when the tiles reach the top of the screen, but there is no character to die."
+    "deaths": true,
+    "reason": "The game is over when the tiles reach the top of the screen."
   },
   "93756": {
     "deaths": true,
@@ -228,8 +232,8 @@
     "reason": "Enemies and lasers can kill you."
   },
   "109462": {
-    "deaths": false,
-    "reason": "Wasp, tarantula and scorpion attacks only make you faint and wake up at home."
+    "deaths": true,
+    "reason": "Wasps, tarantulas and scorpions can knock you out cold."
   },
   "113112": {
     "deaths": true,
@@ -336,8 +340,8 @@
     "reason": "Pals, raids, hunger and the cold can kill you, dropping your items."
   },
   "154422": {
-    "deaths": false,
-    "reason": "An arcade puzzle game. You can get a game over, but there is no character to die."
+    "deaths": true,
+    "reason": "An arcade puzzle game that ends in a game over when the blocks get away from you."
   },
   "175634": {
     "deaths": true,
@@ -372,8 +376,8 @@
     "reason": "Other players, sandworms, thirst and the sun can all kill you."
   },
   "221740": {
-    "deaths": false,
-    "reason": "The game ends when the pile of fruit overflows, but there is no character to die."
+    "deaths": true,
+    "reason": "The game is over when the pile of fruit overflows."
   },
   "229199": {
     "deaths": true,
@@ -488,8 +492,8 @@
     "reason": "Monsters can kill you during a job. Teammates can revive you by recovering your head."
   },
   "338067": {
-    "deaths": false,
-    "reason": "A kart racing game. Falling off the track or being hit only costs you time."
+    "deaths": true,
+    "reason": "You can drive off the track and into the void, and a well-timed shell can wipe you out."
   },
   "344916": {
     "deaths": false,
