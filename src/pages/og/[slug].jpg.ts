@@ -90,25 +90,38 @@ const drawCard = async (game: Game): Promise<Card> => {
 };
 
 // Cards are kept in memory after first being drawn, so a link shared in a busy
-// channel is only drawn once. The oldest are dropped once there are too many.
-// A card is drawn again after a restart, which is also when answers change.
-const MAX_CACHED = 300;
-const cache = new Map<string, Card>();
+// channel is only drawn once, and IGDB is asked for each game's image once.
+// Nothing is ever dropped. A card is drawn again after a restart, which is
+// also when answers change.
+//
+// The cache holds the drawing in progress, not just the finished card, so
+// requests that arrive while a card is still being drawn wait for that one
+// drawing instead of each starting a download of their own.
+const cache = new Map<string, Promise<Card>>();
+
+const cardFor = (game: Game) => {
+  let drawing = cache.get(game.slug);
+  if (!drawing) {
+    drawing = drawCard(game);
+    cache.set(game.slug, drawing);
+    // A plain card for a game that should have artwork means the download
+    // failed. Do not keep it, so the next request tries again. The same goes
+    // for a drawing that failed outright.
+    const forget = () => {
+      if (cache.get(game.slug) === drawing) cache.delete(game.slug);
+    };
+    drawing.then((card) => {
+      if (!card.hasArtwork && (game.art || game.cover)) forget();
+    }, forget);
+  }
+  return drawing;
+};
 
 export const GET: APIRoute = async ({ params }) => {
   const game = findGame(params.slug);
   if (!game) return new Response("not found", { status: 404 });
 
-  let card = cache.get(game.slug);
-  if (!card) {
-    card = await drawCard(game);
-    // A plain card for a game that should have artwork means the download
-    // failed. Do not keep it, so the next request tries again.
-    if (card.hasArtwork || !(game.art || game.cover)) {
-      cache.set(game.slug, card);
-      if (cache.size > MAX_CACHED) cache.delete(cache.keys().next().value!);
-    }
-  }
+  const card = await cardFor(game);
 
   return new Response(new Uint8Array(card.image), {
     headers: {
