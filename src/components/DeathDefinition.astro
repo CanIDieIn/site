@@ -2,18 +2,22 @@
 // The site's definition of dying, in one place so every page words it the same
 // way.
 //
+// The wording itself is in src/i18n/ui.ts, once for each language.
+//
 // Keep it this simple. It is the short version of the rulings recorded beside
 // canDieIn in lib/catalogue.ts, which settle the borderline cases. The issue
 // form and pull request template in .github repeat this wording, so change
 // them together.
+import { uiFor } from "@/i18n/ui";
+
 interface Props {
   class?: string;
 }
 const { class: className } = Astro.props;
+const t = uiFor(Astro.locals.locale).definition;
 ---
 
 <p class:list={["text-muted-foreground text-sm text-pretty", className]}>
-  <strong class="text-foreground font-semibold">What counts as dying?</strong>{" "}
-  Your character is killed or knocked out, or you lose a whole run. Crashing in a race or losing a
-  match on points doesn't count.
+  <strong class="text-foreground font-semibold">{t.question}</strong>{" "}
+  {t.text}
 </p>

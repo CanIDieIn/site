@@ -3,6 +3,8 @@ import DeathDefinition from "@/components/DeathDefinition.astro";
 import GameBrowser from "@/components/GameBrowser.astro";
 import LinkCard from "@/components/LinkCard.astro";
 import Stamp from "@/components/Stamp.astro";
+import { localePath } from "@/i18n/locales";
+import { uiFor } from "@/i18n/ui";
 import Layout from "@/layouts/Layout.astro";
 import { browse } from "@/lib/browse";
 import { gamesWithoutDeaths } from "@/lib/catalogue";
@@ -13,43 +15,48 @@ import Leaf from "@tabler/icons/outline/leaf.svg";
 // without building thousands of static pages or shipping the list to the browser.
 export const prerender = false;
 
-const view = browse(Astro.request, Astro.url, "/", "all");
+// The same page serves every language: / in English, /fr in French, and so
+// on. The text is in src/i18n/ui.ts.
+const { locale } = Astro.locals;
+const t = uiFor(locale);
+
+const view = browse(Astro.request, Astro.url, localePath(locale, "/"), "all", locale);
 if (view.redirect) return Astro.redirect(view.redirect, 302);
 // Dates are written in the visitor's language, so caches must not share the
 // page between languages.
 Astro.response.headers.set("Vary", "Accept-Language");
 
-// The same on every view of this page. The game pages complete the question.
-const pageTitle = "Can I Die In...";
-
-const description =
-  "Search hundreds of thousands of video games to find out whether you can die in them.";
-const count = new Intl.NumberFormat("en");
+const count = new Intl.NumberFormat(locale);
 ---
 
-<Layout title={pageTitle} description={description} tint="yes">
+{/* The title is the same on every view of this page. The game pages complete the question. */}
+<Layout title={t.siteName} description={t.home.description} tint="yes">
   <main id="main" class="mx-auto w-full max-w-2xl px-5 py-14 sm:py-24">
     <header class="mb-10">
       {/* The title, with the two answers stamped beside it. On a narrow screen
           the stamps drop below the title. */}
       <div class="flex flex-wrap items-center justify-between gap-x-8 gap-y-6">
-        <h1 class="text-5xl font-bold tracking-tight sm:text-6xl">{pageTitle}</h1>
+        <h1 class="text-5xl font-bold tracking-tight sm:text-6xl">{t.siteName}</h1>
         <div class="flex items-center gap-3 text-3xl sm:text-4xl" aria-hidden="true">
           <Stamp answer="yes" />
           <Stamp answer="no" />
         </div>
       </div>
-      <p class="mt-6 text-xl text-pretty">Pick a game to find out whether you can die in it.</p>
+      <p class="mt-6 text-xl text-pretty">{t.home.lead}</p>
 
-      <nav aria-label="More on this site" class="mt-8 grid gap-3 sm:grid-cols-2">
+      <nav aria-label={t.home.moreNav} class="mt-8 grid gap-3 sm:grid-cols-2">
         <LinkCard
-          href="/no-deaths"
-          title="Games you can't die in"
-          text={`${count.format(gamesWithoutDeaths.length)} confirmed so far`}
+          href={localePath(locale, "/no-deaths")}
+          title={t.cards.noDeathsTitle}
+          text={t.cards.noDeathsText(count.format(gamesWithoutDeaths.length))}
         >
           <Leaf class="size-5" />
         </LinkCard>
-        <LinkCard href="/streaming" title="Streaming?" text="Connect your stream bot">
+        <LinkCard
+          href={localePath(locale, "/streaming")}
+          title={t.cards.streamingTitle}
+          text={t.cards.streamingText}
+        >
           <Broadcast class="size-5" />
         </LinkCard>
       </nav>

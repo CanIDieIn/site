@@ -1,16 +1,21 @@
 ---
 import "@/styles/starwind.css";
+import { DEFAULT_LOCALE, LOCALES, LOCALE_NAMES, localePath } from "@/i18n/locales";
+import { uiFor } from "@/i18n/ui";
 
 // The shell every page shares: the document head, the global stylesheet, a
-// "skip to content" link and a soft wash of colour behind the page. Each page
-// provides its own <main id="main">.
+// "skip to content" link, a soft wash of colour behind the page and the
+// language menu at the foot. Each page provides its own <main id="main">.
+//
+// The page's language comes from its address, by way of src/middleware.ts.
 //
 // `tint` picks the colour of that wash: "yes" (red), "no" (green) or "unsure"
 // (grey). The colours and the strength of the wash are set in theme.css.
 //
 // `image` is the picture shown when the page is shared on social media or in
 // a chat app, as a path on this site, with `imageAlt` describing it for
-// people who cannot see it. Pages that do not set one get the site's own card.
+// people who cannot see it. Pages that do not set one get the site's own card,
+// in the page's language.
 //
 // `backdrop` is the address of a picture to lay behind the whole page, such as
 // a game's artwork. It is veiled in the page colour so the text over it stays
@@ -24,24 +29,36 @@ interface Props {
   imageAlt?: string;
   backdrop?: string;
 }
+const { locale, path } = Astro.locals;
+const t = uiFor(locale);
 const {
   title,
   description,
   tint = "unsure",
   backdrop,
-  image = "/og.jpg",
-  imageAlt = "Can I Die In... Find out whether a game can kill you.",
+  // Drawn by scripts/make-og-assets.mjs, one for each language.
+  image = locale === DEFAULT_LOCALE ? "/og.jpg" : `/og-${locale}.jpg`,
+  imageAlt = `${t.siteName} ${t.tagline}`,
 } = Astro.props;
 
-const SITE_NAME = "Can I Die In...";
 // Sharing platforms need complete addresses. Use the site address from
 // astro.config.mjs, or the address being visited if that is not set.
 const origin = Astro.site ?? Astro.url.origin;
-const pageUrl = new URL(Astro.url.pathname, origin).href;
+const pageUrl = new URL(localePath(locale, path), origin).href;
 const imageUrl = new URL(image, origin).href;
+
+// This same page in every language, for the menu at the foot of the page and
+// to tell search engines the pages are translations of each other. The
+// visitor's search, sort and page number are carried across.
+const translations = LOCALES.map((code) => ({
+  code,
+  name: LOCALE_NAMES[code],
+  href: `${localePath(code, path)}${Astro.url.search}`,
+  url: new URL(localePath(code, path), origin).href,
+}));
 ---
 
-<html lang="en">
+<html lang={locale}>
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -50,10 +67,17 @@ const imageUrl = new URL(image, origin).href;
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
     <link rel="canonical" href={pageUrl} />
+    {translations.map(({ code, url }) => <link rel="alternate" hreflang={code} href={url} />)}
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href={new URL(localePath(DEFAULT_LOCALE, path), origin).href}
+    />
 
     {/* Open Graph: how the page appears when shared on Facebook, Discord, Slack, LinkedIn and others. */}
     <meta property="og:type" content="website" />
-    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:site_name" content={t.siteName} />
+    <meta property="og:locale" content={locale} />
     <meta property="og:title" content={title} />
     {description && <meta property="og:description" content={description} />}
     <meta property="og:url" content={pageUrl} />
@@ -76,7 +100,7 @@ const imageUrl = new URL(image, origin).href;
       href="#main"
       class="bg-background text-foreground sr-only z-50 rounded-md px-4 py-3 font-medium underline focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
     >
-      Skip to main content
+      {t.skipToContent}
     </a>
     {/* Decoration only, behind everything and hidden from screen readers: the
         backdrop picture, then a veil of the page colour that keeps the text
@@ -117,5 +141,37 @@ const imageUrl = new URL(image, origin).href;
       )
     }
     <slot />
+    {/* The language menu. Each language is named in its own words, and marked
+        as that language so a screen reader pronounces it correctly. */}
+    <footer class="mx-auto w-full max-w-2xl px-5 pb-10">
+      <nav aria-label={t.languageMenu} class="border-t pt-6">
+        <ul class="flex flex-wrap justify-center gap-x-5 gap-y-1 text-sm">
+          {
+            translations.map(({ code, name, href }) => (
+              <li>
+                {code === locale ? (
+                  <span
+                    lang={code}
+                    aria-current="true"
+                    class="inline-flex min-h-11 items-center font-semibold"
+                  >
+                    {name}
+                  </span>
+                ) : (
+                  <a
+                    {href}
+                    lang={code}
+                    hreflang={code}
+                    class="link text-muted-foreground inline-flex min-h-11 items-center"
+                  >
+                    {name}
+                  </a>
+                )}
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </footer>
   </body>
 </html>

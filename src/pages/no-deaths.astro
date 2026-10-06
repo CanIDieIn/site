@@ -3,6 +3,8 @@ import DeathDefinition from "@/components/DeathDefinition.astro";
 import GameBrowser from "@/components/GameBrowser.astro";
 import LinkCard from "@/components/LinkCard.astro";
 import Stamp from "@/components/Stamp.astro";
+import { localePath } from "@/i18n/locales";
+import { uiFor } from "@/i18n/ui";
 import Layout from "@/layouts/Layout.astro";
 import { browse } from "@/lib/browse";
 import { gamesWithoutDeaths } from "@/lib/catalogue";
@@ -13,49 +15,57 @@ import ListSearch from "@tabler/icons/outline/list-search.svg";
 // takes priority over a game whose slug happens to be "no-deaths".
 export const prerender = false;
 
+// The same page serves every language: /no-deaths in English, /fr/no-deaths
+// in French, and so on. The text is in src/i18n/ui.ts.
+const { locale } = Astro.locals;
+const t = uiFor(locale);
+
 // The same search, sort and paging as the main list, over only the games
 // explicitly marked as having no deaths.
-const view = browse(Astro.request, Astro.url, "/no-deaths", "no-deaths");
+const view = browse(Astro.request, Astro.url, localePath(locale, "/no-deaths"), "no-deaths", locale);
 if (view.redirect) return Astro.redirect(view.redirect, 302);
 // Dates are written in the visitor's language, so caches must not share the
 // page between languages.
 Astro.response.headers.set("Vary", "Accept-Language");
 
-const pageTitle = "Games You Can't Die In";
-const description =
-  "Every video game we have confirmed you cannot die in, so there are no deaths to count.";
-const count = new Intl.NumberFormat("en");
+const count = new Intl.NumberFormat(locale);
 ---
 
-<Layout title={pageTitle} description={description} tint="no">
+<Layout title={t.noDeaths.title} description={t.noDeaths.description} tint="no">
   <main id="main" class="mx-auto w-full max-w-2xl px-5 py-14 sm:py-24">
     <header class="mb-10">
       <p class="mb-6">
-        <a href="/" class="link inline-flex min-h-11 items-center">Can I Die In...</a>
+        <a href={localePath(locale, "/")} class="link inline-flex min-h-11 items-center">
+          {t.siteName}
+        </a>
       </p>
       {/* The title, with this page's answer stamped beside it. On a narrow
           screen the stamp drops below the title. */}
       <div class="flex flex-wrap items-center justify-between gap-x-8 gap-y-6">
         <h1 class="max-w-md text-5xl font-bold tracking-tight text-balance sm:text-6xl">
-          {pageTitle}
+          {t.noDeaths.title}
         </h1>
         <div class="text-4xl sm:text-5xl" aria-hidden="true">
           <Stamp answer="no" />
         </div>
       </div>
       <p class="mt-6 text-xl text-pretty">
-        {
-          gamesWithoutDeaths.length === 1
-            ? "The one game we have confirmed has no deaths to count."
-            : `The ${count.format(gamesWithoutDeaths.length)} games we have confirmed have no deaths to count.`
-        }
+        {t.noDeaths.lead(count.format(gamesWithoutDeaths.length), gamesWithoutDeaths.length)}
       </p>
 
-      <nav aria-label="More on this site" class="mt-8 grid gap-3 sm:grid-cols-2">
-        <LinkCard href="/" title="Every game" text="Search the whole catalogue">
+      <nav aria-label={t.home.moreNav} class="mt-8 grid gap-3 sm:grid-cols-2">
+        <LinkCard
+          href={localePath(locale, "/")}
+          title={t.cards.everyGameTitle}
+          text={t.cards.everyGameText}
+        >
           <ListSearch class="size-5" />
         </LinkCard>
-        <LinkCard href="/streaming" title="Streaming?" text="Connect your stream bot">
+        <LinkCard
+          href={localePath(locale, "/streaming")}
+          title={t.cards.streamingTitle}
+          text={t.cards.streamingText}
+        >
           <Broadcast class="size-5" />
         </LinkCard>
       </nav>

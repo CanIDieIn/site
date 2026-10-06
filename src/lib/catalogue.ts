@@ -1,5 +1,6 @@
 import games from "../data/games.json";
 import deaths from "../data/deaths.json";
+import { DEFAULT_LOCALE, type Locale } from "../i18n/locales";
 
 // This module is evaluated once when the server starts, so the sorting and
 // name normalising below is not repeated on every request.
@@ -19,7 +20,16 @@ export type Game = {
   /** The id of the game's portrait cover, used for the card when there is no artwork. */
   cover?: string;
   popularity?: number;
+  /**
+   * The game's name in other languages, where IGDB has one: `{ "ja": "..." }`.
+   * Most games have none. `name` is the English name, and every language
+   * falls back to it. See `nameIn`.
+   */
+  names?: Partial<Record<Locale, string>>;
 };
+
+/** The game's name in a language, or its English name if it has none there. */
+export const nameIn = (game: Game, locale: Locale): string => game.names?.[locale] ?? game.name;
 
 /**
  * Reduces text to plain lowercase words: accents and apostrophes are dropped
@@ -125,6 +135,25 @@ const catalogues = {
 export type Scope = "all" | "no-deaths";
 
 type Listing = { games: Game[]; searchable: string[] };
+
+// Each game's name in each other language, normalised for searching, by game
+// id. Only games that have a name in that language are here.
+const localNames = new Map<Locale, Map<number, string>>();
+for (const { game } of keyed) {
+  for (const [locale, name] of Object.entries(game.names ?? {}) as [Locale, string][]) {
+    let names = localNames.get(locale);
+    if (!names) localNames.set(locale, (names = new Map()));
+    names.set(game.id, normalise(name));
+  }
+}
+
+/**
+ * The normalised name of each game in a language, by game id, for searching
+ * that language's pages. Undefined for English, and for a language no game
+ * has a name in. Searches always look at the English name as well.
+ */
+export const searchableNamesIn = (locale: Locale): Map<number, string> | undefined =>
+  localNames.get(locale);
 const listings = new Map<string, { day: number; listing: Listing }>();
 
 /**
@@ -174,24 +203,20 @@ export const listingFor = (
 
 export type Sort = keyof typeof catalogues;
 
-/** Each sort and the direction it starts in. */
+/** Each sort and the direction it starts in. Their names are in i18n/ui.ts. */
 export const SORTS: {
   value: Sort;
-  label: string;
   defaultDirection: Direction;
 }[] = [
   // Descending by default, so the most popular games come first.
-  { value: "popularity", label: "Popularity", defaultDirection: "desc" },
-  { value: "name", label: "Alphabetical", defaultDirection: "asc" },
+  { value: "popularity", defaultDirection: "desc" },
+  { value: "name", defaultDirection: "asc" },
   // Descending by default, so the newest games come first.
-  { value: "release", label: "Release Date", defaultDirection: "desc" },
+  { value: "release", defaultDirection: "desc" },
 ];
 
 /** The same two choices, in the same order, for every sort. */
-export const DIRECTIONS: { value: Direction; label: string }[] = [
-  { value: "asc", label: "Ascending" },
-  { value: "desc", label: "Descending" },
-];
+export const DIRECTIONS: { value: Direction }[] = [{ value: "asc" }, { value: "desc" }];
 
 export const DEFAULT_SORT: Sort = "popularity";
 
@@ -216,7 +241,21 @@ export const parseDirection = (value: string | null, sort: Sort): Direction =>
 //
 // The reason is optional. A bare `true` or `false` also works, as a quick way
 // to record an answer with no reason: `{ "71": true }`.
-type Verdict = { deaths: boolean; reason?: string };
+//
+// `reason` is in English. The same reason in other languages goes in
+// `reasons`, keyed by language code. Any language without one shows the
+// English reason:
+//
+//   { "71": {
+//       "deaths": true,
+//       "reason": "Turrets and toxic goo can kill you.",
+//       "reasons": { "fr": "Les tourelles et la boue toxique peuvent vous tuer." }
+//   } }
+type Verdict = {
+  deaths: boolean;
+  reason?: string;
+  reasons?: Partial<Record<Locale, string>>;
+};
 const deathsById = new Map<number, Verdict>(
   Object.entries(deaths as Record<string, boolean | Verdict>).map(
     ([id, entry]) => [
@@ -332,9 +371,20 @@ export const findGameByName = (name: string | undefined): Game | undefined => {
 export const canDieIn = (game: Game): boolean | undefined =>
   deathsById.get(game.id)?.deaths;
 
-/** A short explanation of the game's answer, if one has been written. */
-export const reasonFor = (game: Game): string | undefined =>
-  deathsById.get(game.id)?.reason;
+/**
+ * A short explanation of the game's answer, if one has been written, and the
+ * language it is in. That is the language asked for when the reason has been
+ * written in it, and English otherwise.
+ */
+export const reasonFor = (
+  game: Game,
+  locale: Locale = DEFAULT_LOCALE,
+): { text: string; locale: Locale } | undefined => {
+  const verdict = deathsById.get(game.id);
+  const translated = verdict?.reasons?.[locale];
+  if (translated) return { text: translated, locale };
+  return verdict?.reason ? { text: verdict.reason, locale: DEFAULT_LOCALE } : undefined;
+};
 
 /**
  * Every game explicitly marked in `deaths.json` as one you cannot die in, A to

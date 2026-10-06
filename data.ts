@@ -39,6 +39,7 @@ export type Game = {
   art?: string;
   cover?: string;
   popularity?: number;
+  names?: Record<string, string>;
   [field: string]: unknown;
 };
 
@@ -121,6 +122,18 @@ const IGDB_TWITCH_FILTER = "external_games.external_game_source = 14";
 // 1 "Visits", 5 "24hr Peak Players" (Steam only) and 34 "24hr Hours Watched"
 // (Twitch). The full list is at the `popularity_types` endpoint.
 const IGDB_POPULARITY_TYPE = 3;
+
+// Game names in other languages. IGDB records a game's name per region, not
+// per language, and only a few regions have many: Japan has tens of thousands,
+// Korea about ten thousand, and "Europe" mostly empty entries. French, German
+// and Spanish names are not held this way at all, so those languages show the
+// English name.
+//
+// This maps a language code on the site to the IGDB region whose names it
+// uses. The region is named by IGDB's own identifier for it. To add another,
+// add a line here, for example `ko: "ko-KR"`, and the language itself in
+// src/i18n/locales.ts.
+const IGDB_NAME_REGIONS: Record<string, string> = { ja: "ja-JP" };
 
 const sleep = (ms: number) =>
   new Promise<void>((resolve) => setTimeout(resolve, ms));
@@ -212,6 +225,52 @@ const fetchPopularity = async (token: string): Promise<Map<number, number>> => {
 };
 
 /**
+ * Pulls every game's name in each language listed in IGDB_NAME_REGIONS.
+ * Returns, for each game id, the names it has: `{ ja: "..." }`. Most games
+ * have none and are not in the result.
+ */
+const fetchLocalNames = async (token: string): Promise<Map<number, Record<string, string>>> => {
+  type Localization = { id: number; game?: number; name?: string };
+  const namesById = new Map<number, Record<string, string>>();
+  for (const [language, identifier] of Object.entries(IGDB_NAME_REGIONS)) {
+    const [region] = await igdbQuery<{ id: number }[]>(
+      "regions",
+      token,
+      `fields identifier; where identifier = "${identifier}"; limit 1;`,
+    );
+    if (!region) throw new Error(`IGDB has no region "${identifier}", needed for "${language}" names.`);
+    const filter = `region = ${region.id}`;
+    const { count } = await igdbQuery<{ count: number }>(
+      "game_localizations/count",
+      token,
+      `where ${filter};`,
+    );
+    let lastId = 0;
+    let seen = 0;
+    while (true) {
+      const startedAt = Date.now();
+      const page = await igdbQuery<Localization[]>(
+        "game_localizations",
+        token,
+        `fields game,name; where ${filter} & id > ${lastId}; sort id asc; limit ${IGDB_PAGE_SIZE};`,
+      );
+      if (page.length === 0) break;
+      for (const { game, name } of page) {
+        // Some entries exist only to hold a regional cover, and have no name.
+        if (typeof game !== "number" || !name?.trim()) continue;
+        namesById.set(game, { ...namesById.get(game), [language]: name.trim() });
+      }
+      lastId = page[page.length - 1].id;
+      seen += page.length;
+      console.log(`Fetched ${seen} of ~${count} "${language}" names`);
+      if (page.length < IGDB_PAGE_SIZE) break;
+      await sleep(IGDB_MIN_INTERVAL_MS - (Date.now() - startedAt));
+    }
+  }
+  return namesById;
+};
+
+/**
  * Pulls the id, name and slug of every IGDB game that has a Twitch category,
  * released or not, plus its current popularity score where it has one, and brings `outFile`
  * in line with them.
@@ -219,9 +278,9 @@ const fetchPopularity = async (token: string): Promise<Map<number, number>> => {
  * Games are matched by id. A new id is appended as `{ id, name, slug }`, and
  * a changed (or missing) name or slug is updated in place. `art` or `cover`
  * (the image for the game's social media card), `released` (the
- * first release date, in seconds since 1970) and `popularity` are replaced
- * with their values at the time of the run, and removed from games that no
- * longer have one. Saved games that IGDB no longer returns, or that have no
+ * first release date, in seconds since 1970), `popularity` and `names` (the
+ * game's name in other languages) are replaced with their values at the time
+ * of the run, and removed from games that no longer have one. Saved games that IGDB no longer returns, or that have no
  * Twitch category, are removed. Custom fields and record order are kept.
  *
  * Pages by id ("where id > last seen") instead of by offset, so records added
@@ -270,6 +329,7 @@ export const fetchAllGames = async (
     );
   }
   const popularityById = await fetchPopularity(token);
+  const namesById = await fetchLocalNames(token);
 
   // Re-read the file here so edits made to it during the pull are kept.
   const savedGames = readSavedGames(outFile);
@@ -308,6 +368,7 @@ export const fetchAllGames = async (
   let redated = 0;
   let reimaged = 0;
   let rescored = 0;
+  let renamed = 0;
   for (let index = 0; index < games.length; index++) {
     const {
       id,
@@ -317,13 +378,20 @@ export const fetchAllGames = async (
       art: savedArt,
       cover: savedCover,
       popularity: savedPopularity,
+      names: savedNames,
       ...custom
     } = games[index];
     const released = releasedById.get(id);
     const { art, cover } = imageById.get(id) ?? {};
     const popularity = popularityById.get(id);
+    // A name the same as the English one adds nothing, so it is left out.
+    const localNames = Object.entries(namesById.get(id) ?? {}).filter(
+      ([, localName]) => localName !== name,
+    );
+    const names = localNames.length > 0 ? Object.fromEntries(localNames) : undefined;
     const sameImage = savedArt === art && savedCover === cover;
-    if (savedReleased === released && sameImage && savedPopularity === popularity) continue;
+    const sameNames = JSON.stringify(savedNames) === JSON.stringify(names);
+    if (savedReleased === released && sameImage && savedPopularity === popularity && sameNames) continue;
     // Rebuild the record so these sit after the slug, ahead of any custom
     // fields.
     games[index] = {
@@ -334,16 +402,18 @@ export const fetchAllGames = async (
       ...(art !== undefined && { art }),
       ...(cover !== undefined && { cover }),
       ...(popularity !== undefined && { popularity }),
+      ...(names !== undefined && { names }),
       ...custom,
     };
     if (savedReleased !== released) redated++;
     if (!sameImage) reimaged++;
     if (savedPopularity !== popularity) rescored++;
+    if (!sameNames) renamed++;
   }
   console.log(
-    `${added} games added, ${updated} updated, ${removed} removed, ${redated} release dates changed, ${reimaged} images changed, ${rescored} popularity scores changed`,
+    `${added} games added, ${updated} updated, ${removed} removed, ${redated} release dates changed, ${reimaged} images changed, ${rescored} popularity scores changed, ${renamed} translated names changed`,
   );
-  if (added + updated + removed + redated + reimaged + rescored === 0) return games;
+  if (added + updated + removed + redated + reimaged + rescored + renamed === 0) return games;
 
   // Compact JSON with one game per line. The file is not meant to be read or
   // edited by hand, but a line per game keeps the diff between runs small.

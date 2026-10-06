@@ -1,13 +1,15 @@
 import type { APIRoute } from "astro";
 import sharp from "sharp";
-import stampNo from "../../assets/og/stamp-no.png?inline";
-import stampUnsure from "../../assets/og/stamp-unsure.png?inline";
-import stampYes from "../../assets/og/stamp-yes.png?inline";
+import { LOCALES, type Locale } from "../../i18n/locales";
+import type { Answer } from "../../i18n/ui";
 import { canDieIn, findGame, type Game } from "../../lib/catalogue";
 
 // The picture shown when a game's page is shared on social media or in a chat
 // app: the game's artwork from IGDB, darkened, with the site's rubber stamp
 // answer over the top. It lives at /og/<slug>.jpg and is drawn on request.
+//
+// Each language has its own card, with the stamp in that language, at
+// /fr/og/<slug>.jpg and so on.
 //
 // The card carries no other text. The page's title, shown beside the picture
 // wherever a link is shared, already says which game it is.
@@ -25,9 +27,28 @@ const PAGE_COLOUR = "#121212";
 // recognisable. It matches the light blur on the game pages' backdrops.
 const BLUR = 4;
 
-/** Turns one of the `?inline` imports above, a data address, back into image bytes. */
+// Every stamp image, read into the server's code when the site is built. Each
+// arrives as a data address, which `bytes` turns back into image bytes.
+const stampFiles = import.meta.glob<string>("../../assets/og/stamp-*.png", {
+  query: "?inline",
+  import: "default",
+  eager: true,
+});
 const bytes = (dataUrl: string) => Buffer.from(dataUrl.slice(dataUrl.indexOf(",") + 1), "base64");
-const stamps = { yes: bytes(stampYes), no: bytes(stampNo), unsure: bytes(stampUnsure) };
+const ANSWERS: Answer[] = ["yes", "no", "unsure"];
+/** The stamp for an answer in a language: `stamps.fr.yes`. */
+const stamps = Object.fromEntries(
+  LOCALES.map((locale) => [
+    locale,
+    Object.fromEntries(
+      ANSWERS.map((answer) => {
+        const file = stampFiles[`../../assets/og/stamp-${locale}-${answer}.png`];
+        if (!file) throw new Error(`No stamp for "${answer}" in "${locale}". Run npm run og:assets.`);
+        return [answer, bytes(file)];
+      }),
+    ),
+  ]),
+) as Record<Locale, Record<Answer, Buffer>>;
 
 // IGDB serves each image at several sizes, chosen by a name in the address.
 const igdbImage = (size: string, id: string) =>
@@ -54,9 +75,9 @@ const shade = (opacity: number) => ({
 type Card = { image: Buffer; hasArtwork: boolean };
 
 /** Draws the card for a game. `hasArtwork` is false when it had to fall back to a plain card. */
-const drawCard = async (game: Game): Promise<Card> => {
+const drawCard = async (game: Game, locale: Locale): Promise<Card> => {
   const answer = canDieIn(game);
-  const stamp = stamps[answer === undefined ? "unsure" : answer ? "yes" : "no"];
+  const stamp = stamps[locale][answer === undefined ? "unsure" : answer ? "yes" : "no"];
   const { width: stampWidth = 820, height: stampHeight = 440 } = await sharp(stamp).metadata();
   const centred = { left: Math.round((WIDTH - stampWidth) / 2), top: Math.round((HEIGHT - stampHeight) / 2) };
 
@@ -99,16 +120,17 @@ const drawCard = async (game: Game): Promise<Card> => {
 // drawing instead of each starting a download of their own.
 const cache = new Map<string, Promise<Card>>();
 
-const cardFor = (game: Game) => {
-  let drawing = cache.get(game.slug);
+const cardFor = (game: Game, locale: Locale) => {
+  const key = `${locale}/${game.slug}`;
+  let drawing = cache.get(key);
   if (!drawing) {
-    drawing = drawCard(game);
-    cache.set(game.slug, drawing);
+    drawing = drawCard(game, locale);
+    cache.set(key, drawing);
     // A plain card for a game that should have artwork means the download
     // failed. Do not keep it, so the next request tries again. The same goes
     // for a drawing that failed outright.
     const forget = () => {
-      if (cache.get(game.slug) === drawing) cache.delete(game.slug);
+      if (cache.get(key) === drawing) cache.delete(key);
     };
     drawing.then((card) => {
       if (!card.hasArtwork && (game.art || game.cover)) forget();
@@ -117,11 +139,15 @@ const cardFor = (game: Game) => {
   return drawing;
 };
 
-export const GET: APIRoute = async ({ params }) => {
-  const game = findGame(params.slug);
+export const GET: APIRoute = async ({ params, locals }) => {
+  // For a card in another language, such as /fr/og/portal.jpg, the middleware
+  // has passed the request on to this route, and Astro then leaves `params`
+  // empty. The slug is read from the address instead.
+  const slug = params.slug ?? locals.path.match(/^\/og\/(.+)\.jpg$/)?.[1];
+  const game = findGame(slug);
   if (!game) return new Response("not found", { status: 404 });
 
-  const card = await cardFor(game);
+  const card = await cardFor(game, locals.locale);
 
   return new Response(new Uint8Array(card.image), {
     headers: {

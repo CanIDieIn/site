@@ -1,19 +1,29 @@
 ---
 import DeathDefinition from "@/components/DeathDefinition.astro";
+import { localePath, splitLocale } from "@/i18n/locales";
+import { uiFor, type Answer } from "@/i18n/ui";
 import Layout from "@/layouts/Layout.astro";
-import { canDieIn, findGame, reasonFor } from "../lib/catalogue";
+import { canDieIn, findGame, nameIn, reasonFor } from "../lib/catalogue";
 
 // Rendered per request, so no page is built for each of the 300,000 games.
 export const prerender = false;
 
+// The same page serves every language: /portal in English, /fr/portal in
+// French, and so on. The text is in src/i18n/ui.ts.
+const { locale } = Astro.locals;
+const t = uiFor(locale);
+
 const game = findGame(Astro.params.slug);
 if (!game) Astro.response.status = 404;
+// The game's name in this language, or in English if it has none.
+const name = game ? nameIn(game, locale) : undefined;
 
 // "Unsure" covers every game with no entry in deaths.json yet.
 const canDie = game ? canDieIn(game) : undefined;
-const answer = canDie === undefined ? "Unsure" : canDie ? "Yes" : "No";
-// Why the game got that answer, when someone has written it down.
-const reason = game ? reasonFor(game) : undefined;
+const answer: Answer = canDie === undefined ? "unsure" : canDie ? "yes" : "no";
+// Why the game got that answer, when someone has written it down. It is in
+// this language if it has been written in it, and in English otherwise.
+const reason = game ? reasonFor(game, locale) : undefined;
 // Where corrections are sent: the "Add or correct a game's answer" issue form
 // on GitHub, in .github/ISSUE_TEMPLATE/game_answer.yml. The link fills in what
 // this page already knows, so the visitor only has to give the answer and a
@@ -41,24 +51,28 @@ const correctionUrl =
       })}`
     : undefined;
 
-const pageTitle = game ? `Can I Die In ${game.name}?` : "Game not found";
+const pageTitle = name ? t.game.title(name) : t.game.notFoundTitle;
 
 // "Browse all games" returns to the list exactly as the visitor left it, with
 // their search, sort and page. The browser says which page linked here in the
 // Referer header. If that was this site's main list, link back to that same
 // address. A visitor who arrived any other way, such as from a search engine
 // or a bookmark, gets the plain list.
-let listHref = "/";
-let listLabel = "Browse all games";
+//
+// The link always stays in this page's language, whichever language the list
+// was in.
+let listHref = localePath(locale, "/");
+let listLabel = t.game.browseAll;
 const referrer = Astro.request.headers.get("referer");
 if (referrer && URL.canParse(referrer)) {
   const from = new URL(referrer);
   if (from.host === Astro.url.host) {
-    if (from.pathname === "/") {
-      listHref = `/${from.search}`;
-    } else if (from.pathname === "/no-deaths") {
-      listHref = `/no-deaths${from.search}`;
-      listLabel = "Back to games you can't die in";
+    const { path } = splitLocale(from.pathname);
+    if (path === "/") {
+      listHref = `${localePath(locale, "/")}${from.search}`;
+    } else if (path === "/no-deaths") {
+      listHref = `${localePath(locale, "/no-deaths")}${from.search}`;
+      listLabel = t.game.backToNoDeaths;
     }
   }
 }
@@ -73,12 +87,12 @@ Astro.response.headers.set("Vary", "Referer");
 // The word itself always says the answer, so colour is never the only way to
 // tell them apart. `tint` is the matching wash of colour behind the page.
 const stamps = {
-  Yes: {
+  yes: {
     tint: "yes",
     style: "text-yes -rotate-3 text-[clamp(4rem,20vw,9rem)]",
   },
-  No: { tint: "no", style: "text-no rotate-2 text-[clamp(4rem,20vw,9rem)]" },
-  Unsure: {
+  no: { tint: "no", style: "text-no rotate-2 text-[clamp(4rem,20vw,9rem)]" },
+  unsure: {
     tint: "unsure",
     style: "text-unsure -rotate-1 border-dashed text-[clamp(2.5rem,12vw,6rem)]",
   },
@@ -97,20 +111,17 @@ const backdrop = game?.art
     : undefined;
 
 // The picture for social media: the same artwork as the backdrop above, with
-// the stamped answer over it, drawn by src/pages/og/[slug].jpg.ts.
+// the stamped answer over it, drawn by src/pages/og/[slug].jpg.ts. The stamp
+// is in this page's language, so each language has its own card.
 //
 // Browsers and platforms keep these pictures for a long time. The `v` on the
 // end names the image and the answer the card was drawn from, so if either
 // changes the address changes too, and nobody is shown an out-of-date card.
-const cardVersion = `${game?.art ?? game?.cover ?? "none"}-${answer.toLowerCase()}`;
-const image = game ? `/og/${game.slug}.jpg?v=${cardVersion}` : undefined;
-const imageAlt = game
-  ? `${game.name}, stamped with the answer: ${answer === "Unsure" ? "unsure" : answer.toLowerCase()}.`
-  : undefined;
+const cardVersion = `${game?.art ?? game?.cover ?? "none"}-${answer}`;
+const image = game ? `${localePath(locale, `/og/${game.slug}.jpg`)}?v=${cardVersion}` : undefined;
+const imageAlt = name ? t.game.cardAlt(name, t.answers[answer].toLowerCase()) : undefined;
 
-const description = game
-  ? `Can you die in ${game.name}? ${answer === "Unsure" ? "We are not sure yet." : `${answer}.`}`
-  : undefined;
+const description = name ? t.game.description(name, t.game.answerSentence[answer]) : undefined;
 ---
 
 <Layout
@@ -140,37 +151,41 @@ const description = game
                 stamp.style,
               ]}
             >
-              {answer}
+              {t.answers[answer]}
             </p>
+            {/* A reason not yet written in this language is shown in English,
+                and marked as English so a screen reader pronounces it right. */}
             {reason && (
-              <p class="mx-auto mt-6 max-w-prose text-lg text-pretty">
-                {reason}
+              <p
+                class="mx-auto mt-6 max-w-prose text-lg text-pretty"
+                lang={reason.locale === locale ? undefined : reason.locale}
+              >
+                {reason.text}
               </p>
             )}
           </div>
           <div class="text-muted-foreground flex flex-col gap-2 text-sm">
             {/* The guide to the plain-text API, in pages/streaming.astro. */}
             <p>
-              Streaming?{" "}
-              <a href="/streaming" class="link text-foreground">
-                Connect your stream bot
+              {t.cards.streamingTitle}{" "}
+              <a href={localePath(locale, "/streaming")} class="link text-foreground">
+                {t.cards.streamingText}
               </a>
-              .
+              {t.fullStop}
             </p>
             {correctionUrl && (
               <p>
-                {canDie === undefined ? "Know the answer?" : "Not right?"}{" "}
+                {canDie === undefined ? t.game.knowAnswer : t.game.notRight}{" "}
                 <a
                   href={correctionUrl}
                   rel="noopener"
                   class="link text-foreground"
                 >
-                  {canDie === undefined
-                    ? "Tell us on GitHub"
-                    : "Suggest a correction on GitHub"}
+                  {canDie === undefined ? t.game.tellUs : t.game.suggest}
                 </a>
-                .<br />
-                This is game ID {game.id}.
+                {t.fullStop}
+                <br />
+                {t.game.gameId(game.id)}
               </p>
             )}
           </div>
@@ -180,7 +195,7 @@ const description = game
           <h1 class="text-3xl font-semibold tracking-tight sm:text-4xl">
             {pageTitle}
           </h1>
-          <p class="mt-4 text-lg">There is no game at this address.</p>
+          <p class="mt-4 text-lg">{t.game.notFoundText}</p>
         </div>
       )
     }

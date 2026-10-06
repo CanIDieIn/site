@@ -3,12 +3,15 @@
 // page: capitals in a heavy box, knocked slightly off straight.
 //
 // It is decoration, and hidden from screen readers. Its size follows the text
-// size of whatever it is placed in.
+// size of whatever it is placed in. The word is in the page's language.
+import { uiFor } from "@/i18n/ui";
+
 interface Props {
   answer: "yes" | "no";
   class?: string;
 }
 const { answer, class: className } = Astro.props;
+const word = uiFor(Astro.locals.locale).answers[answer];
 
 const stamps = {
   yes: "text-yes -rotate-6",
@@ -24,5 +27,5 @@ const stamps = {
     className,
   ]}
 >
-  {answer}
+  {word}
 </span>
