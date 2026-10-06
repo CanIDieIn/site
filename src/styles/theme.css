@@ -2,99 +2,130 @@
  * Every colour the site uses is defined here, as a CSS variable.
  * Change a value in this file to restyle the whole site.
  *
- * The look is a printed register: ink on paper, with one red for emphasis.
- * The first block is the light theme (ink on paper). The second is the dark
- * theme (paper-coloured ink on near-black), which applies automatically when
- * the visitor's device is set to dark mode.
+ * The first block is the light theme. The second is the dark theme, which
+ * applies automatically when the visitor's device is set to dark mode.
  *
- * Values can be any CSS colour, such as #a4161a or oklch(60% 0.2 25).
+ * ACCESSIBILITY: these colours were chosen to meet the WCAG 2.2 contrast
+ * rules, and the measured contrast against the page background is noted
+ * beside each one. If you change a colour, check it again, for example at
+ * https://webaim.org/resources/contrastchecker/. The targets are:
+ *
+ *   - text:                      at least 4.5 to 1
+ *   - field borders, focus ring: at least 3 to 1
+ *   - dividing lines:            no minimum, as they carry no meaning
  */
 
 :root {
-  /* The paper and the ink. */
-  --background: #f4efe4;
-  --foreground: #1b1815;
+  /* Page background and main text. Contrast 18.9 to 1. */
+  --background: #ffffff;
+  --foreground: #111111;
 
-  /* Panels and form fields sit directly on the paper. */
-  --card: #f4efe4;
-  --card-foreground: #1b1815;
+  /* Panels sit directly on the page. */
+  --card: #ffffff;
+  --card-foreground: #111111;
 
-  /* The one accent: the dagger mark, link hovers and button hovers. */
-  --primary: #a4161a;
-  --primary-foreground: #f4efe4;
-  --primary-accent: #a4161a;
+  /* Solid buttons: text colour as the fill, page colour as the label. 18.9 to 1. */
+  --primary: #111111;
+  --primary-foreground: #ffffff;
+  --primary-accent: #111111;
 
-  /* Small print, such as dates and notes, and faint backgrounds. */
-  --muted: #e9e2d3;
-  --muted-foreground: #6b6358;
+  /* Quieter text, such as dates and notes. 7.0 to 1. */
+  --muted: #f2f2f2;
+  --muted-foreground: #595959;
 
-  /* The background of a button or field while hovered. */
-  --accent: #e9e2d3;
-  --accent-foreground: #1b1815;
+  /* The background of a row or button while hovered. Text on it stays above 4.5 to 1. */
+  --accent: #f2f2f2;
+  --accent-foreground: #111111;
 
-  /* Lines. Heavy rules and field borders use the ink colour itself; these are
-     the lighter ones: the rules between rows and the focus ring. */
-  --border: #cfc6b4;
-  --input: #1b1815;
-  --outline: #1b1815;
+  /* Dividing lines between rows. Decorative. */
+  --border: #d9d9d9;
+  /* Borders of text fields, menus and outlined buttons. 4.5 to 1. */
+  --input: #767676;
+  /* The ring around whatever has keyboard focus. 6.7 to 1. */
+  --outline: #1d4ed8;
 
-  /* The stamped answer on a game page. */
-  --yes: #a4161a;
-  --no: #2c5f3b;
-  --unsure: #857c6e;
+  /* The big answer on a game page. Yes 6.5 to 1, No 6.5 to 1, Unsure 7.0 to 1.
+     The answer is always written as a word, so colour is never the only cue. */
+  --yes: #b3261e;
+  --no: #156b3f;
+  --unsure: #595959;
 
   /* Colours the component library defines. The site does not use them yet. */
-  --popover: #f4efe4;
-  --popover-foreground: #1b1815;
-  --secondary: #e9e2d3;
-  --secondary-foreground: #1b1815;
-  --secondary-accent: #1b1815;
-  --info: #b9d4e3;
-  --info-foreground: #12303f;
-  --success: #bcd9c2;
-  --success-foreground: #14321d;
-  --warning: #ecd9a0;
-  --warning-foreground: #3d2f07;
-  --error: #a4161a;
-  --error-foreground: #f4efe4;
+  --popover: #ffffff;
+  --popover-foreground: #111111;
+  --secondary: #f2f2f2;
+  --secondary-foreground: #111111;
+  --secondary-accent: #111111;
+  --info: #dbeafe;
+  --info-foreground: #111111;
+  --success: #dcfce7;
+  --success-foreground: #111111;
+  --warning: #fef3c7;
+  --warning-foreground: #111111;
+  --error: #b3261e;
+  --error-foreground: #ffffff;
 
-  /* How rounded corners are. Not a colour, but it belongs with the theme.
-     0 gives the square, printed look. Try 0.5rem for a softer one. */
-  --radius: 0rem;
+  /* How rounded corners are. Not a colour, but it belongs with the theme. */
+  --radius: 0.5rem;
+
+  /* How strong the wash of colour behind each page is. It takes the page's
+     answer colour: red, green or grey. Set to 0% to remove it. Text contrast
+     was checked up to 14%, where the lowest pairing is still 5.2 to 1. Check
+     again before going higher. */
+  --tint-strength: 14%;
+
+  /* On a game's page, its artwork sits behind everything, covered by a veil
+     of the page colour. This is how solid that veil is. Lower shows more of
+     the artwork and less contrast. At 88% every text pairing stays above
+     4.5 to 1 even over pure black or pure white artwork. At 80% some fall
+     below it. Set to 100% to hide the artwork. */
+  --backdrop-veil: 88%;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #151311;
-    --foreground: #ece4d4;
+    /* Contrast 16.7 to 1. */
+    --background: #121212;
+    --foreground: #f2f2f2;
 
-    --card: #151311;
-    --card-foreground: #ece4d4;
+    --card: #121212;
+    --card-foreground: #f2f2f2;
 
-    --primary: #ff6b5e;
-    --primary-foreground: #151311;
-    --primary-accent: #ff6b5e;
+    /* 16.7 to 1. */
+    --primary: #f2f2f2;
+    --primary-foreground: #121212;
+    --primary-accent: #f2f2f2;
 
-    --muted: #24201c;
-    --muted-foreground: #a0978a;
+    /* 9.4 to 1. */
+    --muted: #222222;
+    --muted-foreground: #b8b8b8;
 
-    --accent: #24201c;
-    --accent-foreground: #ece4d4;
+    --accent: #222222;
+    --accent-foreground: #f2f2f2;
 
-    --border: #3a342d;
-    --input: #ece4d4;
-    --outline: #ece4d4;
+    --border: #333333;
+    /* 5.8 to 1. */
+    --input: #8f8f8f;
+    /* 10.3 to 1. */
+    --outline: #9cc2ff;
 
-    --yes: #ff6b5e;
-    --no: #86c995;
-    --unsure: #8c8375;
+    /* Yes 8.5 to 1, No 10.2 to 1, Unsure 9.4 to 1. */
+    --yes: #ff8f85;
+    --no: #6fd39a;
+    --unsure: #b8b8b8;
 
-    --popover: #151311;
-    --popover-foreground: #ece4d4;
-    --secondary: #24201c;
-    --secondary-foreground: #ece4d4;
-    --secondary-accent: #ece4d4;
-    --error: #ff6b5e;
-    --error-foreground: #151311;
+    --popover: #121212;
+    --popover-foreground: #f2f2f2;
+    --secondary: #222222;
+    --secondary-foreground: #f2f2f2;
+    --secondary-accent: #f2f2f2;
+    --info: #1e3a5f;
+    --info-foreground: #f2f2f2;
+    --success: #14432a;
+    --success-foreground: #f2f2f2;
+    --warning: #4a3a0b;
+    --warning-foreground: #f2f2f2;
+    --error: #ff8f85;
+    --error-foreground: #121212;
   }
 }

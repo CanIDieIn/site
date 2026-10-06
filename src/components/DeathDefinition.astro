@@ -1,22 +1,19 @@
 ---
 // The site's definition of dying, in one place so every page words it the same
-// way. It is set as a footnote: small monospace type beside a ruled line.
+// way.
 //
-// Keep it this simple. The same rule decides every answer in deaths.json:
-// would it make a fun moment to call this a death?
+// Keep it this simple. It is the short version of the rulings recorded beside
+// canDieIn in lib/catalogue.ts, which settle the borderline cases. The issue
+// form and pull request template in .github repeat this wording, so change
+// them together.
 interface Props {
   class?: string;
 }
 const { class: className } = Astro.props;
 ---
 
-<p
-  class:list={[
-    "border-foreground text-muted-foreground border-l-2 pl-3 font-mono text-xs leading-relaxed text-pretty",
-    className,
-  ]}
->
-  <strong class="text-foreground font-medium tracking-wider uppercase">What counts as dying?</strong
-  >{" "}
-  Anything that would be fun to call a death. Killed, knocked out, blown up, game over: it all counts.
+<p class:list={["text-muted-foreground text-sm text-pretty", className]}>
+  <strong class="text-foreground font-semibold">What counts as dying?</strong>{" "}
+  Your character is killed or knocked out, or you lose a whole run. Crashing in a race or losing a
+  match on points doesn't count.
 </p>

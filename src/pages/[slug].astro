@@ -66,51 +66,85 @@ Astro.response.headers.set("Vary", "Referer");
 // slightly off straight. Each answer has its own colour, from theme.css, and
 // its own tilt. "Unsure" gets a dashed box and smaller type, as a longer word
 // that also deserves less confidence.
+//
+// The word itself always says the answer, so colour is never the only way to
+// tell them apart. `tint` is the matching wash of colour behind the page.
 const stamps = {
-  Yes: "text-yes -rotate-3 text-[clamp(4.5rem,20vw,11rem)]",
-  No: "text-no rotate-2 text-[clamp(4.5rem,20vw,11rem)]",
-  Unsure: "text-unsure -rotate-1 border-dashed text-[clamp(3rem,13vw,7.5rem)]",
-};
+  Yes: { tint: "yes", style: "text-yes -rotate-3 text-[clamp(4rem,20vw,9rem)]" },
+  No: { tint: "no", style: "text-no rotate-2 text-[clamp(4rem,20vw,9rem)]" },
+  Unsure: {
+    tint: "unsure",
+    style: "text-unsure -rotate-1 border-dashed text-[clamp(2.5rem,12vw,6rem)]",
+  },
+} as const;
 const stamp = stamps[answer];
+
+// The game's artwork from IGDB, laid softly behind the page. A landscape
+// artwork is used at a moderate size, as it is blurred anyway. A game with
+// only a portrait cover gets that, blurred heavily into a wash of its colours.
+const igdbImage = (size: string, id: string) =>
+  `https://images.igdb.com/igdb/image/upload/t_${size}/${id}.jpg`;
+const backdrop = game?.art
+  ? igdbImage("720p", game.art)
+  : game?.cover
+    ? igdbImage("cover_big", game.cover)
+    : undefined;
+
+// The picture for social media: the game's artwork with the stamped answer,
+// drawn by src/pages/og/[slug].jpg.ts.
+const image = game ? `/og/${game.slug}.jpg` : undefined;
+const imageAlt = game
+  ? `${game.name}, stamped with the answer: ${answer === "Unsure" ? "unsure" : answer.toLowerCase()}.`
+  : undefined;
 
 const description = game
   ? `Can you die in ${game.name}? ${answer === "Unsure" ? "We are not sure yet." : `${answer}.`}`
   : undefined;
 ---
 
-<Layout title={pageTitle} description={description}>
+<Layout
+  title={pageTitle}
+  description={description}
+  tint={stamp.tint}
+  image={image}
+  imageAlt={imageAlt}
+  backdrop={backdrop}
+  backdropBlur={game?.art ? "soft" : "strong"}
+>
   <main
-    class="mx-auto flex min-h-dvh w-full max-w-4xl flex-col items-center justify-center gap-8 px-4 py-12 text-center"
+    id="main"
+    class="mx-auto flex min-h-dvh w-full max-w-2xl flex-col items-center justify-center gap-10 px-5 py-14 text-center"
   >
-    <p class="small-print">
-      <a href="/" class="ink-link">
-        <span class="text-primary-accent" aria-hidden="true">†</span> Can I Die In...
-      </a>
+    <p>
+      <a href="/" class="link inline-flex min-h-11 items-center">Can I Die In...</a>
     </p>
     {
       game ? (
         <>
-          {/* The whole question in one style. It only wraps when the name is too long
-              for the screen, and then breaks into lines of similar length. */}
-          <h1 class="text-3xl leading-tight font-semibold tracking-tight text-balance wrap-anywhere sm:text-5xl">
-            {pageTitle}
-          </h1>
-          <p
-            class:list={[
-              "my-2 border-[0.07em] border-current px-[0.2em] pt-[0.02em] pb-[0.08em] leading-none font-black tracking-tight uppercase",
-              stamp,
-            ]}
-          >
-            {answer}
-          </p>
-          {reason && <p class="max-w-xl text-xl leading-snug text-pretty italic sm:text-2xl">{reason}</p>}
-          <div class="text-muted-foreground flex flex-col gap-1.5 font-mono text-sm">
+          <div>
+            {/* The whole question in one style. It only wraps when the name is too long
+                for the screen, and then breaks into lines of similar length. */}
+            <h1 class="text-3xl leading-tight font-semibold tracking-tight text-balance wrap-anywhere sm:text-4xl">
+              {pageTitle}
+            </h1>
+            <p
+              class:list={[
+                "mx-auto mt-8 mb-2 w-fit rounded-md border-[0.07em] border-current px-[0.22em] pt-[0.06em] pb-[0.1em] leading-none font-black tracking-tight uppercase",
+                stamp.style,
+              ]}
+            >
+              {answer}
+            </p>
+            {reason && <p class="mx-auto mt-6 max-w-prose text-lg text-pretty">{reason}</p>}
+          </div>
+          <div class="text-muted-foreground flex flex-col gap-2 text-sm">
             {/* The API has no answer for an unsure game, so there is nothing to link to. */}
             {canDie !== undefined && (
               <p>
                 Using Streamer.bot?{" "}
-                <a href={`/api/game/${game.slug}`} class="ink-link text-foreground">
+                <a href={`/api/game/${game.slug}`} class="link text-foreground">
                   You want this link
+                  <span class="sr-only"> to this game's answer as plain text</span>
                 </a>
                 .
               </p>
@@ -118,24 +152,24 @@ const description = game
             {correctionUrl && (
               <p>
                 {canDie === undefined ? "Know the answer?" : "Not right?"}{" "}
-                <a href={correctionUrl} rel="noopener" class="ink-link text-foreground">
+                <a href={correctionUrl} rel="noopener" class="link text-foreground">
                   {canDie === undefined ? "Tell us on GitHub" : "Suggest a correction on GitHub"}
                 </a>
                 . This is game ID {game.id}.
               </p>
             )}
           </div>
-          <DeathDefinition class="max-w-md text-left" />
+          <DeathDefinition class="max-w-md" />
         </>
       ) : (
-        <>
-          <h1 class="text-3xl font-semibold tracking-tight sm:text-5xl">{pageTitle}</h1>
-          <p class="text-xl italic">There is no game at this address.</p>
-        </>
+        <div>
+          <h1 class="text-3xl font-semibold tracking-tight sm:text-4xl">{pageTitle}</h1>
+          <p class="mt-4 text-lg">There is no game at this address.</p>
+        </div>
       )
     }
     <p>
-      <a href={listHref} class="small-print ink-link">← {listLabel}</a>
+      <a href={listHref} class="link inline-flex min-h-11 items-center">{listLabel}</a>
     </p>
   </main>
 </Layout>

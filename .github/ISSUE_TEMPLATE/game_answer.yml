@@ -8,7 +8,7 @@ body:
       value: |
         Thanks for helping out. You do not need to know how to code for this one.
 
-        **The one rule:** would it make a fun moment to call this a death? Killed, knocked out, blown up, game over: all **Yes**. If nothing in the game could ever earn a "you died", it is a **No**.
+        **What counts as dying?** Your character is killed or knocked out, or you lose a whole run. Crashing in a race or losing a match on points doesn't count.
 
   - type: dropdown
     id: kind

@@ -32,11 +32,11 @@ Tell us you have played it, or link to something that shows it: a wiki page, a
 clip or a review. One line is plenty.
 -->
 
-## The one rule
+## What counts as dying?
 
-**Would it make a fun moment to call this a death?**
+Your character is killed or knocked out, or you lose a whole run. Crashing in a race or losing a match on points doesn't count.
 
-Killed, knocked out, blown up, game over: all **Yes**. If nothing in the game could ever earn a "you died", it is a **No**.
+For borderline games, the rulings are listed beside `canDieIn` in `src/lib/catalogue.ts`.
 
 ## Checklist
 

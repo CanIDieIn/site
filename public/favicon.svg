@@ -1,5 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <!-- A dagger, the printer's mark for a death, in the site's red on its paper colour. -->
-  <rect width="64" height="64" fill="#f4efe4" />
-  <path fill="#a4161a" d="M27 8h10v14h13v9H37v25h-10V31H14v-9h13z" />
+  <!-- A question mark: the site answers one question. Dark on light, or light on dark. -->
+  <style>
+    rect { fill: #111111; }
+    text { fill: #ffffff; }
+    @media (prefers-color-scheme: dark) {
+      rect { fill: #f2f2f2; }
+      text { fill: #121212; }
+    }
+  </style>
+  <rect width="64" height="64" rx="14" />
+  <text x="32" y="47" text-anchor="middle" font-family="system-ui, Arial, sans-serif" font-size="44" font-weight="600">?</text>
 </svg>

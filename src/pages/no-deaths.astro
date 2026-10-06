@@ -23,31 +23,23 @@ const description =
 const count = new Intl.NumberFormat("en");
 ---
 
-<Layout title={pageTitle} description={description}>
-  <main class="mx-auto w-full max-w-3xl px-4 py-10 sm:py-16">
-    <header class="border-foreground mb-8 border-b-4 pb-7">
-      <p class="small-print mb-4">
-        <a href="/" class="ink-link">
-          <span class="text-primary-accent" aria-hidden="true">†</span> Can I Die In...
-        </a>
+<Layout title={pageTitle} description={description} tint="no">
+  <main id="main" class="mx-auto w-full max-w-2xl px-5 py-14 sm:py-24">
+    <header class="mb-12">
+      <p class="mb-6">
+        <a href="/" class="link inline-flex min-h-11 items-center">Can I Die In...</a>
       </p>
-      <h1 class="text-[clamp(2.5rem,8vw,4.5rem)] leading-[0.95] font-black tracking-tight text-balance">
-        <a href="/no-deaths">{pageTitle}</a>
-      </h1>
-      <p class="mt-5 max-w-xl text-xl leading-snug text-balance italic">
+      <h1 class="text-4xl font-semibold tracking-tight text-balance sm:text-5xl">{pageTitle}</h1>
+      <p class="mt-5 text-lg text-balance">
         {
           gamesWithoutDeaths.length === 1
             ? "The one game we have confirmed has no deaths to count."
             : `The ${count.format(gamesWithoutDeaths.length)} games we have confirmed have no deaths to count.`
         }
       </p>
-      <DeathDefinition class="mt-5 max-w-xl" />
+      <DeathDefinition class="mt-5" />
     </header>
 
     <GameBrowser view={view} />
-
-    <p class="mt-10">
-      <a href="/" class="small-print ink-link">← Browse all games</a>
-    </p>
   </main>
 </Layout>

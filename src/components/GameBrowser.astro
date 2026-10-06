@@ -3,23 +3,20 @@ import { Button } from "@/components/starwind/button";
 import { Input } from "@/components/starwind/input";
 import { Label } from "@/components/starwind/label";
 import { NativeSelect, NativeSelectOption } from "@/components/starwind/native-select";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/starwind/pagination";
 import type { BrowseView } from "@/lib/browse";
 import { DEFAULT_SORT, DIRECTIONS, SORTS } from "@/lib/catalogue";
 
-// The search bar, the list of games and the page controls. Every page that
+// The search form, the list of games and the page controls. Every page that
 // lists games uses this, so they all search, sort and page the same way.
 // The `view` comes from `browse` in lib/browse.ts.
 //
-// The list is set like a printed register: a numbered entry per line, with a
-// dotted leader running from the name across to the date.
+// Accessibility notes, so later changes keep them:
+//   - Every field has a visible label. Placeholders are not used as labels.
+//   - Nothing happens until the Search button is pressed. Changing a menu
+//     never reloads the page, which would disorient keyboard and screen
+//     reader users.
+//   - Fields and buttons are at least 44 pixels tall, for easy tapping.
+//   - Links in the list are full-width rows, so the whole row is the target.
 interface Props {
   view: BrowseView;
 }
@@ -29,82 +26,68 @@ const { basePath, query, sort, direction, defaultDirection, page, totalPages, to
 
 const count = new Intl.NumberFormat("en");
 
-// Entry numbers are padded to the same width, so the names line up.
-const digits = Math.max(2, String(start + games.length).length);
-const entryNumber = (index: number) => String(start + index + 1).padStart(digits, "0");
-
-// Shared looks for the form controls: square, ruled in ink, no shadows.
-const field = "border-foreground rounded-none border-2 bg-transparent shadow-none dark:bg-transparent";
-const smallPrint = "font-mono text-xs tracking-wider uppercase";
-const pageLink = `${smallPrint} rounded-none hover:bg-transparent hover:text-primary-accent hover:underline underline-offset-4`;
+// The component library tints fields in dark mode. Keep them plain here.
+const field = "bg-background dark:bg-background shadow-none";
 ---
 
-<form method="get" action={basePath} role="search" class="flex flex-wrap items-center gap-2">
-  <Input
-    type="search"
-    name="q"
-    value={query}
-    placeholder="Search by name"
-    aria-label="Search games by name"
-    maxlength="100"
-    autocomplete="off"
-    size="lg"
-    class={`${field} w-auto min-w-0 grow basis-full text-lg sm:basis-56`}
-  />
-  <Label for="sort" size="sm" class={`${smallPrint} text-muted-foreground pl-1 font-normal`}>
-    Sort by
-  </Label>
-  {/* Changing the sort drops the direction, so the new sort starts in its own default. */}
-  <NativeSelect
-    id="sort"
-    name="sort"
-    size="lg"
-    class={`${field} ${smallPrint}`}
-    onchange="this.form.elements.dir.disabled = true; this.form.submit()"
-  >
-    {
-      SORTS.map(({ value, label }) => (
-        <NativeSelectOption value={value} selected={value === sort}>
-          {label}
-        </NativeSelectOption>
-      ))
-    }
-  </NativeSelect>
-  <NativeSelect
-    name="dir"
-    size="lg"
-    class={`${field} ${smallPrint}`}
-    aria-label="Sort direction"
-    onchange="this.form.submit()"
-  >
-    {
-      DIRECTIONS.map(({ value, label }) => (
-        <NativeSelectOption value={value} selected={value === direction}>
-          {label}
-        </NativeSelectOption>
-      ))
-    }
-  </NativeSelect>
-  <Button
-    type="submit"
-    size="lg"
-    class={`${smallPrint} hover:bg-primary hover:text-primary-foreground rounded-none px-6`}
-  >
-    Search
-  </Button>
+<form
+  method="get"
+  action={basePath}
+  role="search"
+  aria-label="Find a game"
+  class="grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto_auto_auto] sm:items-end"
+  data-game-search
+>
+  <div class="grid gap-1.5">
+    <Label for="q" size="sm">Search by name</Label>
+    <Input
+      id="q"
+      type="search"
+      name="q"
+      value={query}
+      maxlength="100"
+      autocomplete="off"
+      class={field}
+    />
+  </div>
+  <div class="grid gap-1.5 **:data-[slot=native-select-wrapper]:w-full">
+    <Label for="sort" size="sm">Sort by</Label>
+    <NativeSelect id="sort" name="sort" class={field}>
+      {
+        SORTS.map(({ value, label, defaultDirection: startsIn }) => (
+          <NativeSelectOption value={value} selected={value === sort} data-direction={startsIn}>
+            {label}
+          </NativeSelectOption>
+        ))
+      }
+    </NativeSelect>
+  </div>
+  <div class="grid gap-1.5 **:data-[slot=native-select-wrapper]:w-full">
+    <Label for="dir" size="sm">Order</Label>
+    <NativeSelect id="dir" name="dir" class={field}>
+      {
+        DIRECTIONS.map(({ value, label }) => (
+          <NativeSelectOption value={value} selected={value === direction}>
+            {label}
+          </NativeSelectOption>
+        ))
+      }
+    </NativeSelect>
+  </div>
+  <Button type="submit">Search</Button>
 </form>
 
-<p class={`${smallPrint} text-muted-foreground mt-8 mb-2`}>
+<p class="text-muted-foreground mt-10 text-sm">
   {
     total === 0
       ? query
-        ? `Nothing matches "${query}".`
-        : "Nothing to show yet."
-      : `${count.format(start + 1)} to ${count.format(start + games.length)} of ${count.format(total)} ${total === 1 ? "game" : "games"}${query ? ` matching "${query}"` : ""}`
+        ? `No games match "${query}".`
+        : "No games to show yet."
+      : `Showing ${count.format(start + 1)} to ${count.format(start + games.length)} of ${count.format(total)} ${total === 1 ? "game" : "games"}${query ? ` matching "${query}"` : ""}.`
   }
   {
     query && (
-      <a href={view.pageHref(1, false)} class="ink-link text-foreground ml-2">
+      <a href={view.pageHref(1, false)} class="link text-foreground ml-1">
         Clear search
       </a>
     )
@@ -113,112 +96,89 @@ const pageLink = `${smallPrint} rounded-none hover:bg-transparent hover:text-pri
 
 {
   games.length > 0 && (
-    <ol class="border-foreground border-t-2">
-      {games.map(({ game, released }, index) => (
-        <li class="border-border border-b">
-          <a href={`/${game.slug}`} class="group flex items-baseline gap-3 py-2.5">
-            <span
-              class={`${smallPrint} text-muted-foreground shrink-0 tabular-nums`}
-              aria-hidden="true"
-            >
-              {entryNumber(index)}
-            </span>
-            <span class="group-hover:text-primary-accent min-w-0 text-lg leading-snug decoration-1 underline-offset-4 wrap-anywhere group-hover:underline">
+    <ul class="mt-3 border-t">
+      {games.map(({ game, released }) => (
+        <li class="border-b">
+          <a
+            href={`/${game.slug}`}
+            class="group hover:bg-accent -mx-3 flex flex-col gap-0.5 rounded-md px-3 py-3 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6"
+          >
+            <span class="min-w-0 font-medium underline-offset-4 wrap-anywhere group-hover:underline">
               {game.name}
             </span>
-            <span
-              class="border-muted-foreground/50 min-w-4 flex-1 -translate-y-1 border-b border-dotted"
-              aria-hidden="true"
-            />
             {released && (
-              <time
-                class={`${smallPrint} text-muted-foreground shrink-0 tabular-nums`}
-                datetime={released.iso}
-                title="First release date"
-              >
+              <time class="text-muted-foreground shrink-0 text-sm tabular-nums" datetime={released.iso}>
+                <span class="sr-only">Released </span>
                 {released.text}
               </time>
             )}
           </a>
         </li>
       ))}
-    </ol>
+    </ul>
   )
 }
 
 {
   totalPages > 1 && (
-    <Pagination class="mt-8" aria-label="Pagination">
-      <PaginationContent class="flex-wrap justify-center gap-y-2">
-        <PaginationItem>
-          <PaginationLink size="sm" class={pageLink} href={view.pageHref(1)} disabled={page === 1}>
-            First
-          </PaginationLink>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationPrevious
-            size="sm"
-            class={pageLink}
-            href={view.pageHref(page - 1)}
-            rel="prev"
-            disabled={page === 1}
-          >
-            Previous
-          </PaginationPrevious>
-        </PaginationItem>
-        <PaginationItem>
-          <form method="get" action={basePath} class="flex items-center gap-2 px-2">
-            {query && <input type="hidden" name="q" value={query} />}
-            {sort !== DEFAULT_SORT && <input type="hidden" name="sort" value={sort} />}
-            {direction !== defaultDirection && <input type="hidden" name="dir" value={direction} />}
-            <Label for="page" size="sm" class={`${smallPrint} text-muted-foreground font-normal`}>
-              Page
-            </Label>
-            <Input
-              id="page"
-              type="number"
-              name="page"
-              size="sm"
-              value={page}
-              min="1"
-              max={totalPages}
-              class={`${field} w-20 font-mono text-sm`}
-            />
-            <span class={`${smallPrint} text-muted-foreground whitespace-nowrap`}>
-              of {count.format(totalPages)}
-            </span>
-            <Button
-              type="submit"
-              variant="outline"
-              size="sm"
-              class={`${field} ${smallPrint} hover:bg-foreground hover:text-background dark:hover:bg-foreground`}
-            >
-              Go
-            </Button>
-          </form>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationNext
-            size="sm"
-            class={pageLink}
-            href={view.pageHref(page + 1)}
-            rel="next"
-            disabled={page === totalPages}
-          >
-            Next
-          </PaginationNext>
-        </PaginationItem>
-        <PaginationItem>
-          <PaginationLink
-            size="sm"
-            class={pageLink}
-            href={view.pageHref(totalPages)}
-            disabled={page === totalPages}
-          >
-            Last
-          </PaginationLink>
-        </PaginationItem>
-      </PaginationContent>
-    </Pagination>
+    <nav aria-label="Pages of results" class="mt-8 flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
+      {page > 1 ? (
+        <a href={view.pageHref(page - 1)} rel="prev" class="link inline-flex min-h-11 items-center">
+          Previous<span class="sr-only"> page</span>
+        </a>
+      ) : (
+        <span class="text-muted-foreground inline-flex min-h-11 items-center">
+          Previous<span class="sr-only"> page, not available</span>
+        </span>
+      )}
+
+      <form method="get" action={basePath} class="flex items-center gap-2">
+        {query && <input type="hidden" name="q" value={query} />}
+        {sort !== DEFAULT_SORT && <input type="hidden" name="sort" value={sort} />}
+        {direction !== defaultDirection && <input type="hidden" name="dir" value={direction} />}
+        <Label for="page" size="sm" class="font-normal">
+          Page
+        </Label>
+        <Input
+          id="page"
+          type="number"
+          name="page"
+          value={page}
+          min="1"
+          max={totalPages}
+          inputmode="numeric"
+          class={`${field} w-24`}
+        />
+        <span class="text-sm whitespace-nowrap">of {count.format(totalPages)}</span>
+        <Button type="submit" variant="outline" class={`${field} border-input`}>
+          Go<span class="sr-only"> to page</span>
+        </Button>
+      </form>
+
+      {page < totalPages ? (
+        <a href={view.pageHref(page + 1)} rel="next" class="link inline-flex min-h-11 items-center">
+          Next<span class="sr-only"> page</span>
+        </a>
+      ) : (
+        <span class="text-muted-foreground inline-flex min-h-11 items-center">
+          Next<span class="sr-only"> page, not available</span>
+        </span>
+      )}
+    </nav>
   )
 }
+
+<script>
+  // A convenience only: picking a different sort sets the Order menu to the
+  // order that sort normally starts in, such as newest first for release date.
+  // Nothing is submitted. The visitor still sees both menus and presses Search.
+  for (const form of document.querySelectorAll<HTMLFormElement>("[data-game-search]")) {
+    const sort = form.elements.namedItem("sort");
+    const order = form.elements.namedItem("dir");
+    if (!(sort instanceof HTMLSelectElement) || !(order instanceof HTMLSelectElement)) continue;
+    sort.addEventListener("change", () => {
+      const startsIn = sort.selectedOptions[0]?.dataset.direction;
+      if (startsIn) order.value = startsIn;
+    });
+  }
+</script>

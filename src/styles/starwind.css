@@ -39,9 +39,14 @@
  * variable, so changing theme.css changes every element that uses them.
  */
 @theme inline {
-  /* The typefaces, set up in astro.config.mjs. "font-serif" is the main one. */
-  --font-serif: var(--font-fraunces);
-  --font-mono: var(--font-plex-mono);
+  /*
+   * One typeface for everything: whatever the visitor's own device uses for
+   * its interface. It needs no download, it is the face each visitor already
+   * reads most comfortably, and it honours any font they have chosen for
+   * accessibility reasons.
+   */
+  --font-sans:
+    system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -88,29 +93,51 @@
 
 @layer base {
   * {
-    @apply border-border outline-outline/50;
+    @apply border-border;
+  }
+  html {
+    /* Leave the text size to the visitor's own browser setting. */
+    font-size: 100%;
+    -webkit-text-size-adjust: 100%;
   }
   body {
-    @apply bg-background text-foreground scheme-light dark:scheme-dark font-serif;
-    /* Fraunces has an optical size axis. Let it adapt to each text size. */
-    font-optical-sizing: auto;
+    @apply bg-background text-foreground scheme-light dark:scheme-dark font-sans leading-relaxed;
   }
   button {
     @apply cursor-pointer;
   }
-  ::selection {
-    background: var(--primary);
-    color: var(--primary-foreground);
-  }
 }
 
 @layer components {
-  /* Small print: monospace capitals, used for labels, dates and buttons. */
-  .small-print {
-    @apply font-mono text-xs tracking-wider uppercase;
+  /*
+   * A text link. Always underlined, so it never relies on colour alone to be
+   * recognised as a link. The underline thickens on hover.
+   */
+  .link {
+    @apply underline decoration-1 underline-offset-4 hover:decoration-2;
   }
-  /* A text link: underlined in ink, turning red on hover. */
-  .ink-link {
-    @apply decoration-foreground/40 hover:text-primary-accent hover:decoration-primary-accent underline decoration-1 underline-offset-4 transition-colors;
+}
+
+/*
+ * Keyboard focus. Deliberately outside any layer, so that it wins over every
+ * component's own styling: whatever is focused always gets the same clear
+ * ring, in a colour that stands out from the page. It only shows for keyboard
+ * use, not for mouse clicks.
+ */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 3px solid var(--outline);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+  box-shadow: none;
+}
+
+/* Visitors who ask their device for less motion get none at all. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

@@ -1,28 +1,124 @@
 ---
-import { Font } from "astro:assets";
 import "@/styles/starwind.css";
 
-// The shell every page shares: the document head, the typefaces and the
-// global stylesheet.
+// The shell every page shares: the document head, the global stylesheet, a
+// "skip to content" link and a soft wash of colour behind the page. Each page
+// provides its own <main id="main">.
+//
+// `tint` picks the colour of that wash: "yes" (red), "no" (green) or "unsure"
+// (grey). The colours and the strength of the wash are set in theme.css.
+//
+// `image` is the picture shown when the page is shared on social media or in
+// a chat app, as a path on this site, with `imageAlt` describing it for
+// people who cannot see it. Pages that do not set one get the site's own card.
+//
+// `backdrop` is the address of a picture to lay behind the whole page, such as
+// a game's artwork. It is blurred and veiled in the page colour, so it sets a
+// mood without getting in the way of the text. `backdropBlur` is how soft it
+// is: "strong" suits small or portrait pictures that would otherwise look
+// stretched.
 interface Props {
   title: string;
   description?: string;
+  tint?: "yes" | "no" | "unsure";
+  image?: string;
+  imageAlt?: string;
+  backdrop?: string;
+  backdropBlur?: "soft" | "strong";
 }
-const { title, description } = Astro.props;
+const {
+  title,
+  description,
+  tint = "unsure",
+  backdrop,
+  backdropBlur = "soft",
+  image = "/og.jpg",
+  imageAlt = "Can I Die In... Find out whether a game can kill you.",
+} = Astro.props;
+
+const SITE_NAME = "Can I Die In...";
+// Sharing platforms need complete addresses. Use the site address from
+// astro.config.mjs, or the address being visited if that is not set.
+const origin = Astro.site ?? Astro.url.origin;
+const pageUrl = new URL(Astro.url.pathname, origin).href;
+const imageUrl = new URL(image, origin).href;
 ---
 
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
-    <Font cssVariable="--font-fraunces" preload />
-    <Font cssVariable="--font-plex-mono" />
+    <link rel="canonical" href={pageUrl} />
+
+    {/* Open Graph: how the page appears when shared on Facebook, Discord, Slack, LinkedIn and others. */}
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={SITE_NAME} />
+    <meta property="og:title" content={title} />
+    {description && <meta property="og:description" content={description} />}
+    <meta property="og:url" content={pageUrl} />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={imageAlt} />
+
+    {/* The same for X, formerly Twitter, as a large picture card. */}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    {description && <meta name="twitter:description" content={description} />}
+    <meta name="twitter:image" content={imageUrl} />
+    <meta name="twitter:image:alt" content={imageAlt} />
   </head>
   <body class="min-h-dvh antialiased">
+    {/* The first thing a keyboard user reaches. It stays hidden until focused,
+        then lets them jump past everything before the page's content. */}
+    <a
+      href="#main"
+      class="bg-background text-foreground sr-only z-50 rounded-md px-4 py-3 font-medium underline focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
+    >
+      Skip to main content
+    </a>
+    {/* Decoration only, behind everything and hidden from screen readers: the
+        backdrop picture, then a veil of the page colour that keeps the text
+        readable over it. The picture is enlarged a little so its blurred
+        edges fall outside the screen. */}
+    {
+      backdrop && (
+        <div class="pointer-events-none fixed inset-0 -z-30 overflow-hidden" aria-hidden="true">
+          <img
+            src={backdrop}
+            alt=""
+            decoding="async"
+            fetchpriority="low"
+            referrerpolicy="no-referrer"
+            class:list={[
+              "size-full scale-110 object-cover",
+              backdropBlur === "strong" ? "blur-3xl" : "blur-md",
+            ]}
+          />
+        </div>
+      )
+    }
+    {
+      backdrop && (
+        <div
+          class="pointer-events-none fixed inset-0 -z-20"
+          style="background: color-mix(in srgb, var(--background) var(--backdrop-veil), transparent)"
+          aria-hidden="true"
+        />
+      )
+    }
+    {/* Decoration only: a wash of the page's colour, fading down from the top.
+        It sits behind everything and is hidden from screen readers. */}
+    <div
+      class="pointer-events-none fixed inset-0 -z-10"
+      style={`background: radial-gradient(70% 55% at 50% 0%, color-mix(in oklch, var(--${tint}) var(--tint-strength), transparent), transparent 75%)`}
+      aria-hidden="true"
+    >
+    </div>
     <slot />
   </body>
 </html>

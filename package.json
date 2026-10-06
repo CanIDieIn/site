@@ -11,7 +11,8 @@
     "preview": "astro preview",
     "start": "node ./dist/server/entry.mjs",
     "astro": "astro",
-    "data:sync": "node data.ts"
+    "data:sync": "node data.ts",
+    "og:assets": "node scripts/make-og-assets.mjs"
   },
   "dependencies": {
     "@astrojs/node": "^11.1.6",
@@ -20,6 +21,7 @@
     "@tailwindcss/forms": "^0.5.11",
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.3.5",
+    "sharp": "^0.35.5",
     "tailwind-merge": "^3.7.0",
     "tailwind-variants": "^3.3.1",
     "tailwindcss": "^4.3.3",

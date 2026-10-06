@@ -36,6 +36,8 @@ export type Game = {
   name: string;
   slug?: string;
   released?: number;
+  art?: string;
+  cover?: string;
   popularity?: number;
   [field: string]: unknown;
 };
@@ -44,11 +46,58 @@ export type Game = {
 // `first_release_date` is the game's earliest release anywhere, in seconds
 // since 1970. It is absent when IGDB has no date, and in the future for games
 // that are announced but not out.
+//
+// `artworks` and `cover` are the game's images. Each has an `image_id`, which
+// is all that is needed to build an address on IGDB's image server.
+type IgdbArtwork = {
+  image_id?: string;
+  artwork_type?: number;
+  width?: number;
+  height?: number;
+};
 type IgdbGame = {
   id: number;
   name: string;
   slug: string;
   first_release_date?: number;
+  artworks?: IgdbArtwork[];
+  cover?: { image_id?: string };
+};
+
+// Which artwork to use behind a game's page and social media card, most
+// preferred first. These are IGDB's artwork types: 2 is key art without the
+// game's logo, and 1 is general artwork.
+//
+// Type 3, key art WITH the logo, is deliberately left out: these images are
+// used as backgrounds, and a logo behind the page's own text is a distraction.
+// Logos, icons, covers and infographics are never used either.
+const ARTWORK_TYPE_PREFERENCE = [2, 1];
+
+/**
+ * Picks the image for a game's social media card. Returns `art`, the id of a
+ * landscape artwork, or failing that `cover`, the id of its portrait cover.
+ * A game with neither gets nothing, and its card is drawn without an image.
+ */
+const pickImage = ({ artworks = [], cover }: IgdbGame): { art?: string; cover?: string } => {
+  const landscape = artworks.filter(
+    (artwork) =>
+      artwork.image_id &&
+      ARTWORK_TYPE_PREFERENCE.includes(artwork.artwork_type ?? 0) &&
+      // Wide enough to fill a card without being stretched, and wider than tall.
+      (artwork.width ?? 0) >= 1000 &&
+      (artwork.width ?? 0) >= (artwork.height ?? 0) * 1.3,
+  );
+  // The card is about 1.9 times as wide as it is tall. Within the best type
+  // available, take the artwork closest to that shape, so the least is cropped.
+  const shapeError = (artwork: IgdbArtwork) =>
+    Math.abs((artwork.width ?? 0) / (artwork.height ?? 1) - 1200 / 630);
+  for (const type of ARTWORK_TYPE_PREFERENCE) {
+    const [best] = landscape
+      .filter((artwork) => artwork.artwork_type === type)
+      .sort((a, b) => shapeError(a) - shapeError(b));
+    if (best) return { art: best.image_id };
+  }
+  return cover?.image_id ? { cover: cover.image_id } : {};
 };
 
 const IGDB_PAGE_SIZE = 500; // the maximum IGDB allows per request
@@ -164,7 +213,8 @@ const fetchPopularity = async (token: string): Promise<Map<number, number>> => {
  * in line with them.
  *
  * Games are matched by id. A new id is appended as `{ id, name, slug }`, and
- * a changed (or missing) name or slug is updated in place. `released` (the
+ * a changed (or missing) name or slug is updated in place. `art` or `cover`
+ * (the image for the game's social media card), `released` (the
  * first release date, in seconds since 1970) and `popularity` are replaced
  * with their values at the time of the run, and removed from games that no
  * longer have one. Saved games that IGDB no longer returns, or that have no
@@ -198,12 +248,10 @@ export const fetchAllGames = async (
     const page = await igdbQuery<IgdbGame[]>(
       "games",
       token,
-      `fields name,slug,first_release_date; where ${filter} & id > ${lastId}; sort id asc; limit ${IGDB_PAGE_SIZE};`,
+      `fields name,slug,first_release_date,cover.image_id,artworks.image_id,artworks.artwork_type,artworks.width,artworks.height; where ${filter} & id > ${lastId}; sort id asc; limit ${IGDB_PAGE_SIZE};`,
     );
     if (page.length === 0) break;
-    for (const { id, name, slug, first_release_date } of page) {
-      fetched.push({ id, name, slug, first_release_date });
-    }
+    for (const game of page) fetched.push(game);
     lastId = page[page.length - 1].id;
     console.log(`Fetched ${fetched.length} of ~${count} games`);
     if (page.length < IGDB_PAGE_SIZE) break;
@@ -243,15 +291,18 @@ export const fetchAllGames = async (
     updated++;
   }
 
-  // Release date and popularity are brought in line with this run on every
-  // record, and dropped from games that no longer have them.
+  // Release date, image and popularity are brought in line with this run on
+  // every record, and dropped from games that no longer have them.
   const releasedById = new Map<number, number>();
-  for (const { id, first_release_date } of fetched) {
-    if (typeof first_release_date === "number") {
-      releasedById.set(id, first_release_date);
+  const imageById = new Map<number, { art?: string; cover?: string }>();
+  for (const game of fetched) {
+    if (typeof game.first_release_date === "number") {
+      releasedById.set(game.id, game.first_release_date);
     }
+    imageById.set(game.id, pickImage(game));
   }
   let redated = 0;
+  let reimaged = 0;
   let rescored = 0;
   for (let index = 0; index < games.length; index++) {
     const {
@@ -259,12 +310,16 @@ export const fetchAllGames = async (
       name,
       slug,
       released: savedReleased,
+      art: savedArt,
+      cover: savedCover,
       popularity: savedPopularity,
       ...custom
     } = games[index];
     const released = releasedById.get(id);
+    const { art, cover } = imageById.get(id) ?? {};
     const popularity = popularityById.get(id);
-    if (savedReleased === released && savedPopularity === popularity) continue;
+    const sameImage = savedArt === art && savedCover === cover;
+    if (savedReleased === released && sameImage && savedPopularity === popularity) continue;
     // Rebuild the record so these sit after the slug, ahead of any custom
     // fields.
     games[index] = {
@@ -272,16 +327,19 @@ export const fetchAllGames = async (
       name,
       ...(slug !== undefined && { slug }),
       ...(released !== undefined && { released }),
+      ...(art !== undefined && { art }),
+      ...(cover !== undefined && { cover }),
       ...(popularity !== undefined && { popularity }),
       ...custom,
     };
     if (savedReleased !== released) redated++;
+    if (!sameImage) reimaged++;
     if (savedPopularity !== popularity) rescored++;
   }
   console.log(
-    `${added} games added, ${updated} updated, ${removed} removed, ${redated} release dates changed, ${rescored} popularity scores changed`,
+    `${added} games added, ${updated} updated, ${removed} removed, ${redated} release dates changed, ${reimaged} images changed, ${rescored} popularity scores changed`,
   );
-  if (added + updated + removed + redated + rescored === 0) return games;
+  if (added + updated + removed + redated + reimaged + rescored === 0) return games;
 
   // Compact JSON with one game per line. The file is not meant to be read or
   // edited by hand, but a line per game keeps the diff between runs small.

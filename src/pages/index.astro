@@ -21,23 +21,16 @@ const description =
   "Search hundreds of thousands of video games to find out whether you can die in them.";
 ---
 
-<Layout title={pageTitle} description={description}>
-  <main class="mx-auto w-full max-w-3xl px-4 py-10 sm:py-16">
-    <header class="border-foreground mb-8 border-b-4 pb-7">
-      <p class="small-print text-muted-foreground mb-4">A register of video game mortality</p>
-      <h1 class="text-[clamp(2.75rem,10vw,5.5rem)] leading-[0.95] font-black tracking-tight">
-        <a href="/">
-          {/* The dagger is the printer's mark for a death. */}
-          <span class="text-primary-accent mr-[0.12em]" aria-hidden="true">†</span>
-          {pageTitle}
-        </a>
-      </h1>
-      <p class="mt-5 max-w-xl text-xl leading-snug italic">
+<Layout title={pageTitle} description={description} tint="yes">
+  <main id="main" class="mx-auto w-full max-w-2xl px-5 py-14 sm:py-24">
+    <header class="mb-12">
+      <h1 class="text-4xl font-semibold tracking-tight sm:text-5xl">{pageTitle}</h1>
+      <p class="mt-5 text-lg">
         Pick a game to find out whether you can die in it.
         <br />
-        Or see the <a href="/no-deaths" class="ink-link">games you can't die in</a>.
+        Or see the <a href="/no-deaths" class="link">games you can't die in</a>.
       </p>
-      <DeathDefinition class="mt-5 max-w-xl" />
+      <DeathDefinition class="mt-5" />
     </header>
 
     <GameBrowser view={view} />

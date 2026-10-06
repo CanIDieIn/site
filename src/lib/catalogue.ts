@@ -14,6 +14,10 @@ export type Game = {
   name: string;
   slug: string;
   released?: number;
+  /** The id of a landscape artwork on IGDB's image server, for the game's social media card. */
+  art?: string;
+  /** The id of the game's portrait cover, used for the card when there is no artwork. */
+  cover?: string;
   popularity?: number;
 };
 
@@ -234,8 +238,26 @@ export const findGame = (slug: string | undefined): Game | undefined =>
  * game has no entry in `deaths.json` and nobody has decided yet.
  *
  * The rule is one question: would it make a fun moment to call this a death?
- * Killed, knocked out, blown up, game over: all yes. If nothing in the game
- * could ever earn a "you died", it is a no.
+ *
+ * These rulings settle the borderline cases. The first 2,700 answers in
+ * deaths.json follow them, so new answers should too:
+ *
+ *   - Knocked out or fainting, with no death: yes only if it costs you items,
+ *     money or progress. Stardew Valley is a yes. Animal Crossing is a no.
+ *   - A game over with no character to die: yes only when a whole run is
+ *     lost. Suika Game and Balatro are a yes. Failing one song or level and
+ *     retrying it is a no, as in Beat Saber.
+ *   - Vehicles: yes only when the vehicle is your character in a fight, such
+ *     as tanks, warships and starfighters. Racing crashes, and Rocket League,
+ *     are a no.
+ *   - Units you command: usually only "you" count. They count when losing
+ *     them means a game over or a reset, as in XCOM, The Sims or Civilization.
+ *   - Knocked out of a round or match: yes. Fighting games, Super Smash Bros.
+ *     and Fall Guys are a yes. Losing on points, as in football, is a no.
+ *   - Card games: yes when your hero or avatar is destroyed, as in
+ *     Hearthstone. No when there is none, as in Marvel Snap.
+ *   - Deaths that are only part of the story: no. Detroit: Become Human and
+ *     Until Dawn are a no. Dying has to be a risk of normal play.
  */
 export const canDieIn = (game: Game): boolean | undefined =>
   deathsById.get(game.id)?.deaths;
