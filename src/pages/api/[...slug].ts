@@ -33,7 +33,7 @@ const decoded = (value: string) => {
  *
  * The game is named in the address, either by its slug or by its name:
  *
- *   /api/baldurs-gate-3
+ *   /api/baldurs-gate-iii
  *   /api/Baldur's Gate 3
  *
  * The name is there so a streaming tool can send the current Twitch category

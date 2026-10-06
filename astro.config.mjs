@@ -13,6 +13,8 @@ export default defineConfig({
   redirects: {
     "/game/[slug]": "/[slug]",
     "/api/game/[...slug]": "/api/[...slug]",
+    // The API on its own has nothing to answer. Send people to its guide.
+    "/api": "/streaming",
   },
 
   adapter: node({

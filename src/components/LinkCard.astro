@@ -1,0 +1,37 @@
+---
+import ArrowRight from "@tabler/icons/outline/arrow-right.svg";
+
+// A link drawn as a panel: an icon, a title and a line of detail. Used at the
+// top of the list pages to point to the site's other pages.
+//
+// The icon goes in the slot. The whole panel is the link, so it is a large
+// target, and the title is underlined on hover like the rows of the game list.
+interface Props {
+  href: string;
+  title: string;
+  text: string;
+}
+const { href, title, text } = Astro.props;
+---
+
+<a
+  {href}
+  class="group bg-background/60 hover:bg-accent flex items-center gap-4 rounded-xl border p-4"
+>
+  <span
+    class="bg-muted text-foreground grid size-11 shrink-0 place-items-center rounded-full"
+    aria-hidden="true"
+  >
+    <slot />
+  </span>
+  <span class="min-w-0 flex-1">
+    <span class="block leading-snug font-semibold underline-offset-4 group-hover:underline">
+      {title}
+    </span>
+    <span class="text-muted-foreground mt-0.5 block text-sm leading-snug">{text}</span>
+  </span>
+  <ArrowRight
+    class="text-muted-foreground size-5 shrink-0 transition-transform group-hover:translate-x-0.5 motion-reduce:transition-none"
+    aria-hidden="true"
+  />
+</a>

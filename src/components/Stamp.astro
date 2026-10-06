@@ -1,0 +1,28 @@
+---
+// A small rubber stamp of an answer, the same style as the big one on a game
+// page: capitals in a heavy box, knocked slightly off straight.
+//
+// It is decoration, and hidden from screen readers. Its size follows the text
+// size of whatever it is placed in.
+interface Props {
+  answer: "yes" | "no";
+  class?: string;
+}
+const { answer, class: className } = Astro.props;
+
+const stamps = {
+  yes: "text-yes -rotate-6",
+  no: "text-no rotate-3",
+};
+---
+
+<span
+  aria-hidden="true"
+  class:list={[
+    "inline-block rounded-md border-[0.09em] border-current px-[0.22em] pt-[0.06em] pb-[0.1em] leading-none font-black tracking-tight uppercase select-none",
+    stamps[answer],
+    className,
+  ]}
+>
+  {answer}
+</span>

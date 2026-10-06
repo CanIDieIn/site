@@ -12,9 +12,12 @@ import { DEFAULT_SORT, DIRECTIONS, SORTS } from "@/lib/catalogue";
 //
 // Accessibility notes, so later changes keep them:
 //   - Every field has a visible label. Placeholders are not used as labels.
-//   - Nothing happens until the Search button is pressed. Changing a menu
-//     never reloads the page, which would disorient keyboard and screen
-//     reader users.
+//   - The list updates as the visitor types or picks from a menu, but the
+//     page is never reloaded and focus never moves, which would disorient
+//     keyboard and screen reader users. Only the list is replaced, and the
+//     "Showing..." line announces the new count. See the script below.
+//   - Without JavaScript the form still works. A Search button appears, as
+//     nothing else would then send the form.
 //   - Fields and buttons are at least 44 pixels tall, for easy tapping.
 //   - Links in the list are full-width rows, so the whole row is the target.
 interface Props {
@@ -35,7 +38,7 @@ const field = "bg-background dark:bg-background shadow-none";
   action={basePath}
   role="search"
   aria-label="Find a game"
-  class="grid gap-4 sm:grid-cols-[minmax(0,1fr)_auto_auto_auto] sm:items-end"
+  class="bg-background/60 grid gap-4 rounded-xl border p-4 sm:grid-cols-[minmax(0,1fr)_auto_auto] sm:items-end sm:p-5"
   data-game-search
 >
   <div class="grid gap-1.5">
@@ -74,10 +77,13 @@ const field = "bg-background dark:bg-background shadow-none";
       }
     </NativeSelect>
   </div>
-  <Button type="submit">Search</Button>
+  {/* Only shown when JavaScript is off, when the list cannot update by itself. */}
+  <noscript class="grid sm:col-span-full">
+    <Button type="submit">Search</Button>
+  </noscript>
 </form>
 
-<p class="text-muted-foreground mt-10 text-sm">
+<p class="text-muted-foreground mt-10 text-sm" role="status" data-game-status>
   {
     total === 0
       ? query
@@ -94,91 +100,169 @@ const field = "bg-background dark:bg-background shadow-none";
   }
 </p>
 
-{
-  games.length > 0 && (
-    <ul class="mt-3 border-t">
-      {games.map(({ game, released }) => (
-        <li class="border-b">
-          <a
-            href={`/${game.slug}`}
-            class="group hover:bg-accent -mx-3 flex flex-col gap-0.5 rounded-md px-3 py-3 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6"
-          >
-            <span class="min-w-0 font-medium underline-offset-4 wrap-anywhere group-hover:underline">
-              {game.name}
-            </span>
-            {released && (
-              <time class="text-muted-foreground shrink-0 text-sm tabular-nums" datetime={released.iso}>
-                <span class="sr-only">Released </span>
-                {released.text}
-              </time>
-            )}
+<div data-game-results class="transition-opacity motion-reduce:transition-none aria-busy:opacity-60">
+  {
+    games.length > 0 && (
+      <ul class="mt-3 border-t">
+        {games.map(({ game, released }) => (
+          <li class="border-b">
+            <a
+              href={`/${game.slug}`}
+              class="group hover:bg-accent -mx-3 flex flex-col gap-0.5 rounded-md px-3 py-3 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6"
+            >
+              <span class="min-w-0 font-medium underline-offset-4 wrap-anywhere group-hover:underline">
+                {game.name}
+              </span>
+              {released && (
+                <time class="text-muted-foreground shrink-0 text-sm tabular-nums" datetime={released.iso}>
+                  <span class="sr-only">Released </span>
+                  {released.text}
+                </time>
+              )}
+            </a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
+
+  {
+    totalPages > 1 && (
+      <nav aria-label="Pages of results" class="mt-8 flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
+        {page > 1 ? (
+          <a href={view.pageHref(page - 1)} rel="prev" class="link inline-flex min-h-11 items-center">
+            Previous<span class="sr-only"> page</span>
           </a>
-        </li>
-      ))}
-    </ul>
-  )
-}
+        ) : (
+          <span class="text-muted-foreground inline-flex min-h-11 items-center">
+            Previous<span class="sr-only"> page, not available</span>
+          </span>
+        )}
 
-{
-  totalPages > 1 && (
-    <nav aria-label="Pages of results" class="mt-8 flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
-      {page > 1 ? (
-        <a href={view.pageHref(page - 1)} rel="prev" class="link inline-flex min-h-11 items-center">
-          Previous<span class="sr-only"> page</span>
-        </a>
-      ) : (
-        <span class="text-muted-foreground inline-flex min-h-11 items-center">
-          Previous<span class="sr-only"> page, not available</span>
-        </span>
-      )}
+        <form method="get" action={basePath} class="flex items-center gap-2">
+          {query && <input type="hidden" name="q" value={query} />}
+          {sort !== DEFAULT_SORT && <input type="hidden" name="sort" value={sort} />}
+          {direction !== defaultDirection && <input type="hidden" name="dir" value={direction} />}
+          <Label for="page" size="sm" class="font-normal">
+            Page
+          </Label>
+          <Input
+            id="page"
+            type="number"
+            name="page"
+            value={page}
+            min="1"
+            max={totalPages}
+            inputmode="numeric"
+            class={`${field} w-24`}
+          />
+          <span class="text-sm whitespace-nowrap">of {count.format(totalPages)}</span>
+          <Button type="submit" variant="outline" class={`${field} border-input`}>
+            Go<span class="sr-only"> to page</span>
+          </Button>
+        </form>
 
-      <form method="get" action={basePath} class="flex items-center gap-2">
-        {query && <input type="hidden" name="q" value={query} />}
-        {sort !== DEFAULT_SORT && <input type="hidden" name="sort" value={sort} />}
-        {direction !== defaultDirection && <input type="hidden" name="dir" value={direction} />}
-        <Label for="page" size="sm" class="font-normal">
-          Page
-        </Label>
-        <Input
-          id="page"
-          type="number"
-          name="page"
-          value={page}
-          min="1"
-          max={totalPages}
-          inputmode="numeric"
-          class={`${field} w-24`}
-        />
-        <span class="text-sm whitespace-nowrap">of {count.format(totalPages)}</span>
-        <Button type="submit" variant="outline" class={`${field} border-input`}>
-          Go<span class="sr-only"> to page</span>
-        </Button>
-      </form>
-
-      {page < totalPages ? (
-        <a href={view.pageHref(page + 1)} rel="next" class="link inline-flex min-h-11 items-center">
-          Next<span class="sr-only"> page</span>
-        </a>
-      ) : (
-        <span class="text-muted-foreground inline-flex min-h-11 items-center">
-          Next<span class="sr-only"> page, not available</span>
-        </span>
-      )}
-    </nav>
-  )
-}
+        {page < totalPages ? (
+          <a href={view.pageHref(page + 1)} rel="next" class="link inline-flex min-h-11 items-center">
+            Next<span class="sr-only"> page</span>
+          </a>
+        ) : (
+          <span class="text-muted-foreground inline-flex min-h-11 items-center">
+            Next<span class="sr-only"> page, not available</span>
+          </span>
+        )}
+      </nav>
+    )
+  }
+</div>
 
 <script>
-  // A convenience only: picking a different sort sets the Order menu to the
-  // order that sort normally starts in, such as newest first for release date.
-  // Nothing is submitted. The visitor still sees both menus and presses Search.
-  for (const form of document.querySelectorAll<HTMLFormElement>("[data-game-search]")) {
-    const sort = form.elements.namedItem("sort");
-    const order = form.elements.namedItem("dir");
-    if (!(sort instanceof HTMLSelectElement) || !(order instanceof HTMLSelectElement)) continue;
+  // Updates the list as the visitor types or picks from a menu, so there is no
+  // Search button to press. Without JavaScript one is shown, and pressing it
+  // loads the page the ordinary way.
+  //
+  // The new list is fetched from this same page's address and put in place of
+  // the old one. The page is not reloaded, so the search box keeps its focus
+  // and the visitor's place on the page does not move. The address bar is kept
+  // in step, so the view can be bookmarked, shared or returned to.
+
+  // How long to wait after the last keystroke before searching, in
+  // milliseconds. Menus update at once.
+  const TYPING_DELAY = 300;
+
+  const form = document.querySelector<HTMLFormElement>("[data-game-search]");
+  const status = document.querySelector<HTMLElement>("[data-game-status]");
+  const results = document.querySelector<HTMLElement>("[data-game-results]");
+  const search = form?.elements.namedItem("q");
+  const sort = form?.elements.namedItem("sort");
+  const order = form?.elements.namedItem("dir");
+
+  if (
+    form &&
+    status &&
+    results &&
+    search instanceof HTMLInputElement &&
+    sort instanceof HTMLSelectElement &&
+    order instanceof HTMLSelectElement
+  ) {
+    let timer: number | undefined;
+    let request: AbortController | undefined;
+    // What the list currently shows, to skip a fetch that would change nothing.
+    const choices = () =>
+      new URLSearchParams({ q: search.value, sort: sort.value, dir: order.value }).toString();
+    let shown = choices();
+
+    /** Shows the list for the form as it stands. `force` skips the "nothing changed" check. */
+    const update = async (force = false) => {
+      window.clearTimeout(timer);
+      const wanted = choices();
+      if (wanted === shown && !force) return;
+
+      // Only the latest request matters. Drop any still on its way.
+      request?.abort();
+      request = new AbortController();
+      const { signal } = request;
+      results.setAttribute("aria-busy", "true");
+      try {
+        const response = await fetch(`${form.action}?${wanted}`, { signal });
+        if (!response.ok) throw new Error(`Search responded ${response.status}`);
+        const page = new DOMParser().parseFromString(await response.text(), "text/html");
+        const newStatus = page.querySelector("[data-game-status]");
+        const newResults = page.querySelector("[data-game-results]");
+        if (!newStatus || !newResults) throw new Error("Search returned an unexpected page");
+        // The status line is announced by screen readers when it changes, so
+        // they hear how many games now match.
+        status.innerHTML = newStatus.innerHTML;
+        results.innerHTML = newResults.innerHTML;
+        shown = wanted;
+        // The server redirects to the tidiest form of the address. Show that.
+        history.replaceState(null, "", response.url);
+      } catch {
+        if (signal.aborted) return; // replaced by a newer request
+        // Fall back to loading the page the ordinary way.
+        form.submit();
+        return;
+      }
+      results.removeAttribute("aria-busy");
+    };
+
+    search.addEventListener("input", () => {
+      window.clearTimeout(timer);
+      timer = window.setTimeout(() => update(), TYPING_DELAY);
+    });
     sort.addEventListener("change", () => {
+      // Picking a different sort sets the Order menu to the order that sort
+      // normally starts in, such as newest first for release date.
       const startsIn = sort.selectedOptions[0]?.dataset.direction;
       if (startsIn) order.value = startsIn;
+      update();
+    });
+    order.addEventListener("change", () => update());
+    // Pressing Enter updates in place too, without waiting. It always runs,
+    // as it also returns a visitor on a later page to page 1.
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      update(true);
     });
   }
 </script>

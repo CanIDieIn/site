@@ -242,25 +242,66 @@ const preferredForName = (a: Game, b: Game) =>
   (b.popularity ?? 0) - (a.popularity ?? 0) ||
   a.id - b.id;
 
-// Keyed by normalised name, so case, accents and punctuation do not matter.
-// Names made only of symbols normalise to nothing and are left out.
-const gamesByName = new Map<string, Game>();
-for (const { game, key } of keyed) {
-  if (key === "") continue;
-  const current = gamesByName.get(key);
-  if (!current || preferredForName(game, current) < 0) {
-    gamesByName.set(key, game);
+// A whole word that is a Roman numeral from 1 to 39: I, IV, IX, XXVII. Only
+// the letters I, V and X are read, as sequels do not reach 40, and reading L,
+// C, D and M as well would turn words such as "mix" and "dim" into numbers.
+const ROMAN_NUMERAL = /^(x{0,3})(ix|iv|v?i{0,3})$/;
+const ROMAN_UNITS = ["", "i", "ii", "iii", "iv", "v", "vi", "vii", "viii", "ix"];
+
+/**
+ * Rewrites the Roman numerals in a normalised name as ordinary numbers, so
+ * "baldurs gate iii" becomes "baldurs gate 3". Twitch and IGDB do not always
+ * agree on which to use for the same game.
+ *
+ * This reads the word "I" as 1 and a lone "X" as 10, so it is only used to
+ * compare two names that have both been through it, never for display.
+ */
+export const withoutRomanNumerals = (key: string) =>
+  key
+    .split(" ")
+    .map((word) => {
+      const [, tens, units] = word.match(ROMAN_NUMERAL) ?? [];
+      if (!word || tens === undefined) return word;
+      return String(tens.length * 10 + ROMAN_UNITS.indexOf(units));
+    })
+    .join(" ");
+
+/** The preferred game for each name, after the name has been through `keyOf`. */
+const indexByName = (keyOf: (key: string) => string) => {
+  const index = new Map<string, Game>();
+  for (const { game, key } of keyed) {
+    // Names made only of symbols normalise to nothing and are left out.
+    if (key === "") continue;
+    const name = keyOf(key);
+    const current = index.get(name);
+    if (!current || preferredForName(game, current) < 0) index.set(name, game);
   }
-}
+  return index;
+};
+
+// Keyed by normalised name, so case, accents and punctuation do not matter.
+const gamesByName = indexByName((key) => key);
+// The same, with Roman numerals and ordinary numbers treated as equal.
+const gamesByNumberedName = indexByName(withoutRomanNumerals);
 
 /**
  * The game with this name, if it is in the catalogue. Meant for Twitch
- * category names, which are taken from IGDB and so match the names here.
- * "Baldur's Gate 3", "baldurs gate 3" and "BALDUR'S GATE 3" all find the same
- * game.
+ * category names. "Baldur's Gate III", "baldurs gate iii" and "BALDUR'S GATE
+ * III" all find the same game.
+ *
+ * Twitch takes its names from IGDB, as this site does, but sometimes writes a
+ * sequel's number differently: its category is "Baldur's Gate 3". So when no
+ * game has the name as given, Roman numerals and ordinary numbers are treated
+ * as equal. A name that matches as given always wins, which keeps "Mega Man X"
+ * and "Mega Man 10" apart, as they are different games.
  */
-export const findGameByName = (name: string | undefined): Game | undefined =>
-  name === undefined ? undefined : gamesByName.get(normalise(name));
+export const findGameByName = (name: string | undefined): Game | undefined => {
+  if (name === undefined) return undefined;
+  const key = normalise(name);
+  return (
+    gamesByName.get(key) ?? gamesByNumberedName.get(withoutRomanNumerals(key))
+  );
+};
 
 /**
  * Whether you can die in the game: `true`, `false`, or `undefined` when the

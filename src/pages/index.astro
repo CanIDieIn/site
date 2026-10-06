@@ -1,8 +1,13 @@
 ---
 import DeathDefinition from "@/components/DeathDefinition.astro";
 import GameBrowser from "@/components/GameBrowser.astro";
+import LinkCard from "@/components/LinkCard.astro";
+import Stamp from "@/components/Stamp.astro";
 import Layout from "@/layouts/Layout.astro";
 import { browse } from "@/lib/browse";
+import { gamesWithoutDeaths } from "@/lib/catalogue";
+import Broadcast from "@tabler/icons/outline/broadcast.svg";
+import Leaf from "@tabler/icons/outline/leaf.svg";
 
 // Rendered per request, so search and paging work across the whole catalogue
 // without building thousands of static pages or shipping the list to the browser.
@@ -19,18 +24,37 @@ const pageTitle = "Can I Die In...";
 
 const description =
   "Search hundreds of thousands of video games to find out whether you can die in them.";
+const count = new Intl.NumberFormat("en");
 ---
 
 <Layout title={pageTitle} description={description} tint="yes">
   <main id="main" class="mx-auto w-full max-w-2xl px-5 py-14 sm:py-24">
-    <header class="mb-12">
-      <h1 class="text-4xl font-semibold tracking-tight sm:text-5xl">{pageTitle}</h1>
-      <p class="mt-5 text-lg">
-        Pick a game to find out whether you can die in it.
-        <br />
-        Or see the <a href="/no-deaths" class="link">games you can't die in</a>.
-      </p>
-      <DeathDefinition class="mt-5" />
+    <header class="mb-10">
+      {/* The title, with the two answers stamped beside it. On a narrow screen
+          the stamps drop below the title. */}
+      <div class="flex flex-wrap items-center justify-between gap-x-8 gap-y-6">
+        <h1 class="text-5xl font-bold tracking-tight sm:text-6xl">{pageTitle}</h1>
+        <div class="flex items-center gap-3 text-3xl sm:text-4xl" aria-hidden="true">
+          <Stamp answer="yes" />
+          <Stamp answer="no" />
+        </div>
+      </div>
+      <p class="mt-6 text-xl text-pretty">Pick a game to find out whether you can die in it.</p>
+
+      <nav aria-label="More on this site" class="mt-8 grid gap-3 sm:grid-cols-2">
+        <LinkCard
+          href="/no-deaths"
+          title="Games you can't die in"
+          text={`${count.format(gamesWithoutDeaths.length)} confirmed so far`}
+        >
+          <Leaf class="size-5" />
+        </LinkCard>
+        <LinkCard href="/streaming" title="Streaming?" text="Connect your stream bot">
+          <Broadcast class="size-5" />
+        </LinkCard>
+      </nav>
+
+      <DeathDefinition class="border-yes mt-8 border-l-2 pl-4" />
     </header>
 
     <GameBrowser view={view} />
