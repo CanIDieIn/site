@@ -6,7 +6,7 @@ import { Label } from "@/components/starwind/label";
 // as it has nothing directional about it. See NativeSelect.astro.
 import NativeSelect from "@/components/NativeSelect.astro";
 import { NativeSelectOption } from "@/components/starwind/native-select";
-import { gameHref } from "@/i18n/locales";
+import { directionOf, gameHref } from "@/i18n/locales";
 import { uiFor } from "@/i18n/ui";
 import type { BrowseView } from "@/lib/browse";
 import {
@@ -151,13 +151,18 @@ const field = "bg-background dark:bg-background shadow-none";
                 <span
                   class="font-medium underline-offset-4 group-hover:underline"
                   lang={nameLocale === locale ? undefined : nameLocale}
+                  dir={nameLocale === locale ? undefined : directionOf(nameLocale)}
                 >
                   {nameIn(game, locale)}
                 </span>
                 {/* A game shown under its name in this language also gets its
                     English name, which is the one most people search for. */}
                 {nameIn(game, locale) !== game.name && (
-                  <span class="text-muted-foreground block text-sm" lang="en">
+                  <span
+                    class="text-muted-foreground block text-sm"
+                    lang="en"
+                    dir="ltr"
+                  >
                     {game.name}
                   </span>
                 )}
