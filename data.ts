@@ -126,17 +126,61 @@ const IGDB_TWITCH_FILTER = "external_games.external_game_source = 14";
 // (Twitch). The full list is at the `popularity_types` endpoint.
 const IGDB_POPULARITY_TYPE = 3;
 
-// Game names in other languages. IGDB records a game's name per region, not
-// per language, and only a few regions have many: Japan has tens of thousands,
-// Korea about ten thousand, and "Europe" mostly empty entries. French, German
-// and Spanish names are not held this way at all, so those languages show the
-// English name.
+// Game names in other languages, from the better of IGDB's two sources.
+//
+// `game_localizations` records a name against a region id, so there is nothing
+// to interpret. Only three regions exist at all, and only two hold names worth
+// having: Japan has tens of thousands and Korea about ten thousand. ("Europe"
+// is a continent rather than a language, and its entries are mostly empty.)
 //
 // This maps a language code on the site to the IGDB region whose names it
-// uses. The region is named by IGDB's own identifier for it. To add another,
-// add a line here, for example `ko: "ko-KR"`, and the language itself in
-// src/i18n/locales.ts.
+// uses, named by IGDB's own identifier for it. To add another, add a line
+// here and the language itself in src/i18n/locales.ts.
 const IGDB_NAME_REGIONS: Record<string, string> = { ja: "ja-JP", ko: "ko-KR" };
+
+// Game names in other languages, from the weaker source: `alternative_names`.
+//
+// Chinese, Italian and Russian names are not held per region at all, so they
+// can only come from here. The catch is that this table is free text. Each row
+// carries a `comment` someone typed to say what the name is, and the same
+// table also holds Windows executable names, acronyms, working titles,
+// stylised spellings and romanisations, none of which is a game's name in
+// another language. So only the comments listed below are read, and anything
+// else is ignored.
+//
+// `search` narrows the pull to one language, as IGDB can filter on `comment`.
+// `accept` is the comments to keep, best first: the first one a game has wins,
+// so a game with both Chinese titles is listed under its simplified one.
+//
+// Treat what comes out of here as less trustworthy than the region names
+// above. It is contributed by hand, and for languages written in the same
+// script as English it holds some literal translations of titles that shipped
+// in English anyway, such as "Regenbogen 6 Belagerung" for Rainbow Six Siege.
+// That is why French, German and Spanish are left out: those pages show the
+// English name, which for most games is the name the game was sold under.
+const IGDB_NAME_COMMENTS: Record<
+  string,
+  { search: string; accept: readonly string[] }
+> = {
+  // Simplified first: it is both the commoner script and the larger set here.
+  zh: {
+    search: "chinese",
+    accept: [
+      "chinese title - simplified",
+      "chinese title",
+      "chinese title - traditional",
+    ],
+  },
+  it: { search: "italian", accept: ["italian title"] },
+  ru: { search: "russian", accept: ["russian title"] },
+  // Japanese and Korean are already covered by IGDB_NAME_REGIONS, which is the
+  // better source. These only fill in games that have no name there.
+  ja: {
+    search: "japanese",
+    accept: ["japanese title - original", "japanese title"],
+  },
+  ko: { search: "korean", accept: ["korean title"] },
+};
 
 const sleep = (ms: number) =>
   new Promise<void>((resolve) => setTimeout(resolve, ms));
@@ -282,6 +326,87 @@ const fetchLocalNames = async (
 };
 
 /**
+ * Pulls every game's name in each language listed in IGDB_NAME_COMMENTS from
+ * IGDB's `alternative_names`. Returns, for each game id, the names it has.
+ *
+ * Only the comments that language accepts are kept, and where a game has
+ * several for one language the earliest in its `accept` list wins.
+ */
+const fetchAlternativeNames = async (
+  token: string,
+): Promise<Map<number, Record<string, string>>> => {
+  type AlternativeName = {
+    id: number;
+    game?: number;
+    name?: string;
+    comment?: string;
+  };
+  const namesById = new Map<number, Record<string, string>>();
+  for (const [language, { search, accept }] of Object.entries(
+    IGDB_NAME_COMMENTS,
+  )) {
+    // How good a match each accepted comment is. A lower rank wins.
+    const rankOf = new Map(accept.map((comment, rank) => [comment, rank]));
+    const ranks = new Map<number, number>();
+    const filter = `comment ~ *"${search}"*`;
+    const { count } = await igdbQuery<{ count: number }>(
+      "alternative_names/count",
+      token,
+      `where ${filter};`,
+    );
+    let lastId = 0;
+    let seen = 0;
+    let kept = 0;
+    while (true) {
+      const startedAt = Date.now();
+      const page = await igdbQuery<AlternativeName[]>(
+        "alternative_names",
+        token,
+        `fields game,name,comment; where ${filter} & id > ${lastId}; sort id asc; limit ${IGDB_PAGE_SIZE};`,
+      );
+      if (page.length === 0) break;
+      for (const { game, name, comment } of page) {
+        if (typeof game !== "number" || !name?.trim()) continue;
+        // Capitalisation of the comment varies, so it is compared in lower case.
+        const rank = rankOf.get(comment?.trim().toLowerCase() ?? "");
+        if (rank === undefined) continue;
+        const held = ranks.get(game);
+        if (held !== undefined && held <= rank) continue;
+        namesById.set(game, {
+          ...namesById.get(game),
+          [language]: name.trim(),
+        });
+        ranks.set(game, rank);
+        kept++;
+      }
+      lastId = page[page.length - 1].id;
+      seen += page.length;
+      console.log(
+        `Read ${seen} of ~${count} "${language}" alternative names, kept ${kept}`,
+      );
+      if (page.length < IGDB_PAGE_SIZE) break;
+      await sleep(IGDB_MIN_INTERVAL_MS - (Date.now() - startedAt));
+    }
+  }
+  return namesById;
+};
+
+/**
+ * Adds the names in `extra` to `names`, keeping any name `names` already has.
+ * This lets a weaker source fill the gaps a better one leaves without ever
+ * overwriting it.
+ */
+const fillNameGaps = (
+  names: Map<number, Record<string, string>>,
+  extra: Map<number, Record<string, string>>,
+): void => {
+  for (const [game, found] of extra) {
+    // Later keys win, so the names already held are spread last.
+    names.set(game, { ...found, ...names.get(game) });
+  }
+};
+
+/**
  * Pulls the id, name and slug of every IGDB game that has a Twitch category,
  * released or not, plus its current popularity score where it has one, and brings `outFile`
  * in line with them.
@@ -341,6 +466,8 @@ export const fetchAllGames = async (
   }
   const popularityById = await fetchPopularity(token);
   const namesById = await fetchLocalNames(token);
+  // Second, so the names held per region are kept where both sources have one.
+  fillNameGaps(namesById, await fetchAlternativeNames(token));
 
   // Re-read the file here so edits made to it during the pull are kept.
   const savedGames = readSavedGames(outFile);

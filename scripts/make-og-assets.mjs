@@ -21,16 +21,22 @@
 // font, means the server only ever layers finished images together.
 //
 // The font is Segoe UI, which comes with Windows, to match the site there. It
-// has no Japanese, so Yu Gothic UI, also from Windows, is named after it and
-// is used for any character Segoe UI lacks. On another system, change the
-// fonts below to ones you have installed.
+// covers Latin and Cyrillic but no CJK, so three more Windows fonts are named
+// after it, each picked up for the characters the ones before it lack: Yu
+// Gothic UI for Japanese, Malgun Gothic for Korean, Microsoft YaHei for
+// Chinese and Segoe UI Arabic for Arabic. On another system, change the fonts
+// below to ones you have installed.
+//
+// Arabic also needs shaping and right-to-left ordering, which the renderer
+// does for us, so the words are written here the same way as any other.
 import fs from "node:fs";
 import sharp from "sharp";
 import { DEFAULT_LOCALE, LOCALES } from "../src/i18n/locales.ts";
 import { uiFor } from "../src/i18n/ui.ts";
 
-const FONT = "Segoe UI, Yu Gothic UI";
-const HEAVY = "Segoe UI Black, Yu Gothic UI";
+const FONT = "Segoe UI, Yu Gothic UI, Malgun Gothic, Microsoft YaHei, Segoe UI Arabic";
+const HEAVY =
+  "Segoe UI Black, Yu Gothic UI, Malgun Gothic, Microsoft YaHei, Segoe UI Arabic";
 
 // The answer colours, taken from the dark theme in src/styles/theme.css. The
 // dark theme's colours are the bright ones, which show up over artwork.
@@ -41,14 +47,16 @@ const TEXT = "#f2f2f2";
 const WIDTH = 1200;
 const HEIGHT = 630;
 
-// How wide a character is, as a share of the font size. Latin capitals in the
-// heavy font are about two thirds of it. Japanese characters are square.
+// How wide a character is, as a share of the font size. Latin and Cyrillic
+// capitals in the heavy font are about two thirds of it. Chinese, Japanese and
+// Korean characters are square.
 const charWidth = (char) => (char.charCodeAt(0) > 0x2e7f ? 1 : 0.66);
 
 /** A stamp as SVG: a word in capitals inside a heavy box, tilted. */
 const stampSvg = ({ word, colour, tilt, fontSize, boxWidth, dashed }) => {
-  // Yu Gothic UI has no weight as heavy as Segoe UI Black. Japanese words get
-  // an outline in their own colour, which thickens each stroke to match.
+  // None of the CJK fonts has a weight as heavy as Segoe UI Black. Words in
+  // those scripts get an outline in their own colour, which thickens each
+  // stroke to match.
   const thicken = [...word].some((char) => charWidth(char) === 1)
     ? `stroke="${colour}" stroke-width="${Math.round(fontSize * 0.045)}" stroke-linejoin="round"`
     : "";
@@ -77,10 +85,7 @@ const withShadow = async (svg, blur = 10) => {
   const outline = svg
     .replace(/<rect[^>]*fill-opacity[^>]*>/g, "")
     .replace(/#[0-9a-f]{6}/gi, "#000000");
-  const shadow = await sharp(Buffer.from(outline))
-    .blur(blur)
-    .png()
-    .toBuffer();
+  const shadow = await sharp(Buffer.from(outline)).blur(blur).png().toBuffer();
   return sharp(shadow)
     .composite([
       { input: shadow, blend: "over" },
@@ -118,7 +123,10 @@ for (const locale of LOCALES) {
   for (const [name, style] of Object.entries(styles)) {
     const word = answers[name].toLocaleUpperCase(locale);
     const file = `src/assets/og/stamp-${locale}-${name}.png`;
-    fs.writeFileSync(file, await withShadow(stampSvg({ word, ...style, ...fitted(word) })));
+    fs.writeFileSync(
+      file,
+      await withShadow(stampSvg({ word, ...style, ...fitted(word) })),
+    );
     console.log("wrote", file);
   }
 }
@@ -130,7 +138,12 @@ const escaped = (text) => text.replace(/&/g, "&amp;").replace(/</g, "&lt;");
 for (const locale of LOCALES) {
   const { siteName, tagline } = uiFor(locale);
   // A long name is set smaller so it stays inside the card.
-  const nameSize = Math.round(Math.min(118, 1560 / [...siteName].reduce((sum, char) => sum + charWidth(char), 0)));
+  const nameSize = Math.round(
+    Math.min(
+      118,
+      1560 / [...siteName].reduce((sum, char) => sum + charWidth(char), 0),
+    ),
+  );
   const defaultSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${HEIGHT}" viewBox="0 0 ${WIDTH} ${HEIGHT}">
   <defs>
     <radialGradient id="wash" cx="50%" cy="0%" r="75%">
@@ -145,7 +158,10 @@ for (const locale of LOCALES) {
   <text x="${WIDTH / 2}" y="392" text-anchor="middle" font-family="${FONT}" font-weight="400" font-size="40"
     fill="#b8b8b8">${escaped(tagline)}</text>
 </svg>`;
-  const file = locale === DEFAULT_LOCALE ? "public/og.jpg" : `public/og-${locale}.jpg`;
-  await sharp(Buffer.from(defaultSvg)).jpeg({ quality: 88, mozjpeg: true }).toFile(file);
+  const file =
+    locale === DEFAULT_LOCALE ? "public/og.jpg" : `public/og-${locale}.jpg`;
+  await sharp(Buffer.from(defaultSvg))
+    .jpeg({ quality: 88, mozjpeg: true })
+    .toFile(file);
   console.log("wrote", file);
 }

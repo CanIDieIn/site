@@ -2,11 +2,20 @@
 import { Button } from "@/components/starwind/button";
 import { Input } from "@/components/starwind/input";
 import { Label } from "@/components/starwind/label";
-import { NativeSelect, NativeSelectOption } from "@/components/starwind/native-select";
+// Our own select, which reads either way round. The option is the vendor's,
+// as it has nothing directional about it. See NativeSelect.astro.
+import NativeSelect from "@/components/NativeSelect.astro";
+import { NativeSelectOption } from "@/components/starwind/native-select";
 import { gameHref } from "@/i18n/locales";
 import { uiFor } from "@/i18n/ui";
 import type { BrowseView } from "@/lib/browse";
-import { DEFAULT_SORT, DIRECTIONS, nameIn, SORTS } from "@/lib/catalogue";
+import {
+  DEFAULT_SORT,
+  DIRECTIONS,
+  localeOfNameIn,
+  nameIn,
+  SORTS,
+} from "@/lib/catalogue";
 
 // The search form, the list of games and the page controls. Every page that
 // lists games uses this, so they all search, sort and page the same way.
@@ -114,7 +123,7 @@ const field = "bg-background dark:bg-background shadow-none";
   }
   {
     query && (
-      <a href={view.pageHref(1, false)} class="link text-foreground ml-1">
+      <a href={view.pageHref(1, false)} class="link text-foreground ms-1">
         {t.clear}
       </a>
     )
@@ -125,14 +134,24 @@ const field = "bg-background dark:bg-background shadow-none";
   {
     games.length > 0 && (
       <ul class="mt-3 border-t">
-        {games.map(({ game, released }) => (
+        {games.map(({ game, released }) => {
+          // The language the name below is in, which is English for a game
+          // with no name in this one.
+          const nameLocale = localeOfNameIn(game, locale);
+          return (
           <li class="border-b">
             <a
               href={gameHref(locale, game.slug)}
               class="group hover:bg-accent -mx-3 flex flex-col gap-0.5 rounded-md px-3 py-3 sm:flex-row sm:items-baseline sm:justify-between sm:gap-6"
             >
               <span class="min-w-0 wrap-anywhere">
-                <span class="font-medium underline-offset-4 group-hover:underline">
+                {/* Marked as English when the game has no name in this
+                    language, so a screen reader reads the English title in an
+                    English voice rather than this page's one. */}
+                <span
+                  class="font-medium underline-offset-4 group-hover:underline"
+                  lang={nameLocale === locale ? undefined : nameLocale}
+                >
                   {nameIn(game, locale)}
                 </span>
                 {/* A game shown under its name in this language also gets its
@@ -151,7 +170,8 @@ const field = "bg-background dark:bg-background shadow-none";
               )}
             </a>
           </li>
-        ))}
+          );
+        })}
       </ul>
     )
   }

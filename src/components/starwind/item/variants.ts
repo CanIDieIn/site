@@ -59,7 +59,8 @@ export const itemMedia = tv({
     variant: {
       default: "bg-transparent",
       icon: "bg-muted size-8 rounded-sm border [&_svg:not([class*='size-'])]:size-4",
-      image: "size-10 overflow-hidden rounded-sm [&_img]:size-full [&_img]:object-cover",
+      image:
+        "size-10 overflow-hidden rounded-sm [&_img]:size-full [&_img]:object-cover",
     },
   },
   defaultVariants: {

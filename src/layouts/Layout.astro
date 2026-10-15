@@ -1,6 +1,12 @@
 ---
 import "@/styles/starwind.css";
-import { DEFAULT_LOCALE, LOCALES, LOCALE_NAMES, localePath } from "@/i18n/locales";
+import {
+  DEFAULT_LOCALE,
+  directionOf,
+  LOCALES,
+  LOCALE_NAMES,
+  localePath,
+} from "@/i18n/locales";
 import { uiFor } from "@/i18n/ui";
 
 // The shell every page shares: the document head, the global stylesheet, a
@@ -62,7 +68,7 @@ const translations = LOCALES.map((code) => ({
 }));
 ---
 
-<html lang={locale}>
+<html lang={locale} dir={directionOf(locale)}>
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -102,7 +108,7 @@ const translations = LOCALES.map((code) => ({
         then lets them jump past everything before the page's content. */}
     <a
       href="#main"
-      class="bg-background text-foreground sr-only z-50 rounded-md px-4 py-3 font-medium underline focus:not-sr-only focus:fixed focus:top-3 focus:left-3"
+      class="bg-background text-foreground sr-only z-50 rounded-md px-4 py-3 font-medium underline focus:not-sr-only focus:fixed focus:top-3 focus:start-3"
     >
       {t.skipToContent}
     </a>

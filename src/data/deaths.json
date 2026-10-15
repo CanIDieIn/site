@@ -651,6 +651,10 @@
     "deaths": true,
     "reason": "Henry can be killed by ghosts and monsters, and you reload a save."
   },
+  "484": {
+    "deaths": true,
+    "reason": "Travis can be killed by the town's monsters, and you reload a save."
+  },
   "485": {
     "deaths": true,
     "reason": "Alex can be killed by the town's monsters, and you reload a save."
@@ -2211,6 +2215,10 @@
     "deaths": false,
     "reason": "A football game. You can lose a match, but nothing dies."
   },
+  "2943": {
+    "deaths": true,
+    "reason": "Maxwell can be killed by the objects you summon, and you carry on from where you were."
+  },
   "2946": {
     "deaths": false,
     "reason": "A football game. You can lose a match, but nothing dies."
@@ -2234,6 +2242,10 @@
   "2985": {
     "deaths": true,
     "reason": "The protagonist can be killed in battle, which is a game over."
+  },
+  "2987": {
+    "deaths": true,
+    "reason": "Soldiers are killed in battle and respawn."
   },
   "2990": {
     "deaths": false,
@@ -2527,6 +2539,10 @@
     "deaths": true,
     "reason": "Your aircraft can be shot down in combat."
   },
+  "3772": {
+    "deaths": false,
+    "reason": "A demolition derby racing game. Cars are wrecked, but nothing dies."
+  },
   "3775": {
     "deaths": true,
     "reason": "Adéwalé can be killed in combat or have his ship sunk, shown as desynchronisation."
@@ -2634,6 +2650,10 @@
   "5025": {
     "deaths": false,
     "reason": "A story game with nothing that can kill you."
+  },
+  "5039": {
+    "deaths": true,
+    "reason": "Your troops are killed in battle, and losing a fight sends you back to a save."
   },
   "5060": {
     "deaths": false,
@@ -3007,6 +3027,10 @@
     "deaths": true,
     "reason": "One bullet kills you, restarting the scene."
   },
+  "7211": {
+    "deaths": true,
+    "reason": "You can fall to your death, restarting from a checkpoint."
+  },
   "7216": {
     "deaths": false,
     "reason": "A racing game. Crashes cost you time, and nothing can kill you."
@@ -3327,6 +3351,10 @@
     "deaths": true,
     "reason": "Your character dies for good, and everything they carried goes with them."
   },
+  "8197": {
+    "deaths": true,
+    "reason": "Let the blocks reach the top and the run is over."
+  },
   "8200": {
     "deaths": true,
     "reason": "Lose your last settlement and army and your faction is destroyed."
@@ -3558,6 +3586,10 @@
   "9280": {
     "deaths": true,
     "reason": "Your character can be knocked out in battle and returns to a phoenix statue."
+  },
+  "9425": {
+    "deaths": true,
+    "reason": "Fighters are knocked out to lose a round."
   },
   "9471": {
     "deaths": true,
@@ -4159,6 +4191,10 @@
     "deaths": true,
     "reason": "Characters can be killed in combat, and losing the whole party is a game over."
   },
+  "14314": {
+    "deaths": true,
+    "reason": "Your tech is your body in a fight, and enemies can blow it apart."
+  },
   "14362": {
     "deaths": false,
     "reason": "Characters can die for good through your choices, but that is the story, not a fail state."
@@ -4214,6 +4250,10 @@
   "14761": {
     "deaths": true,
     "reason": "The slugcat is eaten, drowned and crushed constantly, and loses karma each time."
+  },
+  "14811": {
+    "deaths": false,
+    "reason": "A hidden object game. You can run out of time, but nothing dies."
   },
   "14879": {
     "deaths": true,
@@ -4298,6 +4338,10 @@
   "16305": {
     "deaths": false,
     "reason": "A monster collecting game with nothing that can die."
+  },
+  "16426": {
+    "deaths": true,
+    "reason": "Your character can be killed by monsters and players, and respawns."
   },
   "16587": {
     "deaths": true,
@@ -4410,6 +4454,10 @@
   "18088": {
     "deaths": true,
     "reason": "Soldiers are killed quickly in gunfights and wait to redeploy."
+  },
+  "18090": {
+    "deaths": true,
+    "reason": "Your hero is beaten unconscious in arena duels and dungeon fights."
   },
   "18094": {
     "deaths": true,
@@ -5071,6 +5119,10 @@
     "deaths": true,
     "reason": "One bullet kills you, restarting the scene."
   },
+  "25646": {
+    "deaths": true,
+    "reason": "The witch can catch and kill you, and you start again."
+  },
   "25653": {
     "deaths": true,
     "reason": "Guards and inmates can knock you out, and you wake in the infirmary with your contraband gone."
@@ -5214,6 +5266,10 @@
   "26820": {
     "deaths": true,
     "reason": "The Penitent One can be killed, leaving guilt behind at the spot where he fell."
+  },
+  "26836": {
+    "deaths": true,
+    "reason": "Your character can be killed by monsters, and respawns."
   },
   "26840": {
     "deaths": true,
@@ -5394,6 +5450,10 @@
   "27920": {
     "deaths": true,
     "reason": "Losing your Digimon in battle is a game over."
+  },
+  "27927": {
+    "deaths": true,
+    "reason": "In many of its games your character can be killed and respawns."
   },
   "27979": {
     "deaths": true,
@@ -5791,6 +5851,10 @@
     "deaths": true,
     "reason": "Nathan can be killed by gunfire and falls, restarting from a checkpoint."
   },
+  "43165": {
+    "deaths": true,
+    "reason": "Run out of health and you collapse, and have to try the ruins again."
+  },
   "43178": {
     "deaths": false,
     "reason": "An idle game. Your champions are pushed back when beaten, and nothing is lost."
@@ -5810,6 +5874,10 @@
   "44516": {
     "deaths": false,
     "reason": "Lose a fight and you just get angry and walk it off. Nobody dies."
+  },
+  "45517": {
+    "deaths": false,
+    "reason": "A casino game. You can lose your money, but nothing dies."
   },
   "46800": {
     "deaths": true,
@@ -5898,6 +5966,10 @@
   "54736": {
     "deaths": false,
     "reason": "A gentle automation game with nothing that can die."
+  },
+  "54775": {
+    "deaths": true,
+    "reason": "Your character can be killed in combat, and you reload a save."
   },
   "54789": {
     "deaths": false,
@@ -5999,6 +6071,10 @@
     "deaths": true,
     "reason": "Lose your last city and your tribe is wiped out."
   },
+  "57187": {
+    "deaths": true,
+    "reason": "The heroine can be killed by monsters and traps, and you start the area again."
+  },
   "57263": {
     "deaths": false,
     "reason": "A slapstick comedy where nothing can die for long."
@@ -6035,6 +6111,10 @@
     "deaths": false,
     "reason": "A horse riding adventure with nothing that can kill you."
   },
+  "61260": {
+    "deaths": false,
+    "reason": "A visual novel. Deaths only happen as part of the story."
+  },
   "61616": {
     "deaths": false,
     "reason": "Get caught and you are arrested, losing what you stole. Nothing dies."
@@ -6070,6 +6150,10 @@
   "66396": {
     "deaths": true,
     "reason": "Crew members die in fires, explosions, murders and accidents every round."
+  },
+  "67742": {
+    "deaths": false,
+    "reason": "A pet raising game. Your Mamegoma cannot die."
   },
   "68271": {
     "deaths": true,
@@ -6287,6 +6371,10 @@
     "deaths": true,
     "reason": "Your character can be killed, and you may lose the items you carried."
   },
+  "79864": {
+    "deaths": true,
+    "reason": "Deep water and long falls can destroy you, resetting the puzzle."
+  },
   "79993": {
     "deaths": true,
     "reason": "Players are killed in gunfights and respawn."
@@ -6374,6 +6462,10 @@
   "85663": {
     "deaths": false,
     "reason": "A kart racing game. Being hit only costs you time."
+  },
+  "85952": {
+    "deaths": false,
+    "reason": "A visual novel. Deaths only happen as part of the story."
   },
   "86316": {
     "deaths": false,
@@ -6487,6 +6579,10 @@
     "deaths": true,
     "reason": "You can be killed in the campaign."
   },
+  "95069": {
+    "deaths": false,
+    "reason": "A visual novel. Deaths only happen as part of the story."
+  },
   "95118": {
     "deaths": true,
     "reason": "Your character can be killed, and in Hardcore that death is permanent."
@@ -6507,6 +6603,10 @@
     "deaths": false,
     "reason": "A football game. You can lose a match, but nothing dies."
   },
+  "96217": {
+    "deaths": true,
+    "reason": "Aurehen can be killed in combat, and you restart from a checkpoint."
+  },
   "96437": {
     "deaths": true,
     "reason": "You can be killed on foot or have your ship destroyed, and you reload a save."
@@ -6514,6 +6614,10 @@
   "96476": {
     "deaths": false,
     "reason": "A racing game. Crashes cost you time, and nothing can kill you."
+  },
+  "96632": {
+    "deaths": false,
+    "reason": "A dating sim with nothing that can happen to you."
   },
   "97494": {
     "deaths": true,
@@ -6599,6 +6703,10 @@
     "deaths": true,
     "reason": "Infected, bandits and falls can kill Aiden."
   },
+  "102874": {
+    "deaths": true,
+    "reason": "Your Pokémon are knocked out, and losing the team ends the expedition."
+  },
   "103017": {
     "deaths": true,
     "reason": "Your character can be beaten in fights, which is a game over."
@@ -6634,6 +6742,10 @@
   "103244": {
     "deaths": true,
     "reason": "Elster can be killed by the corrupted Replikas, and you reload a save."
+  },
+  "103246": {
+    "deaths": true,
+    "reason": "Crew die of suffocation, starvation and raids, and losing them all ends the game."
   },
   "103261": {
     "deaths": true,
@@ -6750,6 +6862,10 @@
   "105049": {
     "deaths": true,
     "reason": "Your character can be killed by the Root, respawning at a checkpoint."
+  },
+  "105233": {
+    "deaths": true,
+    "reason": "Crews shoot each other dead over the loot, and you redeploy."
   },
   "105322": {
     "deaths": true,
@@ -7039,6 +7155,10 @@
     "deaths": true,
     "reason": "Creatures and falls can kill you, and you respawn having dropped items."
   },
+  "113463": {
+    "deaths": false,
+    "reason": "A visual novel. Deaths only happen as part of the story."
+  },
   "113598": {
     "deaths": true,
     "reason": "Colt can be killed by Eternalists and by Julianna. A third death ends the loop."
@@ -7058,6 +7178,10 @@
   "114009": {
     "deaths": true,
     "reason": "Goku and friends can be knocked out in battle, which is a game over."
+  },
+  "114145": {
+    "deaths": true,
+    "reason": "Ben can be knocked out by Vilgax's drones, and you start the fight again."
   },
   "114283": {
     "deaths": true,
@@ -7146,6 +7270,10 @@
   "115304": {
     "deaths": true,
     "reason": "The animatronics get you, right in your face."
+  },
+  "115309": {
+    "deaths": false,
+    "reason": "A political drama. Deaths only happen as part of the story."
   },
   "115414": {
     "deaths": false,
@@ -7275,6 +7403,10 @@
     "deaths": false,
     "reason": "Two kiwi birds run a post office. Nothing can hurt them."
   },
+  "117526": {
+    "deaths": true,
+    "reason": "Zombies and other players can kill you, and you respawn."
+  },
   "117533": {
     "deaths": true,
     "reason": "Misako and Kyoko can be knocked out, losing some of their money."
@@ -7290,6 +7422,10 @@
   "117820": {
     "deaths": false,
     "reason": "A transport business builder with nothing that can die."
+  },
+  "117883": {
+    "deaths": true,
+    "reason": "Kratos can be killed in combat, and you restart from a checkpoint."
   },
   "118193": {
     "deaths": false,
@@ -7363,6 +7499,10 @@
     "deaths": true,
     "reason": "The undead can kill you, and you get one chance to shoot your way back up."
   },
+  "119239": {
+    "deaths": true,
+    "reason": "SpongeBob can be beaten by robots and falls, restarting from a checkpoint."
+  },
   "119244": {
     "deaths": true,
     "reason": "War and Strife can be killed, respawning at a checkpoint."
@@ -7406,6 +7546,10 @@
   "119295": {
     "deaths": false,
     "reason": "A civilian flight simulator. A crash just ends the flight."
+  },
+  "119298": {
+    "deaths": true,
+    "reason": "The witch's shadows can kill Ellis, and you restart from a checkpoint."
   },
   "119304": {
     "deaths": false,
@@ -7491,6 +7635,10 @@
     "deaths": false,
     "reason": "Work too hard and you collapse and wake up in the clinic. Nothing dies."
   },
+  "120322": {
+    "deaths": true,
+    "reason": "Pass out and you are revived, losing some of your dinks and your tools' condition."
+  },
   "120560": {
     "deaths": true,
     "reason": "Your family starve, sicken or wander off, and when everyone is gone the run is over."
@@ -7506,6 +7654,10 @@
   "121084": {
     "deaths": true,
     "reason": "The things in the tapes can kill Desmond, restarting from a checkpoint."
+  },
+  "121235": {
+    "deaths": true,
+    "reason": "Demons and spirits can kill you, and you start again from a shrine."
   },
   "121247": {
     "deaths": false,
@@ -7606,6 +7758,10 @@
   "122238": {
     "deaths": true,
     "reason": "Party members are incapacitated in battle, and losing the leader with no revive sends you back to a landmark."
+  },
+  "122338": {
+    "deaths": true,
+    "reason": "Your avatar can be knocked out in a fit battle, and you start the level again."
   },
   "122522": {
     "deaths": false,
@@ -7827,6 +7983,10 @@
     "deaths": true,
     "reason": "Players and creatures can kill you, and everything you carried can be looted."
   },
+  "127571": {
+    "deaths": false,
+    "reason": "A visual novel with nothing that can happen to you."
+  },
   "127697": {
     "deaths": true,
     "reason": "Your character can be killed in combat, and you reload a save."
@@ -7890,6 +8050,10 @@
   "130457": {
     "deaths": true,
     "reason": "Players are shot by each other in build fights."
+  },
+  "130577": {
+    "deaths": false,
+    "reason": "A cosy witch's life with nothing that can kill you."
   },
   "130788": {
     "deaths": true,
@@ -7991,6 +8155,14 @@
     "deaths": true,
     "reason": "Haiku can be destroyed, returning to the last repair station."
   },
+  "132648": {
+    "deaths": true,
+    "reason": "Your units are destroyed in battle, and losing them all loses the fight."
+  },
+  "132649": {
+    "deaths": false,
+    "reason": "A romance sim with card battles and no hero to destroy."
+  },
   "133004": {
     "deaths": true,
     "reason": "Eivor can be killed in combat or by falls, shown as desynchronisation."
@@ -8055,6 +8227,10 @@
     "deaths": true,
     "reason": "Run out of health and your goblin dies, ending the run."
   },
+  "133748": {
+    "deaths": true,
+    "reason": "An extraction shooter. Rival scavengers and anomalies can kill you, and you lose what you carried."
+  },
   "133773": {
     "deaths": false,
     "reason": "A rally game. Crashes cost you time, and nothing can kill you."
@@ -8090,6 +8266,10 @@
   "134101": {
     "deaths": false,
     "reason": "A football game. You can lose a match, but nothing dies."
+  },
+  "134161": {
+    "deaths": true,
+    "reason": "Sherlock can be killed in a fight, and you restart from a checkpoint."
   },
   "134165": {
     "deaths": false,
@@ -8191,6 +8371,10 @@
     "deaths": true,
     "reason": "Crash dies constantly and inventively, restarting from a checkpoint."
   },
+  "135295": {
+    "deaths": false,
+    "reason": "A racing game played with chat. Crashes cost you time, and nothing dies."
+  },
   "135381": {
     "deaths": true,
     "reason": "Pokémon are knocked out in fights and wait out a respawn timer."
@@ -8287,6 +8471,10 @@
     "deaths": true,
     "reason": "Get caught cheating at cards and you are killed, then bargain with Death to return."
   },
+  "136790": {
+    "deaths": true,
+    "reason": "Your character can be killed by monsters and players."
+  },
   "136879": {
     "deaths": true,
     "reason": "The Destined One can be killed and respawns at the last shrine."
@@ -8298,6 +8486,10 @@
   "137001": {
     "deaths": true,
     "reason": "You can be killed in the campaign, in multiplayer and in Zombies."
+  },
+  "137206": {
+    "deaths": true,
+    "reason": "Your militia die in battle, and losing your settlement ends the game."
   },
   "137243": {
     "deaths": true,
@@ -8355,6 +8547,10 @@
     "deaths": false,
     "reason": "An extreme sports game. You crash constantly, but nothing dies."
   },
+  "138851": {
+    "deaths": false,
+    "reason": "A rhythm game. You can fail a song and retry it, but there is no run to lose."
+  },
   "138858": {
     "deaths": true,
     "reason": "Lily can be killed, returning to the last respite."
@@ -8395,6 +8591,10 @@
     "deaths": false,
     "reason": "A rhythm game. You can fail a song and retry it, but there is no run to lose."
   },
+  "139150": {
+    "deaths": false,
+    "reason": "A factory building game with nothing that can kill you."
+  },
   "139346": {
     "deaths": false,
     "reason": "A racing game. Cars are wrecked and busted, but nothing dies."
@@ -8415,6 +8615,18 @@
     "deaths": true,
     "reason": "The possessed cultist can catch and kill you."
   },
+  "139858": {
+    "deaths": true,
+    "reason": "Your Taimanin can be killed in combat, and you retry the mission."
+  },
+  "140133": {
+    "deaths": true,
+    "reason": "The monsters of the Perimeter can kill Mia, and you restart from a checkpoint."
+  },
+  "140427": {
+    "deaths": true,
+    "reason": "Run out of health and you collapse, and pay to be revived."
+  },
   "140617": {
     "deaths": false,
     "reason": "Characters can die for good through your choices, but that is the story, not a fail state."
@@ -8431,6 +8643,10 @@
     "deaths": false,
     "reason": "A drawing and guessing party game with nothing that can die."
   },
+  "140863": {
+    "deaths": true,
+    "reason": "Your character can be killed by monsters, and respawns."
+  },
   "141114": {
     "deaths": true,
     "reason": "Bond can be killed, restarting from a checkpoint."
@@ -8446,6 +8662,10 @@
   "141233": {
     "deaths": true,
     "reason": "Your warship can be sunk in battle."
+  },
+  "141259": {
+    "deaths": false,
+    "reason": "You maim a strung-up doll, but there is no you to die."
   },
   "141503": {
     "deaths": false,
@@ -8543,9 +8763,17 @@
     "deaths": false,
     "reason": "A potion shop game with nothing that can die."
   },
+  "143061": {
+    "deaths": true,
+    "reason": "Run out of energy and you collapse, waking in the clinic short of money and a day's work."
+  },
   "143071": {
     "deaths": false,
     "reason": "An idol management game with nothing that can die."
+  },
+  "143078": {
+    "deaths": false,
+    "reason": "A business management game with no you to die."
   },
   "143114": {
     "deaths": true,
@@ -8595,6 +8823,10 @@
     "deaths": true,
     "reason": "Brawlers are knocked out by dodgeballs and respawn."
   },
+  "143620": {
+    "deaths": true,
+    "reason": "Your Miis can be knocked out in battle, and losing the whole team is a game over."
+  },
   "143628": {
     "deaths": true,
     "reason": "Animals, enemies and other players can kill you."
@@ -8619,13 +8851,25 @@
     "deaths": false,
     "reason": "A racing game. Flying off the track only costs you time."
   },
+  "144098": {
+    "deaths": true,
+    "reason": "Get knocked out in combat and you wake up at the doctor's with a bill to pay."
+  },
   "144153": {
     "deaths": true,
     "reason": "Marines can be killed by the Xenomorphs, and the mission fails if all go down."
   },
+  "144163": {
+    "deaths": true,
+    "reason": "A fan remake of Super Mario 64. Mario can be killed by enemies and falls, losing a life."
+  },
   "144248": {
     "deaths": true,
     "reason": "Your sync pairs are knocked out, and losing them all loses the battle."
+  },
+  "144345": {
+    "deaths": true,
+    "reason": "Players are killed in the arena and respawn."
   },
   "144442": {
     "deaths": true,
@@ -8658,6 +8902,10 @@
   "145028": {
     "deaths": true,
     "reason": "Corvus can be killed, dropping his memory shards."
+  },
+  "145029": {
+    "deaths": false,
+    "reason": "A gentle exploration game with nothing that can kill you."
   },
   "145089": {
     "deaths": true,
@@ -8707,6 +8955,10 @@
     "deaths": false,
     "reason": "A life story. Friends and family can die, but that is the story, and you live to the end."
   },
+  "146063": {
+    "deaths": false,
+    "reason": "A trivia game played with chat. You can lose on points, but nothing dies."
+  },
   "146075": {
     "deaths": false,
     "reason": "Too many mistakes gets your client a guilty verdict, and you retry. Nothing dies."
@@ -8714,6 +8966,10 @@
   "146112": {
     "deaths": false,
     "reason": "A farming game with nothing that can kill you."
+  },
+  "146245": {
+    "deaths": false,
+    "reason": "A visual novel. You can lose a debate and retry it, but nothing dies."
   },
   "146564": {
     "deaths": false,
@@ -8735,6 +8991,10 @@
     "deaths": true,
     "reason": "Boxers are knocked out to lose a fight."
   },
+  "147121": {
+    "deaths": true,
+    "reason": "Your character can be killed by monsters, and respawns in town."
+  },
   "147215": {
     "deaths": true,
     "reason": "Units that fall in battle are permanently weakened, and losing a key unit fails the map."
@@ -8754,6 +9014,10 @@
   "148241": {
     "deaths": true,
     "reason": "P can be killed, dropping his Ergo and respawning at a Stargazer."
+  },
+  "148372": {
+    "deaths": true,
+    "reason": "If your country is annexed, the game is over."
   },
   "148397": {
     "deaths": true,
@@ -8871,6 +9135,10 @@
     "deaths": true,
     "reason": "Run out of health and you are knocked out, losing what you carried and the rest of the day."
   },
+  "152244": {
+    "deaths": true,
+    "reason": "R.E.A.C.H. can be killed in combat, and you restart from a checkpoint."
+  },
   "152245": {
     "deaths": true,
     "reason": "Your character can be knocked out in combat, returning to town."
@@ -8922,6 +9190,10 @@
   "153054": {
     "deaths": true,
     "reason": "Fighters are knocked out to lose a battle."
+  },
+  "153680": {
+    "deaths": false,
+    "reason": "An online social world with nothing that can kill you."
   },
   "153700": {
     "deaths": true,
@@ -9135,6 +9407,10 @@
     "deaths": false,
     "reason": "A delivery driving game. Everything gets wrecked, but nothing can kill you."
   },
+  "177612": {
+    "deaths": false,
+    "reason": "An idol audition card game. You can fail an audition, but nothing dies."
+  },
   "178123": {
     "deaths": true,
     "reason": "Claude can be killed, shown as \"Wasted\", and respawns outside a hospital."
@@ -9162,6 +9438,10 @@
   "178359": {
     "deaths": false,
     "reason": "A matching puzzle game. You can fail an order and retry it, but nothing dies."
+  },
+  "178753": {
+    "deaths": false,
+    "reason": "A dating sim with nothing that can happen to you."
   },
   "182241": {
     "deaths": false,
@@ -9267,6 +9547,10 @@
     "deaths": false,
     "reason": "A rocket building game. Rockets explode, but nobody is aboard to die."
   },
+  "191270": {
+    "deaths": false,
+    "reason": "A memory game played with chat. You can miss the goal, but nothing dies."
+  },
   "191396": {
     "deaths": true,
     "reason": "Units can fall for good in Classic mode, and losing a key character fails the battle."
@@ -9347,6 +9631,10 @@
     "deaths": true,
     "reason": "Operators are knocked out in combat, and losing the whole team fails the fight."
   },
+  "194659": {
+    "deaths": false,
+    "reason": "A word guessing party game with nothing that can die."
+  },
   "194682": {
     "deaths": false,
     "reason": "Ghostbusters get slimed and helped back up, and the ghost gets trapped. Nothing dies."
@@ -9375,6 +9663,14 @@
     "deaths": true,
     "reason": "Your characters can be defeated in battle, and losing the team fails the stage."
   },
+  "196769": {
+    "deaths": true,
+    "reason": "Lose a battle and the Alchemist passes out, ending the day early."
+  },
+  "196770": {
+    "deaths": false,
+    "reason": "A farming game with nothing that can kill you."
+  },
   "196954": {
     "deaths": true,
     "reason": "Rémi can be killed by the Hollow Walkers, restarting from a save point."
@@ -9390,6 +9686,10 @@
   "198200": {
     "deaths": false,
     "reason": "A racing game. Crashes can end your race, but nothing can kill you."
+  },
+  "198407": {
+    "deaths": true,
+    "reason": "The boy in your care dies if you cannot cure him, ending the game."
   },
   "198499": {
     "deaths": false,
@@ -9410,6 +9710,10 @@
   "199748": {
     "deaths": true,
     "reason": "The horde eventually kills you, ending the run."
+  },
+  "199925": {
+    "deaths": true,
+    "reason": "Your minis are killed in battle, and losing your leader loses the match."
   },
   "200165": {
     "deaths": true,
@@ -9474,6 +9778,10 @@
   "203367": {
     "deaths": true,
     "reason": "Your character can be killed in combat, restarting from a checkpoint."
+  },
+  "203439": {
+    "deaths": false,
+    "reason": "A comedy puzzle game about reaching a slice of cake, with nothing that can die."
   },
   "203722": {
     "deaths": true,
@@ -9591,6 +9899,10 @@
     "deaths": true,
     "reason": "Descendants can be downed and killed, respawning or failing the mission."
   },
+  "208817": {
+    "deaths": false,
+    "reason": "A game where you judge your chat, with nothing that can die."
+  },
   "210395": {
     "deaths": true,
     "reason": "You die again and again, and each death shapes what comes next."
@@ -9599,6 +9911,10 @@
     "deaths": false,
     "reason": "A guessing game about games. Nothing can die."
   },
+  "210536": {
+    "deaths": true,
+    "reason": "Your Animus are defeated in battle, and losing the team loses the fight."
+  },
   "212089": {
     "deaths": true,
     "reason": "Monsters, turrets and falls kill employees, and the company ejects you all for missing quota."
@@ -9606,6 +9922,10 @@
   "212584": {
     "deaths": true,
     "reason": "Units die for good if not revived in time, and losing Denam is a game over."
+  },
+  "212853": {
+    "deaths": true,
+    "reason": "The entities in the halls can catch and kill you, ending the run."
   },
   "212878": {
     "deaths": true,
@@ -9651,6 +9971,10 @@
     "deaths": true,
     "reason": "Basim can be killed in combat or by falls, shown as desynchronisation."
   },
+  "215955": {
+    "deaths": true,
+    "reason": "Most worlds can kill your character, who then respawns."
+  },
   "216178": {
     "deaths": false,
     "reason": "A football management game. You can be sacked, but nothing dies."
@@ -9670,6 +9994,10 @@
   "217554": {
     "deaths": true,
     "reason": "Travellers are knocked out in battle, and losing the whole party is a game over."
+  },
+  "217555": {
+    "deaths": true,
+    "reason": "Run out of health and you pass out, waking at home and out of the dungeon."
   },
   "217590": {
     "deaths": true,
@@ -9703,6 +10031,10 @@
     "deaths": false,
     "reason": "A story game. Nothing can kill you in play."
   },
+  "218659": {
+    "deaths": false,
+    "reason": "An idle game where you watch rubber ducks, with nothing that can die."
+  },
   "218793": {
     "deaths": true,
     "reason": "The Kemono can knock you out, and three falls fail the hunt."
@@ -9735,9 +10067,17 @@
     "deaths": true,
     "reason": "James can be killed by the town's monsters, and you reload a save."
   },
+  "222342": {
+    "deaths": true,
+    "reason": "Simon can be killed by the town's horrors, and you reload a save."
+  },
   "222343": {
     "deaths": true,
     "reason": "Hinako can be killed by the town's monsters, and you reload a save."
+  },
+  "222608": {
+    "deaths": true,
+    "reason": "Your character can be killed by monsters and players, and respawns."
   },
   "224415": {
     "deaths": true,
@@ -9755,9 +10095,25 @@
     "deaths": true,
     "reason": "Dylan can be killed in combat, respawning at a checkpoint."
   },
+  "226035": {
+    "deaths": true,
+    "reason": "Run out of health in the mines and you faint, waking in the clinic with the day gone."
+  },
+  "226376": {
+    "deaths": true,
+    "reason": "Your heroes can be defeated in battle, and losing the team loses the fight."
+  },
+  "226386": {
+    "deaths": false,
+    "reason": "A room decorating game with nothing that can die."
+  },
   "227211": {
     "deaths": true,
     "reason": "Mutants, anomalies, radiation and other stalkers can kill you."
+  },
+  "227653": {
+    "deaths": true,
+    "reason": "Your Pokémon are knocked out in battle, and losing them all loses the match."
   },
   "227788": {
     "deaths": true,
@@ -9806,6 +10162,10 @@
   "228542": {
     "deaths": true,
     "reason": "Your Armored Core can be destroyed in combat, failing the mission."
+  },
+  "228599": {
+    "deaths": false,
+    "reason": "A name-that-tune party game with nothing that can die."
   },
   "230103": {
     "deaths": false,
@@ -9859,6 +10219,14 @@
     "deaths": true,
     "reason": "Samus can be killed, giving a game over."
   },
+  "236664": {
+    "deaths": true,
+    "reason": "Your character can be knocked out by monsters, waking up back in town."
+  },
+  "237448": {
+    "deaths": false,
+    "reason": "A browser farming game with nothing that can kill you."
+  },
   "238765": {
     "deaths": true,
     "reason": "A violent sandbox where you and everyone else can be killed."
@@ -9874,6 +10242,10 @@
   "239392": {
     "deaths": true,
     "reason": "Fighters are beaten and then killed outright by a Fatality."
+  },
+  "239539": {
+    "deaths": false,
+    "reason": "A clicker game with nothing that can die."
   },
   "239920": {
     "deaths": true,
@@ -9918,6 +10290,10 @@
   "242493": {
     "deaths": false,
     "reason": "A brick-built racing game. Cars fall apart and rebuild, and it stays a race."
+  },
+  "242704": {
+    "deaths": true,
+    "reason": "Miss an anomaly and the Alternate gets you before 6 AM."
   },
   "243378": {
     "deaths": true,
@@ -9995,6 +10371,10 @@
     "deaths": true,
     "reason": "Snake can be killed by soldiers, animals, hunger and wounds."
   },
+  "251073": {
+    "deaths": false,
+    "reason": "A visual novel. Deaths only happen as part of the story."
+  },
   "251833": {
     "deaths": true,
     "reason": "Fail to beat a blind and the whole run is over."
@@ -10039,13 +10419,25 @@
     "deaths": false,
     "reason": "A climbing game where you are always roped in. You cannot fall to your death."
   },
+  "252846": {
+    "deaths": true,
+    "reason": "Your Trampler is your body in a fight, and other raiders can destroy it."
+  },
   "253412": {
     "deaths": false,
     "reason": "A racing simulator. Crashes cost you time, and nothing can kill you."
   },
+  "253544": {
+    "deaths": false,
+    "reason": "A chat simulator visual novel. Deaths only happen as part of the story."
+  },
   "253659": {
     "deaths": true,
     "reason": "Lose five battles and that run is over."
+  },
+  "253735": {
+    "deaths": false,
+    "reason": "A motorsport management game. Crashes end your race, but nothing dies."
   },
   "254235": {
     "deaths": true,
@@ -10066,6 +10458,10 @@
   "254339": {
     "deaths": true,
     "reason": "Mario and friends can die from enemies and pits, losing a life."
+  },
+  "254340": {
+    "deaths": true,
+    "reason": "Peach can be beaten by the Sour Bunch, restarting from a checkpoint."
   },
   "254871": {
     "deaths": false,
@@ -10099,9 +10495,17 @@
     "deaths": false,
     "reason": "A football game. You can lose a match, but nothing dies."
   },
+  "256391": {
+    "deaths": false,
+    "reason": "A co-op cooking game. Orders can be ruined, but nothing dies."
+  },
   "256636": {
     "deaths": true,
     "reason": "What is out there in the forest can find and kill you."
+  },
+  "257834": {
+    "deaths": true,
+    "reason": "Demons and undead can kill you, and you start again from a save."
   },
   "258230": {
     "deaths": false,
@@ -10147,6 +10551,10 @@
     "deaths": false,
     "reason": "A horror story. The deaths are the plot, and a failed scene just restarts."
   },
+  "265111": {
+    "deaths": true,
+    "reason": "The lava and the long fall can kill you, dropping the chain gang back down."
+  },
   "266155": {
     "deaths": false,
     "reason": "A racing simulator. Crashes cost you time, and nothing can kill you."
@@ -10175,6 +10583,14 @@
     "deaths": true,
     "reason": "Your character can be killed in combat, and you reload a save."
   },
+  "268254": {
+    "deaths": false,
+    "reason": "A motel management game with nothing that can die."
+  },
+  "268978": {
+    "deaths": false,
+    "reason": "A collection of classic games for children, with nothing that can die."
+  },
   "273120": {
     "deaths": true,
     "reason": "Your characters can be knocked out in combat, failing the mission."
@@ -10183,9 +10599,17 @@
     "deaths": false,
     "reason": "A shop management game with nothing that can kill you."
   },
+  "275066": {
+    "deaths": true,
+    "reason": "Your hunters can be defeated by the Wanderers, and losing them all loses the fight."
+  },
   "275070": {
     "deaths": true,
     "reason": "You can be killed by enemies and other players, losing the gear you carried."
+  },
+  "275460": {
+    "deaths": false,
+    "reason": "A visual novel. Deaths only happen as part of the story."
   },
   "275923": {
     "deaths": true,
@@ -10210,6 +10634,10 @@
   "279620": {
     "deaths": false,
     "reason": "A physics puzzle game. Goo balls can be lost, but there is no you to die."
+  },
+  "279624": {
+    "deaths": false,
+    "reason": "A co-op walking game with nothing that can kill you."
   },
   "279627": {
     "deaths": true,
@@ -10243,6 +10671,10 @@
     "deaths": false,
     "reason": "A coin pusher machine with nothing that can die."
   },
+  "280431": {
+    "deaths": false,
+    "reason": "The neighbours can catch you out, and you simply try again."
+  },
   "280970": {
     "deaths": true,
     "reason": "Players can be killed by falls, lava and each other."
@@ -10254,6 +10686,10 @@
   "281960": {
     "deaths": false,
     "reason": "A factory puzzle game with nothing that can die."
+  },
+  "282456": {
+    "deaths": false,
+    "reason": "A horror visual novel. Deaths only happen as part of the story."
   },
   "282566": {
     "deaths": true,
@@ -10295,6 +10731,10 @@
     "deaths": true,
     "reason": "Your heroes can be defeated in battle, and losing the team fails the stage."
   },
+  "286264": {
+    "deaths": true,
+    "reason": "The entities you hunt can kill you, and you lose the equipment you brought."
+  },
   "287578": {
     "deaths": false,
     "reason": "A racing game. Crashes can end your race, but nothing can kill you."
@@ -10310,6 +10750,10 @@
   "287854": {
     "deaths": true,
     "reason": "Roll off the edge and your monkey falls out, restarting the stage."
+  },
+  "288010": {
+    "deaths": false,
+    "reason": "A cosy fishing game with nothing that can kill you."
   },
   "288324": {
     "deaths": false,
@@ -10334,6 +10778,14 @@
   "290911": {
     "deaths": false,
     "reason": "A detective story. Nothing can kill you in normal play."
+  },
+  "291217": {
+    "deaths": false,
+    "reason": "A plane building game. Crashes wreck your aircraft, but nothing dies."
+  },
+  "292988": {
+    "deaths": false,
+    "reason": "A deduction game. You can get the case wrong, but nothing dies."
   },
   "294041": {
     "deaths": true,
@@ -10371,13 +10823,25 @@
     "deaths": true,
     "reason": "You can be killed in a raid, losing the gear you brought in."
   },
+  "299596": {
+    "deaths": true,
+    "reason": "Combat is unforgiving, and your character can be killed and lose their gear."
+  },
   "300548": {
     "deaths": true,
     "reason": "The kindergarten's mascots can catch and kill you."
   },
+  "300789": {
+    "deaths": false,
+    "reason": "An idol raising game with nothing that can die."
+  },
   "300976": {
     "deaths": true,
     "reason": "Naoe and Yasuke can be killed in combat, shown as desynchronisation."
+  },
+  "301111": {
+    "deaths": false,
+    "reason": "A visual novel with nothing that can happen to you."
   },
   "302156": {
     "deaths": true,
@@ -10386,6 +10850,10 @@
   "302546": {
     "deaths": false,
     "reason": "A shop management game with nothing that can kill you."
+  },
+  "302654": {
+    "deaths": false,
+    "reason": "A restaurant management game with nothing that can die."
   },
   "302704": {
     "deaths": true,
@@ -10423,9 +10891,17 @@
     "deaths": true,
     "reason": "Outlaws, druids and robots can kill you, and you reload a save."
   },
+  "305160": {
+    "deaths": true,
+    "reason": "Marcus and the squad can be downed and killed by the Locust."
+  },
   "305246": {
     "deaths": false,
     "reason": "A city builder with no you to die."
+  },
+  "305989": {
+    "deaths": true,
+    "reason": "An extraction shooter. Creatures and other players can kill you, and you lose your haul."
   },
   "306137": {
     "deaths": true,
@@ -10459,9 +10935,21 @@
     "deaths": true,
     "reason": "Jango can be killed in firefights and falls, losing a life."
   },
+  "307223": {
+    "deaths": false,
+    "reason": "A voice-matching party game. You can lose on points, but nothing dies."
+  },
   "307774": {
     "deaths": true,
     "reason": "Your magical girls can be defeated in battle, failing the stage."
+  },
+  "307783": {
+    "deaths": false,
+    "reason": "Your parents catch you and ground you, and you simply try again."
+  },
+  "307930": {
+    "deaths": true,
+    "reason": "Your character can be killed by monsters and players, and respawns."
   },
   "308034": {
     "deaths": false,
@@ -10478,6 +10966,10 @@
   "309179": {
     "deaths": false,
     "reason": "A restaurant game with nothing that can kill you."
+  },
+  "309816": {
+    "deaths": true,
+    "reason": "Your Awakeners are defeated in battle, and losing them all ends the run."
   },
   "309862": {
     "deaths": false,
@@ -10498,6 +10990,10 @@
   "311967": {
     "deaths": true,
     "reason": "Players are killed in gunfights, and the round is lost when both of their bodies are down."
+  },
+  "313595": {
+    "deaths": false,
+    "reason": "A museum management game with no you to die."
   },
   "314178": {
     "deaths": true,
@@ -10535,6 +11031,10 @@
     "deaths": true,
     "reason": "Losing your party in battle is a game over."
   },
+  "316581": {
+    "deaths": false,
+    "reason": "A trivia game. A wrong answer costs you a point, but nothing dies."
+  },
   "316987": {
     "deaths": true,
     "reason": "Let the wrong visitor in and they kill you."
@@ -10567,6 +11067,10 @@
     "deaths": true,
     "reason": "The facility's monsters can kill you and your friends."
   },
+  "318575": {
+    "deaths": true,
+    "reason": "Lose your last tower and the match is over at once."
+  },
   "318806": {
     "deaths": false,
     "reason": "A filmed dating story. Nothing can kill you."
@@ -10587,6 +11091,10 @@
     "deaths": true,
     "reason": "You can drown or be eaten, losing the items you were carrying."
   },
+  "320141": {
+    "deaths": true,
+    "reason": "An extraction RPG. Monsters and other hunters can kill you, and you lose your haul."
+  },
   "320734": {
     "deaths": true,
     "reason": "Fall, or let the rising mass catch you, and the climb is over."
@@ -10602,6 +11110,10 @@
   "321048": {
     "deaths": true,
     "reason": "Party members are incapacitated in battle, and losing them all sends you back to a landmark."
+  },
+  "322086": {
+    "deaths": false,
+    "reason": "A cosy restaurant game with nothing that can die."
   },
   "324118": {
     "deaths": true,
@@ -10631,6 +11143,10 @@
     "deaths": false,
     "reason": "A story game. Characters can die through your choices, but that is the story, not a fail state."
   },
+  "326089": {
+    "deaths": false,
+    "reason": "A comedy game about bowing in apology, with nothing that can die."
+  },
   "326127": {
     "deaths": true,
     "reason": "Your Trekkers can be knocked out in combat, failing the stage."
@@ -10642,6 +11158,10 @@
   "327471": {
     "deaths": false,
     "reason": "A coffee shop game with nothing that can die."
+  },
+  "328145": {
+    "deaths": false,
+    "reason": "An online dating and dancing game with nothing that can kill you."
   },
   "328373": {
     "deaths": true,
@@ -10670,6 +11190,10 @@
   "330016": {
     "deaths": false,
     "reason": "A courtroom party game played by sock puppets. Nothing can die."
+  },
+  "330379": {
+    "deaths": true,
+    "reason": "Your hero can be killed in a dungeon, and a wipe ends the run."
   },
   "330905": {
     "deaths": true,
@@ -10743,9 +11267,21 @@
     "deaths": true,
     "reason": "Your squad members can die for good in battle."
   },
+  "340595": {
+    "deaths": false,
+    "reason": "A cosy life simulator with nothing that can hurt you."
+  },
+  "341592": {
+    "deaths": true,
+    "reason": "Charlie can be beaten by the Idols' goons, and you start the fight again."
+  },
   "341687": {
     "deaths": true,
     "reason": "Your character can be knocked out in combat and revives nearby."
+  },
+  "342760": {
+    "deaths": true,
+    "reason": "Let the infected through and the horde overruns your checkpoint, ending the run."
   },
   "342919": {
     "deaths": true,
@@ -10763,6 +11299,14 @@
     "deaths": true,
     "reason": "Units die for good if not revived in time, and losing Ramza is a game over."
   },
+  "347633": {
+    "deaths": true,
+    "reason": "You are knocked out of your shell, and killed if you are hit again before getting back."
+  },
+  "347646": {
+    "deaths": false,
+    "reason": "A quiet co-op brick adventure with nothing that can die."
+  },
   "347668": {
     "deaths": true,
     "reason": "Enemies can kill you, giving a \"You Are Dead\" screen."
@@ -10770,6 +11314,10 @@
   "348166": {
     "deaths": true,
     "reason": "Aliens can kill you, restarting from a checkpoint."
+  },
+  "348168": {
+    "deaths": true,
+    "reason": "Sophia can be killed by foes and swarms of rats, restarting from a checkpoint."
   },
   "348180": {
     "deaths": true,
@@ -10779,6 +11327,10 @@
     "deaths": true,
     "reason": "Insects, thirst and hunger can kill you, leaving a backpack with your items."
   },
+  "348202": {
+    "deaths": true,
+    "reason": "Your Aniimo are defeated in battle, and losing the team loses the fight."
+  },
   "348220": {
     "deaths": true,
     "reason": "You can be killed in the campaign, in multiplayer and in Zombies."
@@ -10786,6 +11338,10 @@
   "348330": {
     "deaths": false,
     "reason": "A racing game. Crashes cost you time, and nothing can kill you."
+  },
+  "348648": {
+    "deaths": false,
+    "reason": "A waterpark management game. Guests are flung about, but nothing dies."
   },
   "348977": {
     "deaths": true,
@@ -10815,6 +11371,10 @@
     "deaths": true,
     "reason": "Impostors kill Crewmates, who carry on as ghosts."
   },
+  "358049": {
+    "deaths": false,
+    "reason": "A point-and-click puzzle game with nothing that can die."
+  },
   "358535": {
     "deaths": true,
     "reason": "Travellers are knocked out in battle, and losing the whole party is a game over."
@@ -10822,6 +11382,14 @@
   "361573": {
     "deaths": false,
     "reason": "A guessing game. You can be wrong, but nothing dies."
+  },
+  "361855": {
+    "deaths": true,
+    "reason": "Characters fall apart when beaten, scattering some of your studs."
+  },
+  "366551": {
+    "deaths": true,
+    "reason": "Your heroes can be defeated in battle, and losing the team fails the stage."
   },
   "366890": {
     "deaths": true,
@@ -10835,9 +11403,17 @@
     "deaths": false,
     "reason": "A guessing game about faces. You can be wrong, but nothing dies."
   },
+  "368744": {
+    "deaths": true,
+    "reason": "Your character can be killed by monsters and players, and respawns."
+  },
   "369853": {
     "deaths": false,
     "reason": "A guessing game. You can be wrong, but nothing dies."
+  },
+  "370380": {
+    "deaths": false,
+    "reason": "A cosy mail delivery game with nothing that can kill you."
   },
   "370971": {
     "deaths": false,
@@ -10847,28 +11423,92 @@
     "deaths": true,
     "reason": "Soldiers are killed by other squads and the closing ring of fire."
   },
+  "371567": {
+    "deaths": false,
+    "reason": "A scratch card game. You can lose your money, but nothing dies."
+  },
+  "373678": {
+    "deaths": false,
+    "reason": "A visual novel. Deaths only happen as part of the story."
+  },
   "375232": {
     "deaths": true,
     "reason": "Master Chief can be killed, restarting from a checkpoint."
+  },
+  "376206": {
+    "deaths": false,
+    "reason": "A leaf raking game with nothing that can die."
   },
   "378229": {
     "deaths": true,
     "reason": "Run out of health in the dungeon and the run is over."
   },
+  "381250": {
+    "deaths": true,
+    "reason": "Wardens are shot dead by rival raiders and redeploy."
+  },
+  "381894": {
+    "deaths": false,
+    "reason": "An idle zoo game with nothing that can die."
+  },
+  "382382": {
+    "deaths": true,
+    "reason": "Let too many enemies through and your Pokémon are defeated, losing the attempt."
+  },
   "386431": {
     "deaths": false,
     "reason": "A story game. Nothing can kill you."
+  },
+  "386997": {
+    "deaths": true,
+    "reason": "The yandere stalking the college can catch and kill you."
+  },
+  "388285": {
+    "deaths": true,
+    "reason": "Soldiers are killed in battle and redeploy."
   },
   "388747": {
     "deaths": false,
     "reason": "A marble racing game with nothing that can die."
   },
+  "392467": {
+    "deaths": false,
+    "reason": "A horse breeding and racing game with nothing that can die."
+  },
+  "393398": {
+    "deaths": false,
+    "reason": "A book-shelving puzzle game with nothing that can die."
+  },
   "395525": {
     "deaths": true,
     "reason": "Heroes can be killed by mobs, using up a life."
   },
+  "398972": {
+    "deaths": true,
+    "reason": "Miss a skip and the run is over."
+  },
+  "399497": {
+    "deaths": false,
+    "reason": "One slip can drop you back down, but nothing dies."
+  },
+  "399673": {
+    "deaths": false,
+    "reason": "A visual novel with nothing that can happen to you."
+  },
   "405028": {
     "deaths": true,
     "reason": "Hiders who are found get shot by the Seekers."
+  },
+  "405185": {
+    "deaths": false,
+    "reason": "A clicker game with nothing that can die."
+  },
+  "413646": {
+    "deaths": false,
+    "reason": "A voice party game scored on pitch and rhythm, with nothing that can die."
+  },
+  "415005": {
+    "deaths": true,
+    "reason": "Geralt can be killed in combat or by falls, and you reload a save."
   }
 }

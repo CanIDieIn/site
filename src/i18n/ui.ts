@@ -478,7 +478,441 @@ const ja: Ui = {
   },
 };
 
-const ui: Record<Locale, Ui> = { en, fr, es, de, ja };
+const ko: Ui = {
+  siteName: "이 게임에서 죽나요?",
+  tagline: "그 게임에서 죽을 수 있는지 알아보세요.",
+  skipToContent: "본문으로 건너뛰기",
+  languageMenu: "언어",
+  fullStop: ".",
+
+  answers: { yes: "예", no: "아니요", unsure: "미확인" },
+
+  definition: {
+    question: "무엇이 죽음에 해당하나요?",
+    text: "캐릭터가 죽거나 기절하거나, 한 판을 전부 잃는 것입니다. 레이스에서의 충돌이나 점수 차 패배는 포함하지 않습니다.",
+  },
+
+  home: {
+    description:
+      "수십만 개의 비디오 게임을 검색해 그 게임에서 죽을 수 있는지 알아보세요.",
+    lead: "게임을 골라 죽을 수 있는지 확인해 보세요.",
+    moreNav: "이 사이트의 다른 페이지",
+  },
+
+  cards: {
+    noDeathsTitle: "죽지 않는 게임",
+    noDeathsText: (count) => `지금까지 ${count}개 확인`,
+    everyGameTitle: "모든 게임",
+    everyGameText: "전체 목록 검색",
+    streamingTitle: "방송하시나요?",
+    streamingText: "방송 봇 연결하기",
+  },
+
+  noDeaths: {
+    title: "죽지 않는 게임",
+    description:
+      "죽을 수 없다고 확인된 모든 비디오 게임입니다. 세어야 할 죽음이 없습니다.",
+    lead: (count) => `세어야 할 죽음이 없다고 확인된 게임은 ${count}개입니다.`,
+  },
+
+  browser: {
+    formLabel: "게임 찾기",
+    search: "이름으로 검색",
+    sortBy: "정렬 기준",
+    order: "순서",
+    sorts: { popularity: "인기", name: "이름순", release: "출시일" },
+    directions: { asc: "오름차순", desc: "내림차순" },
+    submit: "검색",
+    noMatch: (query) => `"${query}"와 일치하는 게임이 없습니다.`,
+    none: "아직 표시할 게임이 없습니다.",
+    showing: (from, to, total, _n, query) =>
+      `${query ? `"${query}"와 일치하는 ` : ""}게임 ${total}개 중 ${from}~${to}번째를 표시하고 있습니다.`,
+    clear: "검색 지우기",
+    released: "출시일: ",
+    pagesNav: "결과 페이지",
+    previous: "이전",
+    previousPage: "이전 페이지",
+    next: "다음",
+    nextPage: "다음 페이지",
+    unavailable: (label) => `${label}, 사용할 수 없음`,
+    page: "페이지",
+    ofPages: (total) => `/ ${total}`,
+    go: "이동",
+    goToPage: "해당 페이지로 이동",
+  },
+
+  game: {
+    title: (name) => `${name}에서 죽나요?`,
+    notFoundTitle: "게임을 찾을 수 없습니다",
+    notFoundText: "이 주소에는 게임이 없습니다.",
+    description: (name, answer) => `${name}에서 죽을 수 있나요? ${answer}`,
+    answerSentence: {
+      yes: "예.",
+      no: "아니요.",
+      unsure: "아직 확실하지 않습니다.",
+    },
+    cardAlt: (name, answer) => `${name}, 도장으로 표시된 답: ${answer}.`,
+    knowAnswer: "답을 아시나요?",
+    notRight: "잘못된 내용인가요?",
+    tellUs: "GitHub에서 알려주세요",
+    suggest: "GitHub에서 수정 제안하기",
+    gameId: (id) => `게임 ID: ${id}`,
+    browseAll: "모든 게임 보기",
+    backToNoDeaths: "죽지 않는 게임 목록으로 돌아가기",
+  },
+};
+
+const zh: Ui = {
+  siteName: "这游戏会死吗？",
+  tagline: "查一查这款游戏里会不会死。",
+  skipToContent: "跳到主要内容",
+  languageMenu: "语言",
+  fullStop: "。",
+
+  answers: { yes: "会", no: "不会", unsure: "未知" },
+
+  definition: {
+    question: "怎样算“死”？",
+    text: "角色被杀死、被击倒，或者整局进度全部失去。赛车中撞车或比分落败不算。",
+  },
+
+  home: {
+    description: "在数十万款电子游戏中搜索，看看哪些游戏里会死。",
+    lead: "选一款游戏，看看在里面会不会死。",
+    moreNav: "本站其他页面",
+  },
+
+  cards: {
+    noDeathsTitle: "不会死的游戏",
+    noDeathsText: (count) => `目前已确认 ${count} 款`,
+    everyGameTitle: "所有游戏",
+    everyGameText: "搜索完整目录",
+    streamingTitle: "在做直播？",
+    streamingText: "连接你的直播机器人",
+  },
+
+  noDeaths: {
+    title: "不会死的游戏",
+    description: "我们已确认不会死的所有电子游戏，因此没有死亡次数可数。",
+    lead: (count) => `我们已确认有 ${count} 款游戏没有死亡次数可数。`,
+  },
+
+  browser: {
+    formLabel: "查找游戏",
+    search: "按名称搜索",
+    sortBy: "排序方式",
+    order: "顺序",
+    sorts: { popularity: "热门度", name: "按字母", release: "发行日期" },
+    directions: { asc: "升序", desc: "降序" },
+    submit: "搜索",
+    noMatch: (query) => `没有与“${query}”匹配的游戏。`,
+    none: "暂无可显示的游戏。",
+    showing: (from, to, total, _n, query) =>
+      `正在显示${query ? `与“${query}”匹配的` : ""} ${total} 款游戏中的第 ${from} 至 ${to} 款。`,
+    clear: "清除搜索",
+    released: "发行日期：",
+    pagesNav: "结果页",
+    previous: "上一页",
+    previousPage: "转到上一页",
+    next: "下一页",
+    nextPage: "转到下一页",
+    unavailable: (label) => `${label}，不可用`,
+    page: "页",
+    ofPages: (total) => `/ 共 ${total} 页`,
+    go: "前往",
+    goToPage: "前往指定页",
+  },
+
+  game: {
+    title: (name) => `《${name}》里会死吗？`,
+    notFoundTitle: "未找到游戏",
+    notFoundText: "此地址没有对应的游戏。",
+    description: (name, answer) => `《${name}》里会死吗？${answer}`,
+    answerSentence: {
+      yes: "会。",
+      no: "不会。",
+      unsure: "我们还不确定。",
+    },
+    cardAlt: (name, answer) => `${name}，印章上的答案：${answer}。`,
+    knowAnswer: "知道答案？",
+    notRight: "有误？",
+    tellUs: "在 GitHub 上告诉我们",
+    suggest: "在 GitHub 上提交更正",
+    gameId: (id) => `这是游戏 ID ${id}。`,
+    browseAll: "浏览所有游戏",
+    backToNoDeaths: "返回不会死的游戏列表",
+  },
+};
+
+const it: Ui = {
+  siteName: "Posso Morire In...",
+  tagline: "Scopri se un gioco può ucciderti.",
+  skipToContent: "Vai al contenuto principale",
+  languageMenu: "Lingua",
+  fullStop: ".",
+
+  answers: { yes: "Sì", no: "No", unsure: "Incerto" },
+
+  definition: {
+    question: "Cosa conta come morire?",
+    text: "Il tuo personaggio viene ucciso o messo KO, oppure perdi un'intera partita. Schiantarsi in una gara o perdere ai punti non conta.",
+  },
+
+  home: {
+    description:
+      "Cerca tra centinaia di migliaia di videogiochi per scoprire se puoi morirci.",
+    lead: "Scegli un gioco per scoprire se puoi morirci.",
+    moreNav: "Altro su questo sito",
+  },
+
+  cards: {
+    noDeathsTitle: "Giochi in cui non puoi morire",
+    noDeathsText: (count) => `${count} confermati finora`,
+    everyGameTitle: "Tutti i giochi",
+    everyGameText: "Cerca nell'intero catalogo",
+    streamingTitle: "Fai streaming?",
+    streamingText: "Collega il tuo bot",
+  },
+
+  noDeaths: {
+    title: "Giochi In Cui Non Puoi Morire",
+    description:
+      "Tutti i videogiochi in cui abbiamo confermato che non puoi morire, quindi non ci sono morti da contare.",
+    lead: (count, n) =>
+      n === 1
+        ? "L'unico gioco in cui abbiamo confermato che non ci sono morti da contare."
+        : `I ${count} giochi in cui abbiamo confermato che non ci sono morti da contare.`,
+  },
+
+  browser: {
+    formLabel: "Trova un gioco",
+    search: "Cerca per nome",
+    sortBy: "Ordina per",
+    order: "Ordine",
+    sorts: {
+      popularity: "Popolarità",
+      name: "Alfabetico",
+      release: "Data di uscita",
+    },
+    directions: { asc: "Crescente", desc: "Decrescente" },
+    submit: "Cerca",
+    noMatch: (query) => `Nessun gioco corrisponde a "${query}".`,
+    none: "Nessun gioco da mostrare per ora.",
+    showing: (from, to, total, n, query) =>
+      `Visualizzazione da ${from} a ${to} di ${total} ${n === 1 ? "gioco" : "giochi"}${query ? ` corrispondenti a "${query}"` : ""}.`,
+    clear: "Cancella la ricerca",
+    released: "Uscito il ",
+    pagesNav: "Pagine di risultati",
+    previous: "Precedente",
+    previousPage: "Pagina precedente",
+    next: "Successiva",
+    nextPage: "Pagina successiva",
+    unavailable: (label) => `${label}, non disponibile`,
+    page: "Pagina",
+    ofPages: (total) => `di ${total}`,
+    go: "Vai",
+    goToPage: "Vai alla pagina",
+  },
+
+  game: {
+    title: (name) => `Posso morire in ${name}?`,
+    notFoundTitle: "Gioco non trovato",
+    notFoundText: "Non c'è nessun gioco a questo indirizzo.",
+    description: (name, answer) => `Puoi morire in ${name}? ${answer}`,
+    answerSentence: {
+      yes: "Sì.",
+      no: "No.",
+      unsure: "Non ne siamo ancora sicuri.",
+    },
+    cardAlt: (name, answer) => `${name}, timbrato con la risposta: ${answer}.`,
+    knowAnswer: "Conosci la risposta?",
+    notRight: "Non è corretto?",
+    tellUs: "Dillo su GitHub",
+    suggest: "Suggerisci una correzione su GitHub",
+    gameId: (id) => `Questo è l'ID gioco ${id}.`,
+    browseAll: "Sfoglia tutti i giochi",
+    backToNoDeaths: "Torna ai giochi in cui non puoi morire",
+  },
+};
+
+const ru: Ui = {
+  siteName: "Можно ли умереть в...",
+  tagline: "Узнайте, можно ли умереть в игре.",
+  skipToContent: "Перейти к основному содержанию",
+  languageMenu: "Язык",
+  fullStop: ".",
+
+  answers: { yes: "Да", no: "Нет", unsure: "Неизвестно" },
+
+  definition: {
+    question: "Что считается смертью?",
+    text: "Вашего персонажа убивают или он теряет сознание, либо вы теряете весь забег. Авария в гонке и поражение по очкам не считаются.",
+  },
+
+  home: {
+    description:
+      "Поиск по сотням тысяч видеоигр: узнайте, можно ли в них умереть.",
+    lead: "Выберите игру, чтобы узнать, можно ли в ней умереть.",
+    moreNav: "Другие страницы сайта",
+  },
+
+  cards: {
+    noDeathsTitle: "Игры, в которых нельзя умереть",
+    noDeathsText: (count) => `подтверждено: ${count}`,
+    everyGameTitle: "Все игры",
+    everyGameText: "Поиск по всему каталогу",
+    streamingTitle: "Ведёте стрим?",
+    streamingText: "Подключите своего бота",
+  },
+
+  noDeaths: {
+    title: "Игры, В Которых Нельзя Умереть",
+    description:
+      "Все видеоигры, в которых, как мы подтвердили, умереть нельзя, поэтому смерти считать не нужно.",
+    lead: (count) =>
+      `Игр, в которых, как мы подтвердили, смерти считать не нужно: ${count}.`,
+  },
+
+  browser: {
+    formLabel: "Найти игру",
+    search: "Поиск по названию",
+    sortBy: "Сортировка",
+    order: "Порядок",
+    sorts: {
+      popularity: "Популярность",
+      name: "По алфавиту",
+      release: "Дата выхода",
+    },
+    directions: { asc: "По возрастанию", desc: "По убыванию" },
+    submit: "Искать",
+    noMatch: (query) => `Нет игр, соответствующих «${query}».`,
+    none: "Пока нечего показать.",
+    showing: (from, to, total, _n, query) =>
+      `Показаны ${from}–${to} из ${total}${query ? ` по запросу «${query}»` : ""}.`,
+    clear: "Очистить поиск",
+    released: "Дата выхода: ",
+    pagesNav: "Страницы результатов",
+    previous: "Назад",
+    previousPage: "Предыдущая страница",
+    next: "Вперёд",
+    nextPage: "Следующая страница",
+    unavailable: (label) => `${label} — недоступно`,
+    page: "Страница",
+    ofPages: (total) => `из ${total}`,
+    go: "Перейти",
+    goToPage: "Перейти на страницу",
+  },
+
+  game: {
+    title: (name) => `Можно ли умереть в ${name}?`,
+    notFoundTitle: "Игра не найдена",
+    notFoundText: "По этому адресу нет игры.",
+    description: (name, answer) => `Можно ли умереть в ${name}? ${answer}`,
+    answerSentence: {
+      yes: "Да.",
+      no: "Нет.",
+      unsure: "Мы пока не знаем.",
+    },
+    cardAlt: (name, answer) => `${name}, штамп с ответом: ${answer}.`,
+    knowAnswer: "Знаете ответ?",
+    notRight: "Что-то не так?",
+    tellUs: "Напишите нам на GitHub",
+    suggest: "Предложить исправление на GitHub",
+    gameId: (id) => `Это игра с ID ${id}.`,
+    browseAll: "Смотреть все игры",
+    backToNoDeaths: "Назад к играм, в которых нельзя умереть",
+  },
+};
+
+const ar: Ui = {
+  siteName: "هل يمكن أن أموت في...",
+  tagline: "اعرف ما إذا كانت اللعبة قد تقتلك.",
+  skipToContent: "تخطَّ إلى المحتوى الرئيسي",
+  languageMenu: "اللغة",
+  fullStop: ".",
+
+  answers: { yes: "نعم", no: "لا", unsure: "غير مؤكد" },
+
+  definition: {
+    question: "ما الذي يُعدّ موتًا؟",
+    text: "أن تُقتل شخصيتك أو تفقد وعيها، أو أن تخسر جولة كاملة. أما الاصطدام في سباق أو الخسارة بالنقاط فلا يُحتسب.",
+  },
+
+  home: {
+    description:
+      "ابحث في مئات الآلاف من ألعاب الفيديو لتعرف ما إذا كان بإمكانك أن تموت فيها.",
+    lead: "اختر لعبة لتعرف ما إذا كان بإمكانك أن تموت فيها.",
+    moreNav: "المزيد في هذا الموقع",
+  },
+
+  cards: {
+    noDeathsTitle: "ألعاب لا يمكنك أن تموت فيها",
+    noDeathsText: (count) => `تم تأكيد ${count} حتى الآن`,
+    everyGameTitle: "كل الألعاب",
+    everyGameText: "ابحث في الفهرس كاملًا",
+    streamingTitle: "تبثّ مباشرة؟",
+    streamingText: "اربط بوت البث الخاص بك",
+  },
+
+  noDeaths: {
+    title: "ألعاب لا يمكنك أن تموت فيها",
+    description:
+      "كل ألعاب الفيديو التي أكّدنا أنه لا يمكنك أن تموت فيها، فلا وفيات تُحتسب.",
+    lead: (count) => `عدد الألعاب التي أكّدنا أنها بلا وفيات تُحتسب: ${count}.`,
+  },
+
+  browser: {
+    formLabel: "ابحث عن لعبة",
+    search: "ابحث بالاسم",
+    sortBy: "ترتيب حسب",
+    order: "الاتجاه",
+    sorts: {
+      popularity: "الشهرة",
+      name: "أبجديًا",
+      release: "تاريخ الإصدار",
+    },
+    directions: { asc: "تصاعدي", desc: "تنازلي" },
+    submit: "بحث",
+    noMatch: (query) => `لا توجد ألعاب تطابق «${query}».`,
+    none: "لا توجد ألعاب لعرضها بعد.",
+    showing: (from, to, total, _n, query) =>
+      `عرض ${from} إلى ${to} من ${total}${query ? ` مما يطابق «${query}»` : ""}.`,
+    clear: "امسح البحث",
+    released: "صدرت في ",
+    pagesNav: "صفحات النتائج",
+    previous: "السابق",
+    previousPage: "الصفحة السابقة",
+    next: "التالي",
+    nextPage: "الصفحة التالية",
+    unavailable: (label) => `${label}، غير متاح`,
+    page: "صفحة",
+    ofPages: (total) => `من ${total}`,
+    go: "اذهب",
+    goToPage: "اذهب إلى الصفحة",
+  },
+
+  game: {
+    title: (name) => `هل يمكن أن أموت في ${name}؟`,
+    notFoundTitle: "لم يتم العثور على اللعبة",
+    notFoundText: "لا توجد لعبة على هذا العنوان.",
+    description: (name, answer) => `هل يمكنك أن تموت في ${name}؟ ${answer}`,
+    answerSentence: {
+      yes: "نعم.",
+      no: "لا.",
+      unsure: "لسنا متأكدين بعد.",
+    },
+    cardAlt: (name, answer) => `${name}، مختومة بالإجابة: ${answer}.`,
+    knowAnswer: "تعرف الإجابة؟",
+    notRight: "هل هذا غير صحيح؟",
+    tellUs: "أخبرنا على GitHub",
+    suggest: "اقترح تصحيحًا على GitHub",
+    gameId: (id) => `معرّف اللعبة: ${id}`,
+    browseAll: "تصفّح كل الألعاب",
+    backToNoDeaths: "العودة إلى الألعاب التي لا يمكنك أن تموت فيها",
+  },
+};
+
+const ui: Record<Locale, Ui> = { en, fr, es, de, ja, ko, zh, it, ru, ar };
 
 /** The site's text in a language. */
 export const uiFor = (locale: Locale): Ui => ui[locale];

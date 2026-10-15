@@ -4,8 +4,10 @@ import {
   normalise,
   parseDirection,
   parseSort,
-  searchableNamesIn,
+  numberedNameFor,
+  searchableNamesFor,
   sortOption,
+  withoutRomanNumerals,
   type Direction,
   type Game,
   type Scope,
@@ -84,7 +86,8 @@ const dateFormatFor = (request: Request, locale: Locale) => {
  * @param url      The requested address, for the search, sort and page number.
  * @param basePath The page's own address, used to build its links.
  * @param scope    Which games the page covers.
- * @param locale   The page's language, for dates and for searching names.
+ * @param locale   The page's language, for dates. Searching does not use it:
+ *                 every language's names are searched from every page.
  */
 export const browse = (
   request: Request,
@@ -112,31 +115,71 @@ export const browse = (
     //   2 the name contains the query as a phrase
     //   3 every query word starts a word in the name
     //   4 every query word appears somewhere in the name
+    //   5 the name only matches once Roman numerals and ordinary numbers are
+    //     treated as the same, so "baldurs gate 3" finds "Baldur's Gate III"
     //
-    // On a page in another language, a game's name in that language is
-    // searched as well as its English name, and the better match counts.
-    const tiers: Game[][] = [[], [], [], [], []];
-    const wordStarts = words.map((word) => ` ${word}`);
-    const tierOf = (name: string) => {
-      if (!words.every((word) => name.includes(word))) return Infinity;
-      if (name === needle) return 0;
-      if (name.startsWith(needle)) return 1;
-      if (name.includes(needle)) return 2;
-      if (wordStarts.every((word) => ` ${name}`.includes(word))) return 3;
-      return 4;
+    // Tier 5 comes last so a name that matches as written always ranks above
+    // one that matches only after its numerals were rewritten. That keeps
+    // "Mega Man 10" ahead of "Mega Man X" for someone searching the former,
+    // while still leaving the other findable.
+    //
+    // A game's name in every other language is searched as well as its English
+    // name, whatever language the page is in, and the best match counts. So
+    // searching "原神" finds Genshin Impact from the English page, and someone
+    // who knows a game only by its Russian name finds it anywhere.
+    const NUMERAL_TIER = 5;
+    const tiers: Game[][] = [[], [], [], [], [], []];
+    /** Ranks names against one written form of the query. */
+    const tierer = (text: string) => {
+      const parts = [...new Set(text.split(" ").filter(Boolean))];
+      const partStarts = parts.map((word) => ` ${word}`);
+      return (name: string) => {
+        if (!parts.every((word) => name.includes(word))) return Infinity;
+        if (name === text) return 0;
+        if (name.startsWith(text)) return 1;
+        if (name.includes(text)) return 2;
+        if (partStarts.every((word) => ` ${name}`.includes(word))) return 3;
+        return 4;
+      };
     };
-    const localNames = searchableNamesIn(locale);
+    const tierOf = tierer(needle);
+    // The query with its own Roman numerals written as ordinary numbers, so it
+    // meets the names that have been through the same change.
+    const numberedNeedle = withoutRomanNumerals(needle);
+    const tierOfNumbered = tierer(numberedNeedle);
+    const needleRenumbered = numberedNeedle !== needle;
+
     for (let i = 0; words.length > 0 && i < sortedGames.length; i++) {
-      const localName = localNames?.get(sortedGames[i].id);
-      const tier = Math.min(tierOf(searchable[i]), localName ? tierOf(localName) : Infinity);
+      const { id } = sortedGames[i];
+      let tier = tierOf(searchable[i]);
+      // Most games have no other names, so this usually costs one lookup.
+      for (const localName of searchableNamesFor(id) ?? []) {
+        if (tier === 0) break; // nothing can beat an exact match
+        tier = Math.min(tier, tierOf(localName));
+      }
+      if (tier === Infinity) {
+        // Only worth rewriting numerals when one side or the other has one,
+        // which for most games and most searches is neither.
+        const numberedName = numberedNameFor(id);
+        if (numberedName !== undefined || needleRenumbered) {
+          const name = numberedName ?? searchable[i];
+          if (tierOfNumbered(name) !== Infinity) tier = NUMERAL_TIER;
+        }
+      }
       if (tier !== Infinity) tiers[tier].push(sortedGames[i]);
     }
     results = tiers.flat();
   }
 
   const totalPages = Math.max(1, Math.ceil(results.length / PAGE_SIZE));
-  const requestedPage = Number.parseInt(url.searchParams.get("page") ?? "1", 10);
-  const page = Math.min(Math.max(Number.isNaN(requestedPage) ? 1 : requestedPage, 1), totalPages);
+  const requestedPage = Number.parseInt(
+    url.searchParams.get("page") ?? "1",
+    10,
+  );
+  const page = Math.min(
+    Math.max(Number.isNaN(requestedPage) ? 1 : requestedPage, 1),
+    totalPages,
+  );
   const start = (page - 1) * PAGE_SIZE;
 
   /** The query string for a page of the current search, without the "?". */
@@ -168,7 +211,10 @@ export const browse = (
     const date = new Date(game.released * 1000);
     return {
       game,
-      released: { iso: date.toISOString().slice(0, 10), text: dateFormat.format(date) },
+      released: {
+        iso: date.toISOString().slice(0, 10),
+        text: dateFormat.format(date),
+      },
     };
   });
 

@@ -468,7 +468,444 @@ const ja: StreamingText = {
   },
 };
 
-const text: Record<Locale, StreamingText> = { en, fr, es, de, ja };
+const ko: StreamingText = {
+  title: "방송에서 사용하기",
+  description:
+    "Nightbot, StreamElements, Fossabot 또는 Streamer.bot에서 트위치 카테고리 이름으로 그 게임에서 죽을 수 있는지 물어보세요.",
+  intro:
+    "트위치 카테고리 이름을 보내주시면 그 게임에서 죽을 수 있는지 알려드립니다. 봇은 그 답을 이용해 데스 카운터를 켜거나 끌 수 있습니다.",
+
+  request: {
+    heading: "요청",
+    text: "주소 끝에 카테고리 이름을 붙인 GET 요청 한 번이면 됩니다. 키나 가입은 필요하지 않습니다.",
+    placeholder: "카테고리 이름",
+    repliesIntro: "응답은 일반 텍스트이며, 다음 세 가지 중 하나입니다:",
+    yes: "이 게임에서는 죽을 수 있습니다.",
+    no: "이 게임에서는 죽지 않습니다.",
+    notFound: "빈 응답입니다. 해당 이름의 게임이 없거나, 아직 답이 없습니다.",
+    slugNote:
+      "게임 이름 대신 슬러그를 써도 됩니다. 슬러그는 이 사이트에 있는 게임 페이지 주소의 마지막 부분으로, 예를 들어 <code>baldurs-gate-iii</code>입니다.",
+  },
+
+  bots: {
+    heading: "봇 설정하기",
+    intro:
+      "아래 예시는 현재 카테고리를 읽어 질문하므로, 게임을 바꾸면 답도 따라갑니다. 채팅 봇은 답을 “true” 또는 “false”라는 단어로 올립니다.",
+    question: (game) => `${game}에서 죽나요?`,
+    streamerBot: {
+      intro: "액션에 다음 두 하위 작업을 이 순서로 추가하세요:",
+      step1:
+        "<strong>Twitch › User › Get User Info for Target</strong>에서 User Login을 <code>%broadcastUserName%</code>으로 설정합니다. 그러면 카테고리가 <code>%game%</code>에 들어갑니다. 액션이 트위치 트리거로 시작되지 않는 경우에는 그 앞에 <strong>Add Broadcaster Information</strong>을 넣으세요.",
+      step2:
+        "<strong>Core › Network › Fetch URL</strong>에서 Variable Name을 <code>canDie</code>로 설정하고 URL을 다음과 같이 지정합니다:",
+      after:
+        "그러면 <code>%canDie%</code>에 <code>true</code> 또는 <code>false</code>가 들어가며, 답이 없을 때는 비어 있습니다. If/Else 하위 작업으로 확인해 보세요.",
+    },
+    nightbot: {
+      intro: "<code>!candie</code> 명령어를 추가하려면 채팅에 다음을 보내세요:",
+      noAnswer: "답이 없으면 Nightbot이 답 대신 자체 오류 메시지를 올립니다.",
+    },
+    streamElements: {
+      intro: "채팅에 다음을 보내세요:",
+      noAnswer:
+        "답이 없으면 StreamElements가 “The remote server returned status code 404”를 올립니다.",
+    },
+    fossabot: {
+      intro: "다음을 응답으로 하는 명령어를 만드세요:",
+      noAnswer: "답이 없으면 Fossabot은 답을 비워 둡니다.",
+    },
+    other: {
+      heading: "그 밖의 도구",
+      text: "웹 주소를 가져올 수 있는 도구라면 무엇이든 동작합니다. 브라우저 소스와 오버레이에서도 어느 사이트에서나 호출할 수 있습니다.",
+    },
+  },
+
+  matching: {
+    heading: "이름을 찾는 방법",
+    intro:
+      "게임 이름은 IGDB에서 가져오며, 트위치도 같은 곳에서 카테고리를 가져오므로 대부분의 이름은 그대로 일치합니다. 대소문자, 발음 구별 기호, 문장 부호는 무시되고, 속편 번호는 어느 쪽으로 써도 됩니다. “3”으로 “III”을 찾고, “III”으로 “3”을 찾습니다. 지금 몇 가지 이름이 돌려주는 값은 다음과 같습니다:",
+    nameColumn: "보낸 이름",
+    replyColumn: "응답",
+    whyColumn: "이유",
+    empty: "404, 빈 응답",
+    notes: {
+      plain:
+        "평범한 이름입니다. 대소문자는 상관없으므로 “firewatch”와 “FIREWATCH”도 됩니다.",
+      accent:
+        "발음 구별 기호는 생략해도 됩니다. “Pokemon Red Version”으로도 같은 게임을 찾습니다.",
+      punctuation: "문장 부호는 무시되므로 콜론은 빼도 됩니다.",
+      apostrophe:
+        "아포스트로피는 생략해도 됩니다. “Friday Night Funkin”도 됩니다.",
+      numeral:
+        "트위치는 이 카테고리를 3으로 적지만, 우리 데이터에는 III으로 있습니다. 로마 숫자와 일반 숫자를 같게 취급하므로 트위치 이름으로도 찾을 수 있습니다.",
+      numeralReverse:
+        "반대의 경우입니다. 우리 데이터에는 이 게임이 “Forza Horizon 5”로 있습니다.",
+      slash: "이름에 있는 슬래시는 그대로 써도 되고 %2F로 써도 됩니다.",
+      percent:
+        "퍼센트 기호는 %25로 보내야 합니다. 봇의 인코딩 변수를 쓰면 알아서 처리해 줍니다.",
+      shared:
+        "여러 게임이 이 이름을 함께 씁니다. 그중 답이 있는 게임, 그리고 그중에서 가장 인기 있는 게임이 나옵니다.",
+      notGame: "게임이 아니므로 답이 없습니다.",
+      slug: "이 사이트의 게임 페이지 주소에서 가져온 슬러그입니다. 항상 바로 그 게임을 찾습니다.",
+    },
+    helpQuestion: "카테고리로 아무것도 찾지 못했나요?",
+    help: "<a>전체 목록</a>에서 게임을 찾아 그 페이지의 슬러그를 대신 사용하세요.",
+  },
+};
+
+const zh: StreamingText = {
+  title: "在你的直播中使用",
+  description:
+    "通过 Twitch 分类名称查询游戏里会不会死，适用于 Nightbot、StreamElements、Fossabot 和 Streamer.bot。",
+  intro:
+    "把你的 Twitch 分类名称发给我们，我们会告诉你那款游戏里会不会死。你的机器人可以根据答案打开或关闭死亡计数器。",
+
+  request: {
+    heading: "请求",
+    text: "只需一个 GET 请求，把分类名称放在地址末尾即可。不需要密钥，也不需要注册。",
+    placeholder: "分类名称",
+    repliesIntro: "回复是纯文本，只有三种情况：",
+    yes: "这款游戏里会死。",
+    no: "这款游戏里不会死。",
+    notFound: "空回复。没有这个名称的游戏，或者我们还没有答案。",
+    slugNote:
+      "也可以用游戏的 slug 代替名称。slug 是本站该游戏页面地址的最后一段，例如 <code>baldurs-gate-iii</code>。",
+  },
+
+  bots: {
+    heading: "设置你的机器人",
+    intro:
+      "下面每个示例都会读取你当前的分类并据此查询，所以换游戏时答案也会跟着变。聊天机器人会把答案发成“true”或“false”。",
+    question: (game) => `《${game}》里会死吗？`,
+    streamerBot: {
+      intro: "按这个顺序把这两个子操作添加到一个 action 中：",
+      step1:
+        "<strong>Twitch › User › Get User Info for Target</strong>，把 User Login 设为 <code>%broadcastUserName%</code>。这会把你的分类放进 <code>%game%</code>。如果该 action 不是由 Twitch 触发器启动的，请在它前面加上 <strong>Add Broadcaster Information</strong>。",
+      step2:
+        "<strong>Core › Network › Fetch URL</strong>，把 Variable Name 设为 <code>canDie</code>，URL 设为：",
+      after:
+        "之后 <code>%canDie%</code> 的值为 <code>true</code>、<code>false</code>，没有答案时为空。可以用 If/Else 子操作来测试。",
+    },
+    nightbot: {
+      intro: "在聊天中发送这条消息来添加 <code>!candie</code> 命令：",
+      noAnswer: "没有答案时，Nightbot 会用它自己的错误提示代替答案。",
+    },
+    streamElements: {
+      intro: "在聊天中发送这条消息：",
+      noAnswer:
+        "没有答案时，StreamElements 会发送“The remote server returned status code 404”。",
+    },
+    fossabot: {
+      intro: "创建一个命令，并把它的回复设为：",
+      noAnswer: "没有答案时，Fossabot 会留空。",
+    },
+    other: {
+      heading: "其他工具",
+      text: "任何能请求网址的工具都可以使用。浏览器源和覆盖层也能从任意网站调用它。",
+    },
+  },
+
+  matching: {
+    heading: "名称如何匹配",
+    intro:
+      "我们的游戏名称来自 IGDB，Twitch 的分类也来自同一来源，所以大多数名称可以直接匹配。大小写、变音符号和标点都会被忽略，续作编号两种写法都行：“3”能找到“III”，“III”也能找到“3”。下面是一些名称目前返回的结果：",
+    nameColumn: "发送的名称",
+    replyColumn: "回复",
+    whyColumn: "原因",
+    empty: "404，空回复",
+    notes: {
+      plain: "普通名称。大小写无关，所以“firewatch”和“FIREWATCH”也可以。",
+      accent: "变音符号可以省略。“Pokemon Red Version”也能找到同一款游戏。",
+      punctuation: "标点会被忽略，所以冒号可以不写。",
+      apostrophe: "撇号可以省略。“Friday Night Funkin”同样可以。",
+      numeral:
+        "Twitch 把这个分类写成 3，而我们的数据里是 III。罗马数字和普通数字视为相同，所以用 Twitch 的名称也能找到。",
+      numeralReverse: "反过来也一样。我们的数据里这款游戏是“Forza Horizon 5”。",
+      slash: "名称中的斜杠可以照原样写，也可以写成 %2F。",
+      percent: "百分号必须写成 %25。使用机器人的编码变量时，它会帮你处理。",
+      shared:
+        "有多款游戏同名。你会得到我们有答案的那一款，并且是其中最热门的。",
+      notGame: "这不是游戏，所以没有答案。",
+      slug: "取自本站游戏页面地址的 slug。它总能精确找到那款游戏。",
+    },
+    helpQuestion: "分类查不到结果？",
+    help: "在<a>主列表</a>中搜索这款游戏，改用它页面上的 slug。",
+  },
+};
+
+const it: StreamingText = {
+  title: "Usalo sul tuo stream",
+  description:
+    "Chiedi se si può morire in un gioco partendo dal nome della sua categoria Twitch, da Nightbot, StreamElements, Fossabot o Streamer.bot.",
+  intro:
+    "Inviaci il nome della tua categoria Twitch e ti diremo se si può morire in quel gioco. Il tuo bot può usare la risposta per attivare o disattivare un contatore di morti.",
+
+  request: {
+    heading: "La richiesta",
+    text: "È una sola richiesta GET, con il nome della categoria alla fine dell'indirizzo. Non serve né una chiave né un'iscrizione.",
+    placeholder: "nome della categoria",
+    repliesIntro: "La risposta è testo semplice, e può essere una di tre cose:",
+    yes: "In questo gioco si può morire.",
+    no: "In questo gioco non si può morire.",
+    notFound:
+      "Una risposta vuota. Nessun gioco ha quel nome, o non abbiamo ancora una risposta.",
+    slugNote:
+      "Al posto del nome funziona anche lo slug di un gioco. Lo slug è l'ultima parte dell'indirizzo della sua pagina qui, per esempio <code>baldurs-gate-iii</code>.",
+  },
+
+  bots: {
+    heading: "Configurare il bot",
+    intro:
+      "Ogni esempio qui sotto legge la tua categoria attuale e chiede di quella, così la risposta ti segue quando cambi gioco. I bot di chat scrivono la risposta come la parola “true” o “false”.",
+    question: (game) => `Si può morire in ${game}?`,
+    streamerBot: {
+      intro: "Aggiungi queste due sub-action a un'action, in questo ordine:",
+      step1:
+        "<strong>Twitch › User › Get User Info for Target</strong>, con User Login impostato su <code>%broadcastUserName%</code>. Questo mette la tua categoria in <code>%game%</code>. Se l'action non parte da un trigger Twitch, mettici davanti <strong>Add Broadcaster Information</strong>.",
+      step2:
+        "<strong>Core › Network › Fetch URL</strong>, con Variable Name impostato su <code>canDie</code> e questo come URL:",
+      after:
+        "<code>%canDie%</code> conterrà poi <code>true</code>, <code>false</code>, o nulla quando non c'è risposta. Puoi verificarlo con una sub-action If/Else.",
+    },
+    nightbot: {
+      intro:
+        "Invia questo in chat per aggiungere un comando <code>!candie</code>:",
+      noAnswer:
+        "Quando non c'è risposta, Nightbot scrive un proprio messaggio di errore al posto della risposta.",
+    },
+    streamElements: {
+      intro: "Invia questo in chat:",
+      noAnswer:
+        "Quando non c'è risposta, StreamElements scrive “The remote server returned status code 404”.",
+    },
+    fossabot: {
+      intro: "Crea un comando con questo come risposta:",
+      noAnswer: "Quando non c'è risposta, Fossabot lascia la risposta vuota.",
+    },
+    other: {
+      heading: "Qualsiasi altro strumento",
+      text: "Funziona qualsiasi strumento in grado di richiamare un indirizzo web. Possono farlo anche le browser source e le overlay, da qualsiasi sito.",
+    },
+  },
+
+  matching: {
+    heading: "Come vengono abbinati i nomi",
+    intro:
+      "I nostri nomi dei giochi vengono da IGDB, da cui Twitch prende anche le sue categorie, quindi la maggior parte dei nomi corrisponde già così. Maiuscole, accenti e punteggiatura vengono ignorati, e il numero di un sequel si può scrivere in entrambi i modi: “3” trova “III” e “III” trova “3”. Ecco cosa restituiscono alcuni nomi in questo momento:",
+    nameColumn: "Nome inviato",
+    replyColumn: "Risposta",
+    whyColumn: "Perché",
+    empty: "404, vuota",
+    notes: {
+      plain:
+        "Un nome semplice. Le maiuscole non contano, quindi funzionano anche “firewatch” e “FIREWATCH”.",
+      accent:
+        "Gli accenti sono facoltativi. “Pokemon Red Version” trova lo stesso gioco.",
+      punctuation:
+        "La punteggiatura viene ignorata, quindi i due punti si possono omettere.",
+      apostrophe:
+        "Gli apostrofi sono facoltativi. Funziona anche “Friday Night Funkin”.",
+      numeral:
+        "Twitch chiama questa categoria con un 3, mentre i nostri dati hanno III. I numeri romani e quelli normali sono trattati allo stesso modo, quindi il nome di Twitch lo trova comunque.",
+      numeralReverse:
+        "Lo stesso al contrario. Nei nostri dati questo gioco è “Forza Horizon 5”.",
+      slash: "Una barra nel nome funziona, scritta così com'è o come %2F.",
+      percent:
+        "Il segno di percentuale va inviato come %25. I bot lo fanno per te se usi la loro variabile di codifica.",
+      shared:
+        "Diversi giochi hanno questo nome. Ottieni quello per cui abbiamo una risposta, e il più popolare tra quelli.",
+      notGame: "Non è un gioco, quindi non c'è risposta.",
+      slug: "Uno slug, preso dall'indirizzo della pagina del gioco qui. Trova sempre esattamente quel gioco.",
+    },
+    helpQuestion: "La categoria non trova nulla?",
+    help: "Cerca il gioco nell'<a>elenco principale</a> e usa invece lo slug dalla sua pagina.",
+  },
+};
+
+const ru: StreamingText = {
+  title: "Используйте на своём стриме",
+  description:
+    "Узнайте, можно ли умереть в игре, по названию её категории на Twitch — из Nightbot, StreamElements, Fossabot или Streamer.bot.",
+  intro:
+    "Пришлите нам название своей категории на Twitch, и мы ответим, можно ли умереть в этой игре. Ваш бот может по этому ответу включать и выключать счётчик смертей.",
+
+  request: {
+    heading: "Запрос",
+    text: "Это один GET-запрос, с названием категории в конце адреса. Ключ и регистрация не нужны.",
+    placeholder: "название категории",
+    repliesIntro: "Ответ приходит обычным текстом и бывает одним из трёх:",
+    yes: "В этой игре можно умереть.",
+    no: "В этой игре умереть нельзя.",
+    notFound:
+      "Пустой ответ. Игры с таким названием нет, либо у нас пока нет ответа.",
+    slugNote:
+      "Вместо названия подойдёт slug игры. Slug — это последняя часть адреса её страницы на этом сайте, например <code>baldurs-gate-iii</code>.",
+  },
+
+  bots: {
+    heading: "Настройка бота",
+    intro:
+      "Каждый пример ниже читает вашу текущую категорию и спрашивает про неё, поэтому ответ меняется вместе с игрой. Чат-боты пишут ответ словом «true» или «false».",
+    question: (game) => `Можно ли умереть в ${game}?`,
+    streamerBot: {
+      intro: "Добавьте в action эти два sub-action, в таком порядке:",
+      step1:
+        "<strong>Twitch › User › Get User Info for Target</strong>, где User Login задан как <code>%broadcastUserName%</code>. Это положит вашу категорию в <code>%game%</code>. Если action запускается не триггером Twitch, поставьте перед ним <strong>Add Broadcaster Information</strong>.",
+      step2:
+        "<strong>Core › Network › Fetch URL</strong>, где Variable Name задан как <code>canDie</code>, а URL — такой:",
+      after:
+        "После этого в <code>%canDie%</code> будет <code>true</code>, <code>false</code> или ничего, если ответа нет. Проверить можно sub-action If/Else.",
+    },
+    nightbot: {
+      intro:
+        "Отправьте это в чат, чтобы добавить команду <code>!candie</code>:",
+      noAnswer:
+        "Если ответа нет, Nightbot вместо него напишет собственное сообщение об ошибке.",
+    },
+    streamElements: {
+      intro: "Отправьте это в чат:",
+      noAnswer:
+        "Если ответа нет, StreamElements напишет «The remote server returned status code 404».",
+    },
+    fossabot: {
+      intro: "Создайте команду с таким ответом:",
+      noAnswer: "Если ответа нет, Fossabot оставит ответ пустым.",
+    },
+    other: {
+      heading: "Что-то ещё",
+      text: "Подойдёт любой инструмент, умеющий запрашивать веб-адрес. Браузерные источники и оверлеи тоже могут обращаться к нему с любого сайта.",
+    },
+  },
+
+  matching: {
+    heading: "Как сопоставляются названия",
+    intro:
+      "Названия игр мы берём из IGDB, откуда Twitch берёт и свои категории, поэтому большинство названий совпадает как есть. Регистр, диакритика и знаки препинания не учитываются, а номер продолжения можно писать любым способом: «3» находит «III», а «III» находит «3». Вот что сейчас возвращают некоторые названия:",
+    nameColumn: "Отправленное название",
+    replyColumn: "Ответ",
+    whyColumn: "Почему",
+    empty: "404, пусто",
+    notes: {
+      plain:
+        "Обычное название. Регистр не важен, поэтому «firewatch» и «FIREWATCH» тоже подойдут.",
+      accent:
+        "Диакритику можно не писать. «Pokemon Red Version» находит ту же игру.",
+      punctuation:
+        "Знаки препинания не учитываются, поэтому двоеточие можно опустить.",
+      apostrophe:
+        "Апострофы необязательны. «Friday Night Funkin» тоже работает.",
+      numeral:
+        "Twitch называет эту категорию с 3, а в наших данных стоит III. Римские и обычные числа считаются одним и тем же, поэтому название из Twitch всё равно её находит.",
+      numeralReverse:
+        "То же самое наоборот. В наших данных эта игра — «Forza Horizon 5».",
+      slash: "Косая черта в названии работает — как есть или в виде %2F.",
+      percent:
+        "Знак процента нужно отправлять как %25. Боты делают это сами, если использовать их переменную кодирования.",
+      shared:
+        "Это название носят несколько игр. Вы получите ту, для которой у нас есть ответ, а из таких — самую популярную.",
+      notGame: "Это не игра, поэтому ответа нет.",
+      slug: "Slug, взятый из адреса страницы игры здесь. Он всегда находит именно эту игру.",
+    },
+    helpQuestion: "Категория ничего не находит?",
+    help: "Найдите игру в <a>основном списке</a> и используйте slug с её страницы.",
+  },
+};
+
+const ar: StreamingText = {
+  title: "استخدمه في بثّك",
+  description:
+    "اسأل عمّا إذا كان بإمكانك أن تموت في لعبة انطلاقًا من اسم تصنيفها على Twitch، من Nightbot أو StreamElements أو Fossabot أو Streamer.bot.",
+  intro:
+    "أرسل لنا اسم تصنيفك على Twitch وسنخبرك ما إذا كان بإمكانك أن تموت في تلك اللعبة. ويمكن لبوتك أن يستخدم الإجابة لتشغيل عدّاد الوفيات أو إيقافه.",
+
+  request: {
+    heading: "الطلب",
+    text: "طلب GET واحد، مع اسم التصنيف في نهاية العنوان. لا حاجة إلى مفتاح ولا إلى تسجيل.",
+    placeholder: "اسم التصنيف",
+    repliesIntro: "الرد نص عادي، وهو واحد من ثلاثة:",
+    yes: "يمكنك أن تموت في هذه اللعبة.",
+    no: "لا يمكنك أن تموت في هذه اللعبة.",
+    notFound: "رد فارغ. لا توجد لعبة بهذا الاسم، أو ليست لدينا إجابة بعد.",
+    slugNote:
+      "يصلح المعرّف النصّي للعبة بدلًا من اسمها. وهو الجزء الأخير من عنوان صفحة اللعبة هنا، مثل <code>baldurs-gate-iii</code>.",
+  },
+
+  bots: {
+    heading: "إعداد البوت",
+    intro:
+      "كل مثال أدناه يقرأ تصنيفك الحالي ويسأل عنه، فتتبعك الإجابة عند تغيير اللعبة. وتنشر بوتات الدردشة الإجابة بكلمة “true” أو “false”.",
+    question: (game) => `هل يمكن أن تموت في ${game}؟`,
+    streamerBot: {
+      intro: "أضف هذين الإجراءين الفرعيين إلى إجراء واحد، بهذا الترتيب:",
+      step1:
+        "<strong>Twitch › User › Get User Info for Target</strong>، مع ضبط User Login على <code>%broadcastUserName%</code>. يضع هذا تصنيفك في <code>%game%</code>. وإن لم يكن الإجراء مبدوءًا بمشغّل من Twitch، فضع <strong>Add Broadcaster Information</strong> قبله.",
+      step2:
+        "<strong>Core › Network › Fetch URL</strong>، مع ضبط Variable Name على <code>canDie</code> وهذا هو العنوان:",
+      after:
+        "عندها يحمل <code>%canDie%</code> القيمة <code>true</code> أو <code>false</code>، أو لا شيء عند غياب الإجابة. جرّبه بإجراء فرعي If/Else.",
+    },
+    nightbot: {
+      intro: "أرسل هذا في دردشتك لإضافة أمر <code>!candie</code>:",
+      noAnswer: "عند غياب الإجابة، ينشر Nightbot رسالة خطأ خاصة به بدلًا منها.",
+    },
+    streamElements: {
+      intro: "أرسل هذا في دردشتك:",
+      noAnswer:
+        "عند غياب الإجابة، ينشر StreamElements “The remote server returned status code 404”.",
+    },
+    fossabot: {
+      intro: "أنشئ أمرًا يكون هذا هو ردّه:",
+      noAnswer: "عند غياب الإجابة، يترك Fossabot الرد فارغًا.",
+    },
+    other: {
+      heading: "أي أداة أخرى",
+      text: "تصلح أي أداة تستطيع جلب عنوان وِب. ويمكن لمصادر المتصفح والطبقات أن تستدعيه أيضًا، من أي موقع.",
+    },
+  },
+
+  matching: {
+    heading: "كيف تُطابَق الأسماء",
+    intro:
+      "تأتي أسماء الألعاب لدينا من IGDB، وهي المصدر نفسه الذي يأخذ منه Twitch تصنيفاته، فتتطابق معظم الأسماء كما هي. وتُتجاهل حالة الأحرف والعلامات وعلامات الترقيم، ويمكن كتابة رقم الجزء بأي من الطريقتين: فـ“3” تجد “III”، و“III” تجد “3”. وهذا ما تعيده بعض الأسماء الآن:",
+    nameColumn: "الاسم المُرسل",
+    replyColumn: "الرد",
+    whyColumn: "السبب",
+    empty: "404، فارغ",
+    notes: {
+      plain:
+        "اسم عادي. حالة الأحرف لا تهم، فتصلح “firewatch” و“FIREWATCH” أيضًا.",
+      accent: "العلامات اختيارية. فـ“Pokemon Red Version” تجد اللعبة نفسها.",
+      punctuation: "تُتجاهل علامات الترقيم، فيمكن حذف النقطتين.",
+      apostrophe: "الفاصلة العليا اختيارية. و“Friday Night Funkin” تصلح كذلك.",
+      numeral:
+        "يسمّي Twitch هذا التصنيف بالرقم 3، بينما في بياناتنا III. وتُعامل الأرقام الرومانية والعادية على أنها سواء، فيجدها اسم Twitch رغم ذلك.",
+      numeralReverse:
+        "والعكس كذلك. ففي بياناتنا هذه اللعبة باسم “Forza Horizon 5”.",
+      slash: "تصلح الشرطة المائلة في الاسم، مكتوبة كما هي أو على هيئة %2F.",
+      percent:
+        "يجب إرسال علامة النسبة المئوية على هيئة %25. وتفعل البوتات ذلك نيابة عنك عند استخدام متغيّر الترميز لديها.",
+      shared:
+        "تتشارك عدة ألعاب هذا الاسم. فتحصل على التي لدينا إجابة عنها، وأشهرها بينها.",
+      notGame: "ليست لعبة، فلا توجد إجابة.",
+      slug: "معرّف نصّي مأخوذ من عنوان صفحة اللعبة هنا. وهو يجد تلك اللعبة بعينها دائمًا.",
+    },
+    helpQuestion: "ألا يجد التصنيف شيئًا؟",
+    help: "ابحث عن اللعبة في <a>القائمة الرئيسية</a> واستخدم المعرّف النصّي من صفحتها بدلًا من ذلك.",
+  },
+};
+
+const text: Record<Locale, StreamingText> = {
+  en,
+  fr,
+  es,
+  de,
+  ja,
+  ko,
+  zh,
+  it,
+  ru,
+  ar,
+};
 
 /** The streaming guide's text in a language. */
 export const streamingTextFor = (locale: Locale): StreamingText => text[locale];

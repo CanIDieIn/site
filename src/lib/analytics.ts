@@ -138,8 +138,19 @@ const report = (context: APIContext, hit: Partial<UmamiPayload>) => {
       language: languageOf(request),
       ...hit,
     })
-    .then((response) => {
-      if (!response.ok) complain(`${response.status} ${response.statusText}`);
+    .then(async (response) => {
+      if (response.ok) return;
+      // Enough of the answer to show who turned the report away. Umami itself
+      // refuses in JSON, saying what it made of the report; anything standing
+      // in front of it -- a proxy, or a CDN applying a rule of its own --
+      // refuses with its own error page instead. The status on its own does
+      // not tell those two apart, and they want quite different fixing.
+      const detail = await response.text().then(
+        (body) => body.replace(/\s+/g, " ").trim().slice(0, 300),
+        () => "",
+      );
+      const type = response.headers.get("content-type") ?? "no content type";
+      complain(`${response.status} ${response.statusText} (${type}) ${detail}`);
     }, complain);
 };
 

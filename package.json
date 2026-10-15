@@ -11,6 +11,8 @@
     "preview": "astro preview",
     "start": "node ./dist/server/entry.mjs",
     "astro": "astro",
+    "check": "astro check",
+    "format": "prettier --write .",
     "data:sync": "node data.ts",
     "og:assets": "node scripts/make-og-assets.mjs"
   },
@@ -32,8 +34,10 @@
     "esbuild": true
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.10",
     "@types/node": "^26.6.4",
     "prettier": "^3.9.9",
-    "prettier-plugin-sort-json": "^4.2.0"
+    "prettier-plugin-sort-json": "^4.2.0",
+    "typescript": "^6.0.3"
   }
 }

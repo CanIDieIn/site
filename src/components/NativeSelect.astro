@@ -1,0 +1,58 @@
+---
+import ChevronDown from "@tabler/icons/outline/chevron-down.svg";
+import type { ComponentProps } from "astro/types";
+
+import { NativeSelect as VendorNativeSelect } from "@/components/starwind/native-select";
+
+// Starwind's select, corrected to read either way round.
+//
+// The vendor component lays its padding and its chevron out with physical
+// properties: `pl-3`, `pr-9` and `right-3`. Those stay on the left and the
+// right whichever way the page reads, so in Arabic the text would sit against
+// the chevron and the chevron would sit where the text begins.
+//
+// This wraps the vendor component instead of editing it, so running
+// `starwind add native-select` again cannot quietly undo the correction. Only
+// the two directional pieces are restated here; everything else, including the
+// height and text size of each `size`, still comes from the vendor.
+//
+// WHY `px-0`: the `class` prop is merged by tailwind-merge, which treats
+// `padding-left` and `padding-inline-start` as different properties and so
+// keeps both. Adding `ps-3` alone would leave the vendor's `pl-3` in place and
+// pad both sides in Arabic. `px-0` is in the same group as the vendor's
+// `pl`/`pr` and clears them, and the logical padding that follows it wins.
+//
+// The chevron is replaced outright through the vendor's own `icon` slot, which
+// is simpler than trying to out-merge the classes it would otherwise carry.
+
+type Props = ComponentProps<typeof VendorNativeSelect>;
+
+const { size = "md", class: className, ...rest } = Astro.props;
+
+/** The vendor's padding for each size, with the sides written logically. */
+const padding = {
+  sm: "px-0 ps-2 pe-8",
+  md: "px-0 ps-3 pe-9",
+  lg: "px-0 ps-4 pe-10",
+} as const;
+
+/** The vendor's chevron, with its position and size written logically. */
+const icon = {
+  sm: "end-2 size-3.5",
+  md: "end-3 size-4",
+  lg: "end-4 size-5",
+} as const;
+---
+
+<VendorNativeSelect size={size} class:list={[padding[size], className]} {...rest}>
+  <slot />
+  <ChevronDown
+    slot="icon"
+    class:list={[
+      "text-foreground pointer-events-none absolute top-1/2 -translate-y-1/2 opacity-50",
+      icon[size],
+    ]}
+    aria-hidden="true"
+    data-slot="native-select-icon"
+  />
+</VendorNativeSelect>

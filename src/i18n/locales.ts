@@ -7,10 +7,22 @@
 //
 // TO ADD A LANGUAGE: add its code here, then a block for it in ui.ts and
 // streaming.ts. TypeScript will point out every string that is missing. Run
-// `npm run og:assets` to draw its stamps. To pull game names in that language
-// from IGDB, see IGDB_NAME_REGIONS in data.ts.
+// `npm run og:assets` to draw its stamps, checking first that the fonts it
+// names cover the language's script. To pull game names in that language from
+// IGDB, see IGDB_NAME_REGIONS and IGDB_NAME_COMMENTS in data.ts.
 
-export const LOCALES = ["en", "fr", "es", "de", "ja"] as const;
+export const LOCALES = [
+  "en",
+  "fr",
+  "es",
+  "de",
+  "ja",
+  "ko",
+  "zh",
+  "it",
+  "ru",
+  "ar",
+] as const;
 export type Locale = (typeof LOCALES)[number];
 
 export const DEFAULT_LOCALE: Locale = "en";
@@ -22,7 +34,28 @@ export const LOCALE_NAMES: Record<Locale, string> = {
   es: "Español",
   de: "Deutsch",
   ja: "日本語",
+  ko: "한국어",
+  // The interface is in simplified characters, and a game's Chinese name is
+  // its simplified one wherever IGDB has one. See IGDB_NAME_COMMENTS.
+  zh: "简体中文",
+  it: "Italiano",
+  ru: "Русский",
+  ar: "العربية",
 };
+
+/**
+ * The languages written right to left. Every other language is written left to
+ * right.
+ *
+ * A page sets this as the `dir` of its <html>, which is what flips the whole
+ * layout: the styles are written with logical properties, so "start" means the
+ * left in English and the right in Arabic, and nothing needs saying twice.
+ */
+const RTL_LOCALES = new Set<Locale>(["ar"]);
+
+/** Which way a language is written, for the `dir` attribute. */
+export const directionOf = (locale: Locale): "ltr" | "rtl" =>
+  RTL_LOCALES.has(locale) ? "rtl" : "ltr";
 
 export const isLocale = (value: string | undefined): value is Locale =>
   (LOCALES as readonly string[]).includes(value ?? "");

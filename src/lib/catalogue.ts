@@ -29,20 +29,89 @@ export type Game = {
 };
 
 /** The game's name in a language, or its English name if it has none there. */
-export const nameIn = (game: Game, locale: Locale): string => game.names?.[locale] ?? game.name;
+export const nameIn = (game: Game, locale: Locale): string =>
+  game.names?.[locale] ?? game.name;
+
+/**
+ * The language `nameIn` returns the name in: the one asked for when the game
+ * has a name there, and English otherwise.
+ *
+ * A page marks up a name that is not in the page's own language, so a screen
+ * reader pronounces it in the right voice instead of reading an English title
+ * aloud as though it were Japanese.
+ */
+export const localeOfNameIn = (game: Game, locale: Locale): Locale =>
+  game.names?.[locale] ? locale : DEFAULT_LOCALE;
+
+// Letters that look the same in the Latin and Cyrillic alphabets. A handful of
+// titles are typed with one of these by mistake, and it happens in both
+// directions: "Magiс" with a Cyrillic с, and "Пpинца" with a Latin p. Either
+// way the word is hidden from anyone who types it correctly. Each pair is
+// written once here and read both ways.
+const CYRILLIC_TO_LATIN: Record<string, string> = {
+  а: "a",
+  в: "b",
+  с: "c",
+  ԁ: "d",
+  е: "e",
+  н: "h",
+  і: "i",
+  ј: "j",
+  к: "k",
+  м: "m",
+  о: "o",
+  р: "p",
+  ѕ: "s",
+  т: "t",
+  х: "x",
+  у: "y",
+};
+const LATIN_TO_CYRILLIC: Record<string, string> = Object.fromEntries(
+  Object.entries(CYRILLIC_TO_LATIN).map(([cyrillic, latin]) => [
+    latin,
+    cyrillic,
+  ]),
+);
+const CYRILLIC = /[Ѐ-ӿ]/;
+const LATIN = /[a-z]/;
+
+/**
+ * Rewrites a word written in two alphabets at once into the one most of it is
+ * in, so a stray lookalike letter cannot hide the word from a search.
+ *
+ * Only a word that mixes alphabets within itself is touched. A name that
+ * changes alphabet between words, as "Dragon Age: Начало" does, is left
+ * exactly as it is.
+ */
+const oneAlphabet = (word: string): string => {
+  if (!LATIN.test(word) || !CYRILLIC.test(word)) return word;
+  const letters = [...word];
+  const cyrillic = letters.filter((letter) => CYRILLIC.test(letter)).length;
+  const latin = letters.filter((letter) => LATIN.test(letter)).length;
+  const table = cyrillic >= latin ? LATIN_TO_CYRILLIC : CYRILLIC_TO_LATIN;
+  return letters.map((letter) => table[letter] ?? letter).join("");
+};
 
 /**
  * Reduces text to plain lowercase words: accents and apostrophes are dropped
  * and other punctuation becomes a space. "Baldur's Gate" becomes "baldurs gate"
  * and "Pokémon" becomes "pokemon".
+ *
+ * A word mixing the Latin and Cyrillic alphabets is settled into one of them,
+ * as a lookalike letter is almost always a typo. Both the names and what
+ * someone searches for come through here, so the two still meet.
  */
-export const normalise = (text: string) =>
-  text
+export const normalise = (text: string) => {
+  const cleaned = text
     .normalize("NFD")
     .replace(/\p{M}|['’`]/gu, "")
     .toLowerCase()
     .replace(/[^\p{L}\p{N}]+/gu, " ")
     .trim();
+  // Almost every name is in one alphabet and needs no further work.
+  if (!CYRILLIC.test(cleaned)) return cleaned;
+  return cleaned.split(" ").map(oneAlphabet).join(" ");
+};
 
 type Keyed = { game: Game; key: string };
 
@@ -136,24 +205,31 @@ export type Scope = "all" | "no-deaths";
 
 type Listing = { games: Game[]; searchable: string[] };
 
-// Each game's name in each other language, normalised for searching, by game
-// id. Only games that have a name in that language are here.
-const localNames = new Map<Locale, Map<number, string>>();
+// Every name a game has in another language, normalised for searching, by game
+// id. The languages are not kept apart: a search looks through all of them at
+// once, so only the names themselves are needed. Games with none are left out,
+// which is most of them. Duplicates are dropped, as two languages often write
+// a name the same way.
+const localNames = new Map<number, string[]>();
 for (const { game } of keyed) {
-  for (const [locale, name] of Object.entries(game.names ?? {}) as [Locale, string][]) {
-    let names = localNames.get(locale);
-    if (!names) localNames.set(locale, (names = new Map()));
-    names.set(game.id, normalise(name));
+  const names = new Set<string>();
+  for (const name of Object.values(game.names ?? {})) {
+    const normalised = normalise(name);
+    if (normalised) names.add(normalised);
   }
+  if (names.size > 0) localNames.set(game.id, [...names]);
 }
 
 /**
- * The normalised name of each game in a language, by game id, for searching
- * that language's pages. Undefined for English, and for a language no game
- * has a name in. Searches always look at the English name as well.
+ * The game's names in other languages, normalised, for searching. Undefined
+ * for a game that has none.
+ *
+ * Every language is searched from every page, so someone who knows a game only
+ * by its Japanese or Russian name finds it wherever they are reading. Searches
+ * always look at the English name as well.
  */
-export const searchableNamesIn = (locale: Locale): Map<number, string> | undefined =>
-  localNames.get(locale);
+export const searchableNamesFor = (id: number): string[] | undefined =>
+  localNames.get(id);
 const listings = new Map<string, { day: number; listing: Listing }>();
 
 /**
@@ -216,7 +292,10 @@ export const SORTS: {
 ];
 
 /** The same two choices, in the same order, for every sort. */
-export const DIRECTIONS: { value: Direction }[] = [{ value: "asc" }, { value: "desc" }];
+export const DIRECTIONS: { value: Direction }[] = [
+  { value: "asc" },
+  { value: "desc" },
+];
 
 export const DEFAULT_SORT: Sort = "popularity";
 
@@ -285,7 +364,18 @@ const preferredForName = (a: Game, b: Game) =>
 // the letters I, V and X are read, as sequels do not reach 40, and reading L,
 // C, D and M as well would turn words such as "mix" and "dim" into numbers.
 const ROMAN_NUMERAL = /^(x{0,3})(ix|iv|v?i{0,3})$/;
-const ROMAN_UNITS = ["", "i", "ii", "iii", "iv", "v", "vi", "vii", "viii", "ix"];
+const ROMAN_UNITS = [
+  "",
+  "i",
+  "ii",
+  "iii",
+  "iv",
+  "v",
+  "vi",
+  "vii",
+  "viii",
+  "ix",
+];
 
 /**
  * Rewrites the Roman numerals in a normalised name as ordinary numbers, so
@@ -322,6 +412,26 @@ const indexByName = (keyOf: (key: string) => string) => {
 const gamesByName = indexByName((key) => key);
 // The same, with Roman numerals and ordinary numbers treated as equal.
 const gamesByNumberedName = indexByName(withoutRomanNumerals);
+
+// Each game's normalised name with its Roman numerals written as ordinary
+// numbers, by game id, for searching. Only the games whose name actually
+// changes are here, which is about one in fifty.
+const numberedNames = new Map<number, string>();
+for (const { game, key } of keyed) {
+  const numbered = withoutRomanNumerals(key);
+  if (numbered !== key) numberedNames.set(game.id, numbered);
+}
+
+/**
+ * The game's normalised name with Roman numerals written as ordinary numbers,
+ * or undefined when its name has none.
+ *
+ * A search compares this against the query in the same form, so that someone
+ * typing "baldurs gate 3" finds "Baldur's Gate III". Most people write a
+ * sequel's number the way they say it, not the way the box does.
+ */
+export const numberedNameFor = (id: number): string | undefined =>
+  numberedNames.get(id);
 
 /**
  * The game with this name, if it is in the catalogue. Meant for Twitch
@@ -383,7 +493,9 @@ export const reasonFor = (
   const verdict = deathsById.get(game.id);
   const translated = verdict?.reasons?.[locale];
   if (translated) return { text: translated, locale };
-  return verdict?.reason ? { text: verdict.reason, locale: DEFAULT_LOCALE } : undefined;
+  return verdict?.reason
+    ? { text: verdict.reason, locale: DEFAULT_LOCALE }
+    : undefined;
 };
 
 /**

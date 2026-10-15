@@ -46,7 +46,8 @@
    * accessibility reasons.
    */
   --font-sans:
-    system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", Arial, sans-serif;
+    system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans",
+    Arial, sans-serif;
 
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -129,8 +130,16 @@
  * If a page's text column is ever made wider than 44rem, widen this to match.
  */
 .backdrop-veil {
-  --veil-centre: color-mix(in srgb, var(--background) var(--backdrop-veil), transparent);
-  --veil-edge: color-mix(in srgb, var(--background) var(--backdrop-veil-edge), transparent);
+  --veil-centre: color-mix(
+    in srgb,
+    var(--background) var(--backdrop-veil),
+    transparent
+  );
+  --veil-edge: color-mix(
+    in srgb,
+    var(--background) var(--backdrop-veil-edge),
+    transparent
+  );
   background: linear-gradient(
     to right,
     var(--veil-edge),

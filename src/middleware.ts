@@ -21,9 +21,15 @@ const locale = defineMiddleware((context, next) => {
     return context.redirect(`${path}${context.url.search}`, 301);
   }
   // "/en" on its own is just the home page.
-  if (locale === DEFAULT_LOCALE && path === "/") return context.redirect("/", 301);
+  if (locale === DEFAULT_LOCALE && path === "/")
+    return context.redirect("/", 301);
 
-  return next(new Request(new URL(`${path}${context.url.search}`, context.url), context.request));
+  return next(
+    new Request(
+      new URL(`${path}${context.url.search}`, context.url),
+      context.request,
+    ),
+  );
 });
 
 // Analytics comes first, so it sees each request as it arrived: the address

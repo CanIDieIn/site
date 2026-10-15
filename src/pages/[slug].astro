@@ -1,9 +1,14 @@
 ---
-import DeathDefinition from "@/components/DeathDefinition.astro";
 import { localePath, splitLocale } from "@/i18n/locales";
 import { uiFor, type Answer } from "@/i18n/ui";
 import Layout from "@/layouts/Layout.astro";
-import { canDieIn, findGame, nameIn, reasonFor } from "../lib/catalogue";
+import {
+  canDieIn,
+  findGame,
+  localeOfNameIn,
+  nameIn,
+  reasonFor,
+} from "../lib/catalogue";
 
 // Rendered per request, so no page is built for each of the 300,000 games.
 export const prerender = false;
@@ -52,6 +57,22 @@ const correctionUrl =
     : undefined;
 
 const pageTitle = name ? t.game.title(name) : t.game.notFoundTitle;
+
+// The heading asks the question in this language but may name the game in
+// another, so only the name is marked, not the whole sentence. `t.game.title`
+// is called with a stand-in for the name and the sentence split either side of
+// it, which keeps the marked-up heading and the plain `pageTitle` in step
+// without putting any HTML in src/i18n/ui.ts.
+//
+// The stand-in cannot appear in real text, and a translation that ever dropped
+// it leaves `titleParts` unusable, in which case the heading falls back to the
+// plain sentence.
+const NAME_STAND_IN = "\u0000";
+const nameLocale = game ? localeOfNameIn(game, locale) : locale;
+const titleParts =
+  name && nameLocale !== locale
+    ? t.game.title(NAME_STAND_IN).split(NAME_STAND_IN)
+    : undefined;
 
 // "Browse all games" returns to the list exactly as the visitor left it, with
 // their search, sort and page. The browser says which page linked here in the
@@ -118,10 +139,16 @@ const backdrop = game?.art
 // end names the image and the answer the card was drawn from, so if either
 // changes the address changes too, and nobody is shown an out-of-date card.
 const cardVersion = `${game?.art ?? game?.cover ?? "none"}-${answer}`;
-const image = game ? `${localePath(locale, `/og/${game.slug}.jpg`)}?v=${cardVersion}` : undefined;
-const imageAlt = name ? t.game.cardAlt(name, t.answers[answer].toLowerCase()) : undefined;
+const image = game
+  ? `${localePath(locale, `/og/${game.slug}.jpg`)}?v=${cardVersion}`
+  : undefined;
+const imageAlt = name
+  ? t.game.cardAlt(name, t.answers[answer].toLowerCase())
+  : undefined;
 
-const description = name ? t.game.description(name, t.game.answerSentence[answer]) : undefined;
+const description = name
+  ? t.game.description(name, t.game.answerSentence[answer])
+  : undefined;
 ---
 
 <Layout
@@ -143,7 +170,15 @@ const description = name ? t.game.description(name, t.game.answerSentence[answer
             {/* The whole question in one style. It only wraps when the name is too long
                 for the screen, and then breaks into lines of similar length. */}
             <h1 class="text-3xl leading-tight font-semibold tracking-tight text-balance wrap-anywhere sm:text-4xl">
-              {pageTitle}
+              {titleParts?.length === 2 ? (
+                <>
+                  {titleParts[0]}
+                  <span lang={nameLocale}>{name}</span>
+                  {titleParts[1]}
+                </>
+              ) : (
+                pageTitle
+              )}
             </h1>
             <p
               class:list={[
@@ -168,7 +203,10 @@ const description = name ? t.game.description(name, t.game.answerSentence[answer
             {/* The guide to the plain-text API, in pages/streaming.astro. */}
             <p>
               {t.cards.streamingTitle}{" "}
-              <a href={localePath(locale, "/streaming")} class="link text-foreground">
+              <a
+                href={localePath(locale, "/streaming")}
+                class="link text-foreground"
+              >
                 {t.cards.streamingText}
               </a>
               {t.fullStop}

@@ -34,7 +34,8 @@ const stampFiles = import.meta.glob<string>("../../assets/og/stamp-*.png", {
   import: "default",
   eager: true,
 });
-const bytes = (dataUrl: string) => Buffer.from(dataUrl.slice(dataUrl.indexOf(",") + 1), "base64");
+const bytes = (dataUrl: string) =>
+  Buffer.from(dataUrl.slice(dataUrl.indexOf(",") + 1), "base64");
 const ANSWERS: Answer[] = ["yes", "no", "unsure"];
 /** The stamp for an answer in a language: `stamps.fr.yes`. */
 const stamps = Object.fromEntries(
@@ -42,8 +43,12 @@ const stamps = Object.fromEntries(
     locale,
     Object.fromEntries(
       ANSWERS.map((answer) => {
-        const file = stampFiles[`../../assets/og/stamp-${locale}-${answer}.png`];
-        if (!file) throw new Error(`No stamp for "${answer}" in "${locale}". Run npm run og:assets.`);
+        const file =
+          stampFiles[`../../assets/og/stamp-${locale}-${answer}.png`];
+        if (!file)
+          throw new Error(
+            `No stamp for "${answer}" in "${locale}". Run npm run og:assets.`,
+          );
         return [answer, bytes(file)];
       }),
     ),
@@ -68,7 +73,12 @@ const download = async (url: string) => {
 /** A black layer of the given strength, to darken artwork so the stamp stands out. */
 const shade = (opacity: number) => ({
   input: {
-    create: { width: WIDTH, height: HEIGHT, channels: 4 as const, background: { r: 0, g: 0, b: 0, alpha: opacity } },
+    create: {
+      width: WIDTH,
+      height: HEIGHT,
+      channels: 4 as const,
+      background: { r: 0, g: 0, b: 0, alpha: opacity },
+    },
   },
 });
 
@@ -77,9 +87,14 @@ type Card = { image: Buffer; hasArtwork: boolean };
 /** Draws the card for a game. `hasArtwork` is false when it had to fall back to a plain card. */
 const drawCard = async (game: Game, locale: Locale): Promise<Card> => {
   const answer = canDieIn(game);
-  const stamp = stamps[locale][answer === undefined ? "unsure" : answer ? "yes" : "no"];
-  const { width: stampWidth = 820, height: stampHeight = 440 } = await sharp(stamp).metadata();
-  const centred = { left: Math.round((WIDTH - stampWidth) / 2), top: Math.round((HEIGHT - stampHeight) / 2) };
+  const stamp =
+    stamps[locale][answer === undefined ? "unsure" : answer ? "yes" : "no"];
+  const { width: stampWidth = 820, height: stampHeight = 440 } =
+    await sharp(stamp).metadata();
+  const centred = {
+    left: Math.round((WIDTH - stampWidth) / 2),
+    top: Math.round((HEIGHT - stampHeight) / 2),
+  };
 
   // The same image the game's page uses as its backdrop: official key art, or
   // the cover if there is none. Both get the same treatment, so every card is
@@ -103,7 +118,14 @@ const drawCard = async (game: Game, locale: Locale): Promise<Card> => {
   }
 
   // No usable image: the stamp on the site's own dark background.
-  const image = await sharp({ create: { width: WIDTH, height: HEIGHT, channels: 3, background: PAGE_COLOUR } })
+  const image = await sharp({
+    create: {
+      width: WIDTH,
+      height: HEIGHT,
+      channels: 3,
+      background: PAGE_COLOUR,
+    },
+  })
     .composite([{ input: stamp, ...centred }])
     .jpeg({ quality: 82, mozjpeg: true })
     .toBuffer();
@@ -153,7 +175,10 @@ export const GET: APIRoute = async ({ params, locals }) => {
     headers: {
       "Content-Type": "image/jpeg",
       // Let browsers and platforms keep it for a day. Failed downloads are retried sooner.
-      "Cache-Control": card.hasArtwork || !(game.art || game.cover) ? "public, max-age=86400" : "public, max-age=300",
+      "Cache-Control":
+        card.hasArtwork || !(game.art || game.cover)
+          ? "public, max-age=86400"
+          : "public, max-age=300",
     },
   });
 };
