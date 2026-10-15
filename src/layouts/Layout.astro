@@ -1,5 +1,6 @@
 ---
 import "@/styles/starwind.css";
+import LanguageMenu from "@/components/LanguageMenu.astro";
 import {
   DEFAULT_LOCALE,
   directionOf,
@@ -34,6 +35,12 @@ interface Props {
   image?: string;
   imageAlt?: string;
   backdrop?: string;
+  /**
+   * Whether to put the language menu in the foot of the page. A page that
+   * shows its own, such as the home page, turns this off: two navigations
+   * labelled the same way leave a screen reader unable to tell them apart.
+   */
+  languageMenu?: boolean;
 }
 const { locale, path } = Astro.locals;
 const t = uiFor(locale);
@@ -45,6 +52,7 @@ const {
   // Drawn by scripts/make-og-assets.mjs, one for each language.
   image = locale === DEFAULT_LOCALE ? "/og.jpg" : `/og-${locale}.jpg`,
   imageAlt = `${t.siteName} ${t.tagline}`,
+  languageMenu = true,
 } = Astro.props;
 
 // Left where the middleware can read it once the page is drawn, so the page
@@ -151,37 +159,16 @@ const translations = LOCALES.map((code) => ({
       )
     }
     <slot />
-    {/* The language menu. Each language is named in its own words, and marked
-        as that language so a screen reader pronounces it correctly. */}
-    <footer class="mx-auto w-full max-w-2xl px-5 pb-10">
-      <nav aria-label={t.languageMenu} class="border-t pt-6">
-        <ul class="flex flex-wrap justify-center gap-x-5 gap-y-1 text-sm">
-          {
-            translations.map(({ code, name, href }) => (
-              <li>
-                {code === locale ? (
-                  <span
-                    lang={code}
-                    aria-current="true"
-                    class="inline-flex min-h-11 items-center font-semibold"
-                  >
-                    {name}
-                  </span>
-                ) : (
-                  <a
-                    {href}
-                    lang={code}
-                    hreflang={code}
-                    class="link text-muted-foreground inline-flex min-h-11 items-center"
-                  >
-                    {name}
-                  </a>
-                )}
-              </li>
-            ))
-          }
-        </ul>
-      </nav>
-    </footer>
+    {/* The language menu. It is a dropdown rather than a row of links, as ten
+        languages is more than reads well across the foot of a page. The
+        <link rel="alternate"> tags above are what search engines read, so
+        folding the list away costs nothing there. */}
+    {
+      languageMenu && (
+        <footer class="mx-auto flex w-full max-w-2xl justify-center px-5 pb-10">
+          <LanguageMenu drop="up" class="border-t pt-6" />
+        </footer>
+      )
+    }
   </body>
 </html>

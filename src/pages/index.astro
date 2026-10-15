@@ -1,6 +1,7 @@
 ---
 import DeathDefinition from "@/components/DeathDefinition.astro";
 import GameBrowser from "@/components/GameBrowser.astro";
+import LanguageMenu from "@/components/LanguageMenu.astro";
 import LinkCard from "@/components/LinkCard.astro";
 import Stamp from "@/components/Stamp.astro";
 import { localePath } from "@/i18n/locales";
@@ -30,9 +31,23 @@ const count = new Intl.NumberFormat(locale);
 ---
 
 {/* The title is the same on every view of this page. The game pages complete the question. */}
-<Layout title={t.siteName} description={t.home.description} tint="yes">
+<Layout
+  title={t.siteName}
+  description={t.home.description}
+  tint="yes"
+  languageMenu={false}
+>
   <main id="main" class="mx-auto w-full max-w-2xl px-5 py-14 sm:py-24">
     <header class="mb-10">
+      {/* The language menu sits above the title, where someone who cannot read
+          this page will look first. A visitor sent here in a language they do
+          not want should not have to scroll past a page they cannot read to
+          change it. This is the only one on this page: `languageMenu={false}`
+          above leaves it out of the footer, as two navigations labelled the
+          same way leave a screen reader unable to tell them apart. */}
+      <div class="mb-8 flex justify-end">
+        <LanguageMenu />
+      </div>
       {/* The title, with the two answers stamped beside it. On a narrow screen
           the stamps drop below the title. */}
       <div class="flex flex-wrap items-center justify-between gap-x-8 gap-y-6">

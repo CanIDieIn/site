@@ -1,0 +1,114 @@
+---
+import ChevronDown from "@tabler/icons/outline/chevron-down.svg";
+import World from "@tabler/icons/outline/world.svg";
+
+import { LOCALES, LOCALE_NAMES, localePath } from "@/i18n/locales";
+import { uiFor } from "@/i18n/ui";
+
+// The language menu, as a dropdown. There are ten languages now, which is more
+// than reads well as a row of links, so they are folded away behind the name
+// of the language being read.
+//
+// It is a <details>, so it opens and closes on its own without JavaScript, and
+// <summary> is already a button to a screen reader. The script at the foot
+// only adds what a native dropdown would also do: close on Escape, and close
+// when the next click lands somewhere else.
+//
+// Each language is named in its own words and marked as that language, so a
+// screen reader pronounces "Français" in French rather than reading it in the
+// voice of the page around it.
+//
+// NO FLAGS: a flag is a country, not a language. Arabic is spoken across some
+// twenty-five countries, Spanish is far bigger in Mexico than in Spain, and
+// picking a flag for Chinese or English means picking one country's readers
+// over another's. Flag emoji also do not draw as flags on Windows at all,
+// which is where much of the audience is: they come out as two letters.
+
+interface Props {
+  /** Which way the panel opens. Up in the footer, down everywhere else. */
+  drop?: "up" | "down";
+  class?: string;
+}
+
+const { drop = "down", class: className } = Astro.props;
+
+// `path` is this page's address with its language code taken off, set by
+// src/middleware.ts, so each language links to the same page it is on.
+const { locale, path } = Astro.locals;
+const t = uiFor(locale);
+
+const languages = LOCALES.map((code) => ({
+  code,
+  name: LOCALE_NAMES[code],
+  href: `${localePath(code, path)}${Astro.url.search}`,
+}));
+---
+
+<nav aria-label={t.languageMenu} class:list={["w-fit", className]}>
+  <details class="group relative" data-language-menu>
+    <summary
+      class="border-input hover:bg-accent flex min-h-11 cursor-pointer list-none items-center gap-2 rounded-md border px-3 text-sm font-medium transition-colors [&::-webkit-details-marker]:hidden"
+    >
+      <World class="size-4 shrink-0 opacity-70" aria-hidden="true" />
+      <span lang={locale}>{LOCALE_NAMES[locale]}</span>
+      <ChevronDown
+        class="size-4 shrink-0 opacity-70 transition-transform group-open:rotate-180 motion-reduce:transition-none"
+        aria-hidden="true"
+      />
+    </summary>
+    <ul
+      class:list={[
+        "bg-background absolute z-20 max-h-80 min-w-full overflow-y-auto rounded-md border p-1 shadow-lg",
+        drop === "up" ? "bottom-full mb-2" : "top-full mt-2",
+        // Opens towards the middle of the page, so it cannot run off the edge
+        // in either reading direction.
+        "start-0",
+      ]}
+    >
+      {
+        languages.map(({ code, name, href }) => (
+          <li>
+            {code === locale ? (
+              <span
+                lang={code}
+                aria-current="true"
+                class="bg-accent flex min-h-11 items-center rounded-sm px-3 text-sm font-semibold"
+              >
+                {name}
+              </span>
+            ) : (
+              <a
+                {href}
+                lang={code}
+                hreflang={code}
+                class="hover:bg-accent text-muted-foreground hover:text-foreground flex min-h-11 items-center rounded-sm px-3 text-sm transition-colors"
+              >
+                {name}
+              </a>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+  </details>
+</nav>
+
+<script>
+  // What a native dropdown does that <details> does not: close on Escape, and
+  // close when the next click lands outside. Without this the menu still works,
+  // it just stays open until it is clicked again.
+  for (const menu of document.querySelectorAll<HTMLDetailsElement>(
+    "[data-language-menu]",
+  )) {
+    menu.addEventListener("keydown", (event) => {
+      if (event.key !== "Escape" || !menu.open) return;
+      menu.open = false;
+      menu.querySelector("summary")?.focus();
+    });
+    document.addEventListener("click", (event) => {
+      if (!menu.open) return;
+      if (event.target instanceof Node && menu.contains(event.target)) return;
+      menu.open = false;
+    });
+  }
+</script>
