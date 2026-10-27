@@ -11495,6 +11495,10 @@
     "deaths": false,
     "reason": "A visual novel with nothing that can happen to you."
   },
+  "404712": {
+    "deaths": true,
+    "reason": "George can fail any stage. While not formally a 'death' - it's fun to count them!"
+  },
   "405028": {
     "deaths": true,
     "reason": "Hiders who are found get shot by the Seekers."
