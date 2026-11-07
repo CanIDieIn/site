@@ -1,5 +1,5 @@
 import type { APIContext } from "astro";
-import { chatTextFor } from "../i18n/chat";
+import { chatTextFor, notGameLine } from "../i18n/chat";
 import { DEFAULT_LOCALE, isLocale, type Locale } from "../i18n/locales";
 import { trackEvent } from "./analytics";
 import {
@@ -10,7 +10,7 @@ import {
   reasonFor,
   type Game,
 } from "./catalogue";
-import { nonGameCategory } from "./categories";
+import { nonGameCategory, type Category } from "./categories";
 import { githubUrl } from "./github";
 
 // What the plain-text endpoints under src/pages/api share: how a reply is
@@ -44,7 +44,7 @@ export type Lookup = {
   game: Game | undefined;
   canDie: boolean | undefined;
   /** The Twitch category, when the name is one that is not a game. */
-  category: string | undefined;
+  category: Category | undefined;
 };
 
 /**
@@ -113,7 +113,8 @@ export const chatLocale = (url: URL): Locale => {
 
 /**
  * The sentence the chat API posts for a lookup, in a language. The text is in
- * src/i18n/chat.ts.
+ * src/i18n/chat.ts. A Twitch category that is not a game gets a joke, picked at
+ * random, so the same category can get a different reply each time.
  *
  * The game is named as it is in that language where it has a name in it. The
  * reason for the answer follows only when it is written in that language too,
@@ -126,7 +127,7 @@ export const chatReply = (
   locale: Locale,
 ): string => {
   const t = chatTextFor(locale);
-  if (category) return t.notGame(category);
+  if (category) return notGameLine(t, category);
   if (!game || canDie === undefined) {
     return githubUrl ? `${t.unknown} ${githubUrl}` : t.unknown;
   }

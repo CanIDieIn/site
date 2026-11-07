@@ -32,9 +32,12 @@ const CATEGORIES = [
   "Games + Demos",
   "Always On",
   "Crypto",
-];
+] as const;
 
-const categoriesByName = new Map(
+/** A Twitch category that is not a game, as Twitch writes it. */
+export type Category = (typeof CATEGORIES)[number];
+
+const categoriesByName = new Map<string, Category>(
   CATEGORIES.map((category) => [normalise(category), category]),
 );
 

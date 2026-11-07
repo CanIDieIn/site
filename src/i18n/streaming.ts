@@ -32,7 +32,7 @@ const en = {
       language: (codes: string) =>
         `The sentence is in English unless you add <code>?lang=</code> and one of these codes: ${codes}. The commands on this page already ask for the language you are reading it in. The reason for an answer is included when we have it written in that language.`,
       unknown:
-        "When we have no answer, the sentence says so and asks for help on GitHub. A category that is not a game, such as Just Chatting, gets a sentence saying so. Either way, the reply is never empty.",
+        "When we have no answer, the sentence says so and asks for help on GitHub. A category that is not a game, such as Just Chatting, gets a joke instead, a different one each time. Either way, the reply is never empty.",
     },
     /** The address that answers true or false. Its replies follow. */
     automation: {
@@ -130,7 +130,7 @@ const fr: StreamingText = {
       language: (codes) =>
         `La phrase est en anglais, sauf si vous ajoutez <code>?lang=</code> suivi de l'un de ces codes : ${codes}. Les commandes de cette page demandent déjà la langue dans laquelle vous la lisez. La raison de la réponse est ajoutée quand nous l'avons rédigée dans cette langue.`,
       unknown:
-        "Quand nous n'avons pas de réponse, la phrase le dit et demande de l'aide sur GitHub. Une catégorie qui n'est pas un jeu, comme Just Chatting, reçoit une phrase qui le dit. Dans tous les cas, la réponse n'est jamais vide.",
+        "Quand nous n'avons pas de réponse, la phrase le dit et demande de l'aide sur GitHub. Une catégorie qui n'est pas un jeu, comme Just Chatting, reçoit plutôt une blague, différente à chaque fois. Dans tous les cas, la réponse n'est jamais vide.",
     },
     automation: {
       heading: "Pour l'automatisation",
@@ -227,7 +227,7 @@ const es: StreamingText = {
       language: (codes) =>
         `La frase está en inglés, salvo que añadas <code>?lang=</code> y uno de estos códigos: ${codes}. Los comandos de esta página ya piden el idioma en el que la estás leyendo. El motivo de la respuesta se incluye cuando lo tenemos escrito en ese idioma.`,
       unknown:
-        "Cuando no tenemos respuesta, la frase lo dice y pide ayuda en GitHub. Una categoría que no es un juego, como Just Chatting, recibe una frase que lo dice. En cualquier caso, la respuesta nunca está vacía.",
+        "Cuando no tenemos respuesta, la frase lo dice y pide ayuda en GitHub. Una categoría que no es un juego, como Just Chatting, recibe en su lugar un chiste, distinto cada vez. En cualquier caso, la respuesta nunca está vacía.",
     },
     automation: {
       heading: "Para automatizar",
@@ -322,7 +322,7 @@ const de: StreamingText = {
       language: (codes) =>
         `Der Satz ist auf Englisch, außer du hängst <code>?lang=</code> und einen dieser Codes an: ${codes}. Die Befehle auf dieser Seite fragen schon nach der Sprache, in der du sie liest. Der Grund für die Antwort steht dabei, wenn wir ihn in dieser Sprache geschrieben haben.`,
       unknown:
-        "Haben wir keine Antwort, sagt der Satz das und bittet auf GitHub um Hilfe. Eine Kategorie, die kein Spiel ist, wie Just Chatting, bekommt einen Satz, der das sagt. Leer ist die Antwort also nie.",
+        "Haben wir keine Antwort, sagt der Satz das und bittet auf GitHub um Hilfe. Eine Kategorie, die kein Spiel ist, wie Just Chatting, bekommt stattdessen einen Witz, jedes Mal einen anderen. Leer ist die Antwort also nie.",
     },
     automation: {
       heading: "Für Automatisierung",
@@ -420,7 +420,7 @@ const ja: StreamingText = {
       language: (codes) =>
         `<code>?lang=</code>と次のコードのいずれかを付けない限り、文は英語です：${codes}。このページのコマンドには、今読んでいる言語の指定がすでに入っています。答えの理由は、その言語で書かれている場合に付きます。`,
       unknown:
-        "答えがない場合は、その旨を伝え、GitHubでの協力を呼びかける文を返します。Just Chattingのようにゲームではないカテゴリには、そのことを伝える文を返します。どちらの場合も、返事が空になることはありません。",
+        "答えがない場合は、その旨を伝え、GitHubでの協力を呼びかける文を返します。Just Chattingのようにゲームではないカテゴリには、代わりに毎回違うジョークを返します。どちらの場合も、返事が空になることはありません。",
     },
     automation: {
       heading: "自動化用",
@@ -515,7 +515,7 @@ const ko: StreamingText = {
       language: (codes) =>
         `<code>?lang=</code>와 다음 코드 중 하나를 붙이지 않으면 문장은 영어로 나옵니다: ${codes}. 이 페이지의 명령어에는 지금 읽고 있는 언어가 이미 들어 있습니다. 답의 이유는 그 언어로 작성되어 있을 때 함께 나옵니다.`,
       unknown:
-        "답이 없으면 문장이 그렇다고 알리고 GitHub에서 도움을 요청합니다. Just Chatting처럼 게임이 아닌 카테고리에는 그렇다고 알리는 문장이 나옵니다. 어느 경우든 응답이 비어 있지 않습니다.",
+        "답이 없으면 문장이 그렇다고 알리고 GitHub에서 도움을 요청합니다. Just Chatting처럼 게임이 아닌 카테고리에는 대신 매번 다른 농담이 나옵니다. 어느 경우든 응답이 비어 있지 않습니다.",
     },
     automation: {
       heading: "자동화용",
@@ -607,7 +607,7 @@ const zh: StreamingText = {
       language: (codes) =>
         `句子默认是英文，除非你加上 <code>?lang=</code> 和以下任一代码：${codes}。本页的命令已经指定了你正在阅读的语言。如果我们有用该语言写的理由，句子会附上答案的理由。`,
       unknown:
-        "没有答案时，句子会说明这一点，并请大家在 GitHub 上帮忙。不是游戏的分类，例如 Just Chatting，会得到一句说明。无论哪种情况，回复都不会为空。",
+        "没有答案时，句子会说明这一点，并请大家在 GitHub 上帮忙。不是游戏的分类，例如 Just Chatting，则会得到一句玩笑话，每次都不一样。无论哪种情况，回复都不会为空。",
     },
     automation: {
       heading: "用于自动化",
@@ -694,7 +694,7 @@ const it: StreamingText = {
       language: (codes) =>
         `La frase è in inglese, a meno che tu non aggiunga <code>?lang=</code> e uno di questi codici: ${codes}. I comandi di questa pagina chiedono già la lingua in cui la stai leggendo. Il motivo della risposta viene aggiunto quando lo abbiamo scritto in quella lingua.`,
       unknown:
-        "Quando non abbiamo una risposta, la frase lo dice e chiede aiuto su GitHub. Una categoria che non è un gioco, come Just Chatting, riceve una frase che lo dice. In ogni caso la risposta non è mai vuota.",
+        "Quando non abbiamo una risposta, la frase lo dice e chiede aiuto su GitHub. Una categoria che non è un gioco, come Just Chatting, riceve invece una battuta, ogni volta diversa. In ogni caso la risposta non è mai vuota.",
     },
     automation: {
       heading: "Per l'automazione",
@@ -789,7 +789,7 @@ const ru: StreamingText = {
       language: (codes) =>
         `Фраза будет на английском, если не добавить <code>?lang=</code> и один из этих кодов: ${codes}. Команды на этой странице уже запрашивают язык, на котором вы её читаете. Причина ответа добавляется, если она написана на этом языке.`,
       unknown:
-        "Если ответа нет, фраза так и говорит и просит помочь на GitHub. Категория, которая не является игрой, например Just Chatting, получает фразу об этом. В любом случае ответ не бывает пустым.",
+        "Если ответа нет, фраза так и говорит и просит помочь на GitHub. Категория, которая не является игрой, например Just Chatting, получает вместо этого шутку, каждый раз новую. В любом случае ответ не бывает пустым.",
     },
     automation: {
       heading: "Для автоматизации",
@@ -884,7 +884,7 @@ const ar: StreamingText = {
       language: (codes) =>
         `تكون الجملة بالإنجليزية ما لم تُضف <code>?lang=</code> وأحد هذه الرموز: ${codes}. والأوامر في هذه الصفحة تطلب بالفعل اللغة التي تقرؤها بها. ويُضاف سبب الإجابة عندما يكون مكتوبًا لدينا بتلك اللغة.`,
       unknown:
-        "عندما لا تكون لدينا إجابة، تقول الجملة ذلك وتطلب المساعدة على GitHub. أما التصنيف الذي ليس لعبة، مثل Just Chatting، فيحصل على جملة تقول ذلك. وفي كل الأحوال لا يكون الرد فارغًا أبدًا.",
+        "عندما لا تكون لدينا إجابة، تقول الجملة ذلك وتطلب المساعدة على GitHub. أما التصنيف الذي ليس لعبة، مثل Just Chatting، فيحصل بدلًا من ذلك على دعابة، مختلفة في كل مرة. وفي كل الأحوال لا يكون الرد فارغًا أبدًا.",
     },
     automation: {
       heading: "للأتمتة",
