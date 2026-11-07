@@ -1,32 +1,8 @@
 import type { APIRoute } from "astro";
-import { trackEvent } from "../../lib/analytics";
-import { canDieIn, findGame, findGameByName } from "../../lib/catalogue";
+import { answerFor, plainText } from "../../lib/api";
 
 // Answered per request, so no file is built for each of the 225,000 games.
 export const prerender = false;
-
-const text = (body: string | null, status = 200) =>
-  new Response(body, {
-    status,
-    headers: {
-      "Content-Type": "text/plain; charset=utf-8",
-      // Lets browser-based tools, such as stream overlays, call this too.
-      "Access-Control-Allow-Origin": "*",
-    },
-  });
-
-/**
- * Undoes any percent-encoding still left in the address, such as `%2F` for a
- * slash. A name with a real percent sign in it, such as "100% Orange Juice",
- * is not valid encoding and is returned as it is.
- */
-const decoded = (value: string) => {
-  try {
-    return decodeURIComponent(value);
-  } catch {
-    return value;
-  }
-};
 
 /**
  * Plain-text answer for tools such as Streamer.bot: `true` if you can die in
@@ -37,10 +13,9 @@ const decoded = (value: string) => {
  *   /api/baldurs-gate-iii
  *   /api/Baldur's Gate 3
  *
- * The name is there so a streaming tool can send the current Twitch category
- * as it is, without knowing the slug. The slug is tried first. This route
- * takes the whole rest of the address, so a name with a slash in it, such as
- * "Fate/stay night", works too.
+ * This route takes the whole rest of the address, so a name with a slash in
+ * it, such as "Fate/stay night", works too. For a sentence to post straight
+ * into chat instead, see api/chat/[...slug].ts.
  *
  * Anything else is a 404 with an empty body. That covers an address
  * that matches no game, and a game with no entry in `deaths.json` yet. There
@@ -48,24 +23,7 @@ const decoded = (value: string) => {
  * answer.
  */
 export const GET: APIRoute = (context) => {
-  const named = context.params.slug && decoded(context.params.slug);
-  const game = findGame(named) ?? findGameByName(named);
-  const canDie = game && canDieIn(game);
-
-  // What was asked for and what it got, as an "api" event in Umami. The
-  // address alone would say the first but not the second, and the two together
-  // are what shows which games are being watched with no answer written yet.
-  //
-  // `asked` is usually a Twitch category sent as it is by a stream bot, so it
-  // is cut to a sensible length. `game` is missing when nothing matched it at
-  // all, which tells a name the catalogue does not know from a game in it that
-  // nobody has answered for.
-  trackEvent(context, "api", {
-    asked: (named || "").slice(0, 100),
-    answer: canDie === undefined ? "unsure" : String(canDie),
-    ...(game ? { game: game.slug } : {}),
-  });
-
-  if (canDie === undefined) return text(null, 404);
-  return text(String(canDie));
+  const { canDie } = answerFor(context, "boolean");
+  if (canDie === undefined) return plainText(null, 404);
+  return plainText(String(canDie));
 };

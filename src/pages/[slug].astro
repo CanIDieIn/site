@@ -10,6 +10,7 @@ import {
   nameIn,
   reasonFor,
 } from "../lib/catalogue";
+import { githubUrl } from "../lib/github";
 
 // Rendered per request, so no page is built for each of the 300,000 games.
 export const prerender = false;
@@ -38,14 +39,9 @@ const reason = game ? reasonFor(game, locale) : undefined;
 // Each name below other than `template` and `title` is the `id` of a field in
 // that form. If a field is renamed there, rename it here too. The `kind` value
 // must match one of the form's options word for word.
-const githubUrl = (import.meta.env.PUBLIC_GITHUB_URL ?? "")
-  .trim()
-  .replace(/\/+$/, "");
-const isGithubUrl =
-  URL.canParse(githubUrl) && new URL(githubUrl).protocol.startsWith("http");
 const correctionUrl =
-  game && isGithubUrl
-    ? `${githubUrl}/issues/new?${new URLSearchParams({
+  game && githubUrl
+    ?`${githubUrl}/issues/new?${new URLSearchParams({
         template: "game_answer.yml",
         title: `Answer: ${game.name} (${game.id})`,
         kind:

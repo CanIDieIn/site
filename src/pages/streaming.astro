@@ -1,19 +1,23 @@
 ---
 import Stamp from "@/components/Stamp.astro";
-import { localePath } from "@/i18n/locales";
+import { DEFAULT_LOCALE, LOCALES, localePath } from "@/i18n/locales";
 import { streamingTextFor, type StreamingText } from "@/i18n/streaming";
 import { uiFor } from "@/i18n/ui";
 import Layout from "@/layouts/Layout.astro";
+import { chatReply, lookUp } from "@/lib/api";
 import { canDieIn, findGame, findGameByName } from "@/lib/catalogue";
 import LanguageMenu from "@/components/LanguageMenu.astro";
 
-// The guide to the plain-text API in api/[...slug].ts, for people setting up a
-// stream bot. Being a fixed address, this page takes priority over a game whose
+// The guide to the plain-text API, for people setting up a stream bot: the
+// sentence for chat in api/chat/[...slug].ts, and the bare true or false in
+// api/[...slug].ts. Being a fixed address, this page takes priority over a game whose
 // slug happens to be "streaming".
 //
 // The same page serves every language: /streaming in English, /fr/streaming in
 // French, and so on. Its text is in src/i18n/streaming.ts. The API itself has
-// one address and one set of replies, whatever the language.
+// one address whatever the language. The chat sentence is in English unless
+// `?lang=` asks for another, so the commands on this page ask for the
+// language the page is in.
 //
 // Rendered per request, like the other pages, so the example answers below
 // always match what the API says today.
@@ -25,6 +29,25 @@ const site = uiFor(locale);
 
 const origin = (Astro.site ?? Astro.url).origin;
 const api = `${origin}/api/`;
+const chatApi = `${api}chat/`;
+// What the chat commands add to ask for this page's language. English is the
+// API's own default, so it needs nothing.
+const lang = locale === DEFAULT_LOCALE ? "" : `?lang=${locale}`;
+
+// What the chat address says right now for a few names, in this page's
+// language: a game you can die in, one you cannot, and a category that is
+// not a game. Looked up the same way the API does it, so it cannot go out of
+// date.
+const chatExamples = [
+  { name: "Baldur's Gate 3", path: "Baldur's%20Gate%203" },
+  { name: "Firewatch", path: "Firewatch" },
+  { name: "Just Chatting", path: "Just%20Chatting" },
+].map((example) => ({
+  href: `/api/chat/${example.path}${lang}`,
+  address: `${chatApi}${example.path}${lang}`,
+  reply: chatReply(lookUp(example.name), locale),
+}));
+const codes = LOCALES.map((code) => `<code>${code}</code>`).join(", ");
 
 // Names to show in the examples table. `path` is how the name looks in an
 // address when it differs from the name itself, and `note` names the entry in
@@ -108,12 +131,13 @@ const rich = (html: string) =>
     .replaceAll("<a>", `<a href="${localePath(locale, "/")}" class="link">`);
 
 // The commands to copy. Each bot has its own code for the current category,
-// which goes into the question the bot asks in chat.
+// which goes on the end of the chat address. The reply is a whole sentence, so
+// the bot posts it as it is.
 const nightbotGame = `$(twitch $(channel) "{{game}}")`;
 const commands = {
-  nightbot: `!commands add !candie ${t.bots.question(nightbotGame)} $(urlfetch ${api}$(querystring ${nightbotGame}))`,
-  streamElements: `!command add !candie ${t.bots.question("$(game)")} $(customapi ${api}$(pathescape $(game)))`,
-  fossabot: `${t.bots.question("$(game)")} $(customapi ${api}$(pathencode $(game)))`,
+  nightbot: `!commands add !candie $(urlfetch ${chatApi}$(querystring ${nightbotGame})${lang})`,
+  streamElements: `!command add !candie $(customapi ${chatApi}$(pathescape $(game))${lang})`,
+  fossabot: `$(customapi ${chatApi}$(pathencode $(game))${lang})`,
 };
 ---
 
@@ -167,9 +191,40 @@ const commands = {
 
     <h2 class={sectionHeading}>{t.request.heading}</h2>
     <p class="mt-4 text-pretty">{t.request.text}</p>
+
+    <h3 class:list={[botHeading, "mt-8"]}>{t.request.chat.heading}</h3>
+    <pre
+      class={block}><code>GET {chatApi}&lt;{t.request.placeholder}&gt;{lang}</code></pre>
+    <p class="mt-6 text-pretty">{t.request.chat.text}</p>
+    {
+      /* The replies are what the API sends in this page's language, so they
+          are shown as they are. The address above each is in English. */
+    }
+    <ul class="mt-3 grid gap-3">
+      {
+        chatExamples.map((example) => (
+          <li class={panel}>
+            <a
+              href={example.href}
+              class="link block font-mono text-sm break-all"
+              lang="en"
+              dir="ltr"
+            >
+              {example.address}
+            </a>
+            <p class="mt-2 text-pretty">{example.reply}</p>
+          </li>
+        ))
+      }
+    </ul>
+    <p class="mt-6 text-pretty" set:html={rich(t.request.chat.language(codes))} />
+    <p class="mt-4 text-pretty">{t.request.chat.unknown}</p>
+
+    <h3 class:list={[botHeading, "mt-8"]}>{t.request.automation.heading}</h3>
     <pre
       class={block}><code>GET {api}&lt;{t.request.placeholder}&gt;</code></pre>
-    <p class="mt-6 text-pretty">{t.request.repliesIntro}</p>
+    <p class="mt-6 text-pretty">{t.request.automation.text}</p>
+    <p class="mt-4 text-pretty">{t.request.repliesIntro}</p>
     {
       /* The replies themselves are what the API sends, so they are not translated. */
     }
@@ -213,27 +268,18 @@ const commands = {
         <h3 class={botHeading}>Nightbot</h3>
         <p class="mt-2 text-pretty" set:html={rich(t.bots.nightbot.intro)} />
         <pre class={block}><code>{commands.nightbot}</code></pre>
-        <p class="text-muted-foreground mt-3 text-sm text-pretty">
-          {t.bots.nightbot.noAnswer}
-        </p>
       </section>
 
       <section class={panel}>
         <h3 class={botHeading}>StreamElements</h3>
         <p class="mt-2 text-pretty">{t.bots.streamElements.intro}</p>
         <pre class={block}><code>{commands.streamElements}</code></pre>
-        <p class="text-muted-foreground mt-3 text-sm text-pretty">
-          {t.bots.streamElements.noAnswer}
-        </p>
       </section>
 
       <section class={panel}>
         <h3 class={botHeading}>Fossabot</h3>
         <p class="mt-2 text-pretty">{t.bots.fossabot.intro}</p>
         <pre class={block}><code>{commands.fossabot}</code></pre>
-        <p class="text-muted-foreground mt-3 text-sm text-pretty">
-          {t.bots.fossabot.noAnswer}
-        </p>
       </section>
 
       <section class={panel}>

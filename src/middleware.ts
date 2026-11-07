@@ -66,8 +66,9 @@ const locale = defineMiddleware((context, next) => {
   // this to link to the same page in each other language.
   context.locals.path = path;
 
-  // The API answers the same in every language, so it has one address and no
-  // language of its own to remember.
+  // The API has one address in every language and no language of its own to
+  // remember. The chat sentence is asked for in a language with `?lang=`, which
+  // the redirect keeps, rather than with a code on the front of the address.
   const isApi = path === "/api" || path.startsWith("/api/");
   if (isApi) {
     return prefixed

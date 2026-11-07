@@ -20,10 +20,25 @@ const en = {
     "Send us the name of your Twitch category and we will tell you whether you can die in that game. Your bot can use the answer to switch a death counter on or off.",
 
   request: {
-    heading: "The request",
-    text: "It is one GET request, with the category name on the end of the address. No key or sign-up is needed.",
+    heading: "The requests",
+    text: "There are two addresses: one for a sentence to post in chat, and one for the answer on its own. Each is a single GET request with the category name on the end. Both find games the same way, and no key or sign-up is needed.",
     /** Stands in for the name in the example address. */
     placeholder: "category name",
+    /** The address that answers with a sentence for chat. */
+    chat: {
+      heading: "For chat",
+      text: "A sentence your bot can post as it is. Right now, it says:",
+      /** `codes` is the list of language codes, already marked up. */
+      language: (codes: string) =>
+        `The sentence is in English unless you add <code>?lang=</code> and one of these codes: ${codes}. The commands on this page already ask for the language you are reading it in. The reason for an answer is included when we have it written in that language.`,
+      unknown:
+        "When we have no answer, the sentence says so and asks for help on GitHub. A category that is not a game, such as Just Chatting, gets a sentence saying so. Either way, the reply is never empty.",
+    },
+    /** The address that answers true or false. Its replies follow. */
+    automation: {
+      heading: "For automation",
+      text: "The answer on its own, for a tool that acts on it, such as Streamer.bot switching a death counter on or off.",
+    },
     repliesIntro: "The reply is plain text, and one of three things:",
     yes: "You can die in this game.",
     no: "You cannot die in this game.",
@@ -36,9 +51,7 @@ const en = {
   bots: {
     heading: "Setting up your bot",
     intro:
-      "Each example below reads your current category and asks about it, so the answer follows you when you change game. Chat bots post the answer as the word “true” or “false”.",
-    /** What the bot says in chat before the answer. `game` is the bot's own code for the category. */
-    question: (game: string) => `Can you die in ${game}?`,
+      "Each example below reads your current category and asks about it, so the answer follows you when you change game. Nightbot, StreamElements and Fossabot post the sentence from the chat address. Streamer.bot gets the answer on its own, to act on.",
     streamerBot: {
       intro: "Add these two sub-actions to an action, in this order:",
       step1:
@@ -50,17 +63,12 @@ const en = {
     },
     nightbot: {
       intro: "Send this in your chat to add a <code>!candie</code> command:",
-      noAnswer:
-        "When there is no answer, Nightbot posts an error message of its own in place of the answer.",
     },
     streamElements: {
       intro: "Send this in your chat:",
-      noAnswer:
-        "When there is no answer, StreamElements posts “The remote server returned status code 404”.",
     },
     fossabot: {
       intro: "Create a command with this as its response:",
-      noAnswer: "When there is no answer, Fossabot leaves the answer blank.",
     },
     other: {
       heading: "Anything else",
@@ -113,9 +121,21 @@ const fr: StreamingText = {
     "Envoyez-nous le nom de votre catégorie Twitch et nous vous dirons si l'on peut mourir dans ce jeu. Votre bot peut utiliser la réponse pour activer ou désactiver un compteur de morts.",
 
   request: {
-    heading: "La requête",
-    text: "C'est une simple requête GET, avec le nom de la catégorie à la fin de l'adresse. Aucune clé ni inscription n'est nécessaire.",
+    heading: "Les requêtes",
+    text: "Il y a deux adresses : l'une renvoie une phrase à publier dans le chat, l'autre la réponse seule. Chacune est une simple requête GET, avec le nom de la catégorie à la fin. Les deux reconnaissent les jeux de la même façon, et aucune clé ni inscription n'est nécessaire.",
     placeholder: "nom de la catégorie",
+    chat: {
+      heading: "Pour le chat",
+      text: "Une phrase que votre bot peut publier telle quelle. En ce moment, elle dit :",
+      language: (codes) =>
+        `La phrase est en anglais, sauf si vous ajoutez <code>?lang=</code> suivi de l'un de ces codes : ${codes}. Les commandes de cette page demandent déjà la langue dans laquelle vous la lisez. La raison de la réponse est ajoutée quand nous l'avons rédigée dans cette langue.`,
+      unknown:
+        "Quand nous n'avons pas de réponse, la phrase le dit et demande de l'aide sur GitHub. Une catégorie qui n'est pas un jeu, comme Just Chatting, reçoit une phrase qui le dit. Dans tous les cas, la réponse n'est jamais vide.",
+    },
+    automation: {
+      heading: "Pour l'automatisation",
+      text: "La réponse seule, pour un outil qui agit en fonction d'elle, comme Streamer.bot qui active ou désactive un compteur de morts.",
+    },
     repliesIntro:
       "La réponse est en texte brut, et prend l'une de ces trois formes :",
     yes: "On peut mourir dans ce jeu.",
@@ -129,8 +149,7 @@ const fr: StreamingText = {
   bots: {
     heading: "Configurer votre bot",
     intro:
-      "Chaque exemple ci-dessous lit votre catégorie actuelle et pose la question, de sorte que la réponse vous suit quand vous changez de jeu. Les bots de chat publient la réponse sous la forme du mot « true » ou « false ».",
-    question: (game) => `Peut-on mourir dans ${game} ?`,
+      "Chaque exemple ci-dessous lit votre catégorie actuelle et pose la question, de sorte que la réponse vous suit quand vous changez de jeu. Nightbot, StreamElements et Fossabot publient la phrase de l'adresse pour le chat. Streamer.bot reçoit la réponse seule, pour agir en fonction d'elle.",
     streamerBot: {
       intro: "Ajoutez ces deux sous-actions à une action, dans cet ordre :",
       step1:
@@ -143,18 +162,12 @@ const fr: StreamingText = {
     nightbot: {
       intro:
         "Envoyez ceci dans votre chat pour ajouter une commande <code>!candie</code> :",
-      noAnswer:
-        "Quand il n'y a pas de réponse, Nightbot publie son propre message d'erreur à la place.",
     },
     streamElements: {
       intro: "Envoyez ceci dans votre chat :",
-      noAnswer:
-        "Quand il n'y a pas de réponse, StreamElements publie « The remote server returned status code 404 ».",
     },
     fossabot: {
       intro: "Créez une commande avec ceci comme réponse :",
-      noAnswer:
-        "Quand il n'y a pas de réponse, Fossabot laisse la réponse vide.",
     },
     other: {
       heading: "Tout autre outil",
@@ -205,9 +218,21 @@ const es: StreamingText = {
     "Envíanos el nombre de tu categoría de Twitch y te diremos si se puede morir en ese juego. Tu bot puede usar la respuesta para activar o desactivar un contador de muertes.",
 
   request: {
-    heading: "La petición",
-    text: "Es una sola petición GET, con el nombre de la categoría al final de la dirección. No hace falta clave ni registro.",
+    heading: "Las peticiones",
+    text: "Hay dos direcciones: una devuelve una frase para publicar en el chat y la otra, solo la respuesta. Cada una es una sola petición GET, con el nombre de la categoría al final. Las dos reconocen los juegos igual, y no hace falta clave ni registro.",
     placeholder: "nombre de la categoría",
+    chat: {
+      heading: "Para el chat",
+      text: "Una frase que tu bot puede publicar tal cual. Ahora mismo dice:",
+      language: (codes) =>
+        `La frase está en inglés, salvo que añadas <code>?lang=</code> y uno de estos códigos: ${codes}. Los comandos de esta página ya piden el idioma en el que la estás leyendo. El motivo de la respuesta se incluye cuando lo tenemos escrito en ese idioma.`,
+      unknown:
+        "Cuando no tenemos respuesta, la frase lo dice y pide ayuda en GitHub. Una categoría que no es un juego, como Just Chatting, recibe una frase que lo dice. En cualquier caso, la respuesta nunca está vacía.",
+    },
+    automation: {
+      heading: "Para automatizar",
+      text: "Solo la respuesta, para una herramienta que actúe según ella, como Streamer.bot al activar o desactivar un contador de muertes.",
+    },
     repliesIntro: "La respuesta es texto sin formato, y es una de estas tres:",
     yes: "Se puede morir en este juego.",
     no: "No se puede morir en este juego.",
@@ -220,8 +245,7 @@ const es: StreamingText = {
   bots: {
     heading: "Configura tu bot",
     intro:
-      "Cada ejemplo de abajo lee tu categoría actual y pregunta por ella, así que la respuesta te sigue cuando cambias de juego. Los bots de chat publican la respuesta como la palabra «true» o «false».",
-    question: (game) => `¿Se puede morir en ${game}?`,
+      "Cada ejemplo de abajo lee tu categoría actual y pregunta por ella, así que la respuesta te sigue cuando cambias de juego. Nightbot, StreamElements y Fossabot publican la frase de la dirección para el chat. Streamer.bot recibe solo la respuesta, para actuar según ella.",
     streamerBot: {
       intro: "Añade estas dos subacciones a una acción, en este orden:",
       step1:
@@ -234,18 +258,12 @@ const es: StreamingText = {
     nightbot: {
       intro:
         "Envía esto en tu chat para añadir un comando <code>!candie</code>:",
-      noAnswer:
-        "Cuando no hay respuesta, Nightbot publica su propio mensaje de error en su lugar.",
     },
     streamElements: {
       intro: "Envía esto en tu chat:",
-      noAnswer:
-        "Cuando no hay respuesta, StreamElements publica «The remote server returned status code 404».",
     },
     fossabot: {
       intro: "Crea un comando con esto como respuesta:",
-      noAnswer:
-        "Cuando no hay respuesta, Fossabot deja la respuesta en blanco.",
     },
     other: {
       heading: "Cualquier otra herramienta",
@@ -295,9 +313,21 @@ const de: StreamingText = {
     "Schick uns den Namen deiner Twitch-Kategorie, und wir sagen dir, ob man in diesem Spiel sterben kann. Dein Bot kann mit der Antwort einen Todeszähler ein- oder ausschalten.",
 
   request: {
-    heading: "Die Anfrage",
-    text: "Es ist eine einzige GET-Anfrage, mit dem Kategorienamen am Ende der Adresse. Du brauchst weder Schlüssel noch Anmeldung.",
+    heading: "Die Anfragen",
+    text: "Es gibt zwei Adressen: Eine liefert einen Satz für den Chat, die andere nur die Antwort. Jede ist eine einzige GET-Anfrage, mit dem Kategorienamen am Ende. Beide erkennen Spiele auf dieselbe Weise, und du brauchst weder Schlüssel noch Anmeldung.",
     placeholder: "Kategoriename",
+    chat: {
+      heading: "Für den Chat",
+      text: "Ein Satz, den dein Bot so posten kann, wie er ist. Gerade lautet er:",
+      language: (codes) =>
+        `Der Satz ist auf Englisch, außer du hängst <code>?lang=</code> und einen dieser Codes an: ${codes}. Die Befehle auf dieser Seite fragen schon nach der Sprache, in der du sie liest. Der Grund für die Antwort steht dabei, wenn wir ihn in dieser Sprache geschrieben haben.`,
+      unknown:
+        "Haben wir keine Antwort, sagt der Satz das und bittet auf GitHub um Hilfe. Eine Kategorie, die kein Spiel ist, wie Just Chatting, bekommt einen Satz, der das sagt. Leer ist die Antwort also nie.",
+    },
+    automation: {
+      heading: "Für Automatisierung",
+      text: "Nur die Antwort, für ein Werkzeug, das darauf reagiert, etwa Streamer.bot, das einen Todeszähler ein- oder ausschaltet.",
+    },
     repliesIntro:
       "Die Antwort ist reiner Text und eine von drei Möglichkeiten:",
     yes: "In diesem Spiel kann man sterben.",
@@ -311,8 +341,7 @@ const de: StreamingText = {
   bots: {
     heading: "Deinen Bot einrichten",
     intro:
-      "Jedes Beispiel unten liest deine aktuelle Kategorie und fragt danach, sodass die Antwort mitwechselt, wenn du das Spiel wechselst. Chatbots posten die Antwort als das Wort „true“ oder „false“.",
-    question: (game) => `Kann man in ${game} sterben?`,
+      "Jedes Beispiel unten liest deine aktuelle Kategorie und fragt danach, sodass die Antwort mitkommt, wenn du das Spiel wechselst. Nightbot, StreamElements und Fossabot posten den Satz von der Chat-Adresse. Streamer.bot bekommt nur die Antwort, um darauf zu reagieren.",
     streamerBot: {
       intro:
         "Füge einer Aktion diese beiden Sub-Actions hinzu, in dieser Reihenfolge:",
@@ -326,17 +355,12 @@ const de: StreamingText = {
     nightbot: {
       intro:
         "Sende das in deinem Chat, um einen <code>!candie</code>-Befehl anzulegen:",
-      noAnswer:
-        "Gibt es keine Antwort, postet Nightbot stattdessen eine eigene Fehlermeldung.",
     },
     streamElements: {
       intro: "Sende das in deinem Chat:",
-      noAnswer:
-        "Gibt es keine Antwort, postet StreamElements „The remote server returned status code 404“.",
     },
     fossabot: {
       intro: "Lege einen Befehl mit dieser Antwort an:",
-      noAnswer: "Gibt es keine Antwort, lässt Fossabot die Antwort leer.",
     },
     other: {
       heading: "Alles andere",
@@ -388,8 +412,20 @@ const ja: StreamingText = {
 
   request: {
     heading: "リクエスト",
-    text: "アドレスの末尾にカテゴリ名を付けた、1回のGETリクエストです。キーも登録も必要ありません。",
+    text: "アドレスは2つあります。1つはチャットに投稿する文を、もう1つは答えだけを返します。どちらもアドレスの末尾にカテゴリ名を付けた1回のGETリクエストで、ゲームの照合方法も同じです。キーも登録も必要ありません。",
     placeholder: "カテゴリ名",
+    chat: {
+      heading: "チャット用",
+      text: "ボットがそのまま投稿できる文です。現在はこう返します：",
+      language: (codes) =>
+        `<code>?lang=</code>と次のコードのいずれかを付けない限り、文は英語です：${codes}。このページのコマンドには、今読んでいる言語の指定がすでに入っています。答えの理由は、その言語で書かれている場合に付きます。`,
+      unknown:
+        "答えがない場合は、その旨を伝え、GitHubでの協力を呼びかける文を返します。Just Chattingのようにゲームではないカテゴリには、そのことを伝える文を返します。どちらの場合も、返事が空になることはありません。",
+    },
+    automation: {
+      heading: "自動化用",
+      text: "答えだけを返します。Streamer.botで死亡カウンターをオン・オフするなど、答えに応じて動くツール向けです。",
+    },
     repliesIntro: "返答はプレーンテキストで、次の3つのいずれかです。",
     yes: "このゲームでは死ぬことがあります。",
     no: "このゲームでは死ぬことがありません。",
@@ -402,8 +438,7 @@ const ja: StreamingText = {
   bots: {
     heading: "ボットの設定",
     intro:
-      "以下の例はどれも、現在のカテゴリを読み取って問い合わせるので、ゲームを変えても答えが追従します。チャットボットは、答えを「true」または「false」という単語で投稿します。",
-    question: (game) => `${game}で死ぬことはある？`,
+      "以下の例はどれも現在のカテゴリを読み取って問い合わせるので、ゲームを変えても答えが追従します。Nightbot、StreamElements、Fossabotはチャット用アドレスの文を投稿します。Streamer.botは答えだけを受け取り、それに応じて動きます。",
     streamerBot: {
       intro: "アクションに、次の2つのサブアクションをこの順番で追加します。",
       step1:
@@ -416,17 +451,12 @@ const ja: StreamingText = {
     nightbot: {
       intro:
         "チャットで次を送信すると、<code>!candie</code> コマンドが追加されます。",
-      noAnswer:
-        "答えがない場合、Nightbotは代わりに独自のエラーメッセージを投稿します。",
     },
     streamElements: {
       intro: "チャットで次を送信します。",
-      noAnswer:
-        "答えがない場合、StreamElementsは「The remote server returned status code 404」と投稿します。",
     },
     fossabot: {
       intro: "次を応答とするコマンドを作成します。",
-      noAnswer: "答えがない場合、Fossabotは答えの部分を空欄にします。",
     },
     other: {
       heading: "その他のツール",
@@ -477,8 +507,20 @@ const ko: StreamingText = {
 
   request: {
     heading: "요청",
-    text: "주소 끝에 카테고리 이름을 붙인 GET 요청 한 번이면 됩니다. 키나 가입은 필요하지 않습니다.",
+    text: "주소는 두 가지입니다. 하나는 채팅에 올릴 문장을, 다른 하나는 답만 돌려줍니다. 둘 다 주소 끝에 카테고리 이름을 붙인 GET 요청 한 번이며, 게임을 찾는 방법도 같습니다. 키나 가입은 필요하지 않습니다.",
     placeholder: "카테고리 이름",
+    chat: {
+      heading: "채팅용",
+      text: "봇이 그대로 올릴 수 있는 문장입니다. 지금은 이렇게 답합니다:",
+      language: (codes) =>
+        `<code>?lang=</code>와 다음 코드 중 하나를 붙이지 않으면 문장은 영어로 나옵니다: ${codes}. 이 페이지의 명령어에는 지금 읽고 있는 언어가 이미 들어 있습니다. 답의 이유는 그 언어로 작성되어 있을 때 함께 나옵니다.`,
+      unknown:
+        "답이 없으면 문장이 그렇다고 알리고 GitHub에서 도움을 요청합니다. Just Chatting처럼 게임이 아닌 카테고리에는 그렇다고 알리는 문장이 나옵니다. 어느 경우든 응답이 비어 있지 않습니다.",
+    },
+    automation: {
+      heading: "자동화용",
+      text: "답만 돌려줍니다. Streamer.bot으로 사망 카운터를 켜고 끄는 것처럼 답에 따라 동작하는 도구용입니다.",
+    },
     repliesIntro: "응답은 일반 텍스트이며, 다음 세 가지 중 하나입니다:",
     yes: "이 게임에서는 죽을 수 있습니다.",
     no: "이 게임에서는 죽지 않습니다.",
@@ -490,8 +532,7 @@ const ko: StreamingText = {
   bots: {
     heading: "봇 설정하기",
     intro:
-      "아래 예시는 현재 카테고리를 읽어 질문하므로, 게임을 바꾸면 답도 따라갑니다. 채팅 봇은 답을 “true” 또는 “false”라는 단어로 올립니다.",
-    question: (game) => `${game}에서 죽나요?`,
+      "아래 예시는 모두 현재 카테고리를 읽어 물어보므로, 게임을 바꾸면 답도 따라 바뀝니다. Nightbot, StreamElements, Fossabot은 채팅용 주소의 문장을 올립니다. Streamer.bot은 답만 받아 그에 따라 동작합니다.",
     streamerBot: {
       intro: "액션에 다음 두 하위 작업을 이 순서로 추가하세요:",
       step1:
@@ -503,16 +544,12 @@ const ko: StreamingText = {
     },
     nightbot: {
       intro: "<code>!candie</code> 명령어를 추가하려면 채팅에 다음을 보내세요:",
-      noAnswer: "답이 없으면 Nightbot이 답 대신 자체 오류 메시지를 올립니다.",
     },
     streamElements: {
       intro: "채팅에 다음을 보내세요:",
-      noAnswer:
-        "답이 없으면 StreamElements가 “The remote server returned status code 404”를 올립니다.",
     },
     fossabot: {
       intro: "다음을 응답으로 하는 명령어를 만드세요:",
-      noAnswer: "답이 없으면 Fossabot은 답을 비워 둡니다.",
     },
     other: {
       heading: "그 밖의 도구",
@@ -562,8 +599,20 @@ const zh: StreamingText = {
 
   request: {
     heading: "请求",
-    text: "只需一个 GET 请求，把分类名称放在地址末尾即可。不需要密钥，也不需要注册。",
+    text: "有两个地址：一个返回可以发到聊天里的句子，另一个只返回答案。两者都是一个 GET 请求，把分类名称放在地址末尾，匹配游戏的方式也相同。不需要密钥，也不需要注册。",
     placeholder: "分类名称",
+    chat: {
+      heading: "用于聊天",
+      text: "一句机器人可以直接发出的话。现在它会这样回答：",
+      language: (codes) =>
+        `句子默认是英文，除非你加上 <code>?lang=</code> 和以下任一代码：${codes}。本页的命令已经指定了你正在阅读的语言。如果我们有用该语言写的理由，句子会附上答案的理由。`,
+      unknown:
+        "没有答案时，句子会说明这一点，并请大家在 GitHub 上帮忙。不是游戏的分类，例如 Just Chatting，会得到一句说明。无论哪种情况，回复都不会为空。",
+    },
+    automation: {
+      heading: "用于自动化",
+      text: "只返回答案，供根据答案行动的工具使用，例如让 Streamer.bot 打开或关闭死亡计数器。",
+    },
     repliesIntro: "回复是纯文本，只有三种情况：",
     yes: "这款游戏里会死。",
     no: "这款游戏里不会死。",
@@ -575,8 +624,7 @@ const zh: StreamingText = {
   bots: {
     heading: "设置你的机器人",
     intro:
-      "下面每个示例都会读取你当前的分类并据此查询，所以换游戏时答案也会跟着变。聊天机器人会把答案发成“true”或“false”。",
-    question: (game) => `《${game}》里会死吗？`,
+      "下面每个示例都会读取你当前的分类并发起查询，所以换游戏时答案也会跟着变。Nightbot、StreamElements 和 Fossabot 会发出聊天地址返回的句子。Streamer.bot 只接收答案，并据此行动。",
     streamerBot: {
       intro: "按这个顺序把这两个子操作添加到一个 action 中：",
       step1:
@@ -588,16 +636,12 @@ const zh: StreamingText = {
     },
     nightbot: {
       intro: "在聊天中发送这条消息来添加 <code>!candie</code> 命令：",
-      noAnswer: "没有答案时，Nightbot 会用它自己的错误提示代替答案。",
     },
     streamElements: {
       intro: "在聊天中发送这条消息：",
-      noAnswer:
-        "没有答案时，StreamElements 会发送“The remote server returned status code 404”。",
     },
     fossabot: {
       intro: "创建一个命令，并把它的回复设为：",
-      noAnswer: "没有答案时，Fossabot 会留空。",
     },
     other: {
       heading: "其他工具",
@@ -641,9 +685,21 @@ const it: StreamingText = {
     "Inviaci il nome della tua categoria Twitch e ti diremo se si può morire in quel gioco. Il tuo bot può usare la risposta per attivare o disattivare un contatore di morti.",
 
   request: {
-    heading: "La richiesta",
-    text: "È una sola richiesta GET, con il nome della categoria alla fine dell'indirizzo. Non serve né una chiave né un'iscrizione.",
+    heading: "Le richieste",
+    text: "Ci sono due indirizzi: uno restituisce una frase da pubblicare in chat, l'altro solo la risposta. Ognuno è una sola richiesta GET, con il nome della categoria alla fine. Entrambi riconoscono i giochi allo stesso modo, e non serve né una chiave né un'iscrizione.",
     placeholder: "nome della categoria",
+    chat: {
+      heading: "Per la chat",
+      text: "Una frase che il bot può pubblicare così com'è. In questo momento dice:",
+      language: (codes) =>
+        `La frase è in inglese, a meno che tu non aggiunga <code>?lang=</code> e uno di questi codici: ${codes}. I comandi di questa pagina chiedono già la lingua in cui la stai leggendo. Il motivo della risposta viene aggiunto quando lo abbiamo scritto in quella lingua.`,
+      unknown:
+        "Quando non abbiamo una risposta, la frase lo dice e chiede aiuto su GitHub. Una categoria che non è un gioco, come Just Chatting, riceve una frase che lo dice. In ogni caso la risposta non è mai vuota.",
+    },
+    automation: {
+      heading: "Per l'automazione",
+      text: "Solo la risposta, per uno strumento che agisce in base a essa, come Streamer.bot che attiva o disattiva un contatore di morti.",
+    },
     repliesIntro: "La risposta è testo semplice, e può essere una di tre cose:",
     yes: "In questo gioco si può morire.",
     no: "In questo gioco non si può morire.",
@@ -656,8 +712,7 @@ const it: StreamingText = {
   bots: {
     heading: "Configurare il bot",
     intro:
-      "Ogni esempio qui sotto legge la tua categoria attuale e chiede di quella, così la risposta ti segue quando cambi gioco. I bot di chat scrivono la risposta come la parola “true” o “false”.",
-    question: (game) => `Si può morire in ${game}?`,
+      "Ogni esempio qui sotto legge la tua categoria attuale e chiede di essa, così la risposta ti segue quando cambi gioco. Nightbot, StreamElements e Fossabot pubblicano la frase dell'indirizzo per la chat. Streamer.bot riceve solo la risposta, per agire in base a essa.",
     streamerBot: {
       intro: "Aggiungi queste due sub-action a un'action, in questo ordine:",
       step1:
@@ -670,17 +725,12 @@ const it: StreamingText = {
     nightbot: {
       intro:
         "Invia questo in chat per aggiungere un comando <code>!candie</code>:",
-      noAnswer:
-        "Quando non c'è risposta, Nightbot scrive un proprio messaggio di errore al posto della risposta.",
     },
     streamElements: {
       intro: "Invia questo in chat:",
-      noAnswer:
-        "Quando non c'è risposta, StreamElements scrive “The remote server returned status code 404”.",
     },
     fossabot: {
       intro: "Crea un comando con questo come risposta:",
-      noAnswer: "Quando non c'è risposta, Fossabot lascia la risposta vuota.",
     },
     other: {
       heading: "Qualsiasi altro strumento",
@@ -730,9 +780,21 @@ const ru: StreamingText = {
     "Пришлите нам название своей категории на Twitch, и мы ответим, можно ли умереть в этой игре. Ваш бот может по этому ответу включать и выключать счётчик смертей.",
 
   request: {
-    heading: "Запрос",
-    text: "Это один GET-запрос, с названием категории в конце адреса. Ключ и регистрация не нужны.",
+    heading: "Запросы",
+    text: "Адресов два: один возвращает фразу для чата, другой — только ответ. Каждый — это один GET-запрос с названием категории в конце. Оба находят игры одинаково, а ключ и регистрация не нужны.",
     placeholder: "название категории",
+    chat: {
+      heading: "Для чата",
+      text: "Фраза, которую бот может отправить как есть. Сейчас она такая:",
+      language: (codes) =>
+        `Фраза будет на английском, если не добавить <code>?lang=</code> и один из этих кодов: ${codes}. Команды на этой странице уже запрашивают язык, на котором вы её читаете. Причина ответа добавляется, если она написана на этом языке.`,
+      unknown:
+        "Если ответа нет, фраза так и говорит и просит помочь на GitHub. Категория, которая не является игрой, например Just Chatting, получает фразу об этом. В любом случае ответ не бывает пустым.",
+    },
+    automation: {
+      heading: "Для автоматизации",
+      text: "Только ответ — для инструмента, который действует по нему, например Streamer.bot, включающего или выключающего счётчик смертей.",
+    },
     repliesIntro: "Ответ приходит обычным текстом и бывает одним из трёх:",
     yes: "В этой игре можно умереть.",
     no: "В этой игре умереть нельзя.",
@@ -745,8 +807,7 @@ const ru: StreamingText = {
   bots: {
     heading: "Настройка бота",
     intro:
-      "Каждый пример ниже читает вашу текущую категорию и спрашивает про неё, поэтому ответ меняется вместе с игрой. Чат-боты пишут ответ словом «true» или «false».",
-    question: (game) => `Можно ли умереть в ${game}?`,
+      "Каждый пример ниже читает вашу текущую категорию и спрашивает о ней, так что ответ меняется вместе с игрой. Nightbot, StreamElements и Fossabot отправляют фразу с адреса для чата. Streamer.bot получает только ответ, чтобы действовать по нему.",
     streamerBot: {
       intro: "Добавьте в action эти два sub-action, в таком порядке:",
       step1:
@@ -759,17 +820,12 @@ const ru: StreamingText = {
     nightbot: {
       intro:
         "Отправьте это в чат, чтобы добавить команду <code>!candie</code>:",
-      noAnswer:
-        "Если ответа нет, Nightbot вместо него напишет собственное сообщение об ошибке.",
     },
     streamElements: {
       intro: "Отправьте это в чат:",
-      noAnswer:
-        "Если ответа нет, StreamElements напишет «The remote server returned status code 404».",
     },
     fossabot: {
       intro: "Создайте команду с таким ответом:",
-      noAnswer: "Если ответа нет, Fossabot оставит ответ пустым.",
     },
     other: {
       heading: "Что-то ещё",
@@ -819,9 +875,21 @@ const ar: StreamingText = {
     "أرسل لنا اسم تصنيفك على Twitch وسنخبرك ما إذا كان بإمكانك أن تموت في تلك اللعبة. ويمكن لبوتك أن يستخدم الإجابة لتشغيل عدّاد الوفيات أو إيقافه.",
 
   request: {
-    heading: "الطلب",
-    text: "طلب GET واحد، مع اسم التصنيف في نهاية العنوان. لا حاجة إلى مفتاح ولا إلى تسجيل.",
+    heading: "الطلبات",
+    text: "هناك عنوانان: أحدهما يعيد جملة لنشرها في الدردشة، والآخر يعيد الإجابة وحدها. كل منهما طلب GET واحد، مع اسم التصنيف في نهاية العنوان. ويتعرّف كلاهما على الألعاب بالطريقة نفسها، ولا حاجة إلى مفتاح ولا إلى تسجيل.",
     placeholder: "اسم التصنيف",
+    chat: {
+      heading: "للدردشة",
+      text: "جملة يمكن للبوت نشرها كما هي. وهي الآن تقول:",
+      language: (codes) =>
+        `تكون الجملة بالإنجليزية ما لم تُضف <code>?lang=</code> وأحد هذه الرموز: ${codes}. والأوامر في هذه الصفحة تطلب بالفعل اللغة التي تقرؤها بها. ويُضاف سبب الإجابة عندما يكون مكتوبًا لدينا بتلك اللغة.`,
+      unknown:
+        "عندما لا تكون لدينا إجابة، تقول الجملة ذلك وتطلب المساعدة على GitHub. أما التصنيف الذي ليس لعبة، مثل Just Chatting، فيحصل على جملة تقول ذلك. وفي كل الأحوال لا يكون الرد فارغًا أبدًا.",
+    },
+    automation: {
+      heading: "للأتمتة",
+      text: "الإجابة وحدها، لأداة تتصرف بناءً عليها، مثل Streamer.bot حين يشغّل عدّاد الوفيات أو يوقفه.",
+    },
     repliesIntro: "الرد نص عادي، وهو واحد من ثلاثة:",
     yes: "يمكنك أن تموت في هذه اللعبة.",
     no: "لا يمكنك أن تموت في هذه اللعبة.",
@@ -833,8 +901,7 @@ const ar: StreamingText = {
   bots: {
     heading: "إعداد البوت",
     intro:
-      "كل مثال أدناه يقرأ تصنيفك الحالي ويسأل عنه، فتتبعك الإجابة عند تغيير اللعبة. وتنشر بوتات الدردشة الإجابة بكلمة “true” أو “false”.",
-    question: (game) => `هل يمكن أن تموت في ${game}؟`,
+      "يقرأ كل مثال أدناه تصنيفك الحالي ويسأل عنه، فتتبعك الإجابة عندما تغيّر اللعبة. ينشر Nightbot وStreamElements وFossabot الجملة من عنوان الدردشة. أما Streamer.bot فيحصل على الإجابة وحدها ليتصرف بناءً عليها.",
     streamerBot: {
       intro: "أضف هذين الإجراءين الفرعيين إلى إجراء واحد، بهذا الترتيب:",
       step1:
@@ -846,16 +913,12 @@ const ar: StreamingText = {
     },
     nightbot: {
       intro: "أرسل هذا في دردشتك لإضافة أمر <code>!candie</code>:",
-      noAnswer: "عند غياب الإجابة، ينشر Nightbot رسالة خطأ خاصة به بدلًا منها.",
     },
     streamElements: {
       intro: "أرسل هذا في دردشتك:",
-      noAnswer:
-        "عند غياب الإجابة، ينشر StreamElements “The remote server returned status code 404”.",
     },
     fossabot: {
       intro: "أنشئ أمرًا يكون هذا هو ردّه:",
-      noAnswer: "عند غياب الإجابة، يترك Fossabot الرد فارغًا.",
     },
     other: {
       heading: "أي أداة أخرى",
