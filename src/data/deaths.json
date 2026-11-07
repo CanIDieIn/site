@@ -5811,6 +5811,10 @@
     "deaths": true,
     "reason": "Kirby can be defeated, losing a life."
   },
+  "37419": {
+    "deaths": true,
+    "reason": "The police can kill you, and you respawn in jail."
+  },
   "37424": {
     "deaths": false,
     "reason": "A motocross simulator. Riders crash constantly, but nothing dies."
@@ -6030,6 +6034,10 @@
   "55189": {
     "deaths": true,
     "reason": "Heroes are downed and killed by the Skaven hordes, and the mission fails if all are lost."
+  },
+  "55190": {
+    "deaths": true,
+    "reason": "Piku can be killed in boss fights and challenge areas, and retries straight away."
   },
   "55282": {
     "deaths": true,
@@ -7419,6 +7427,10 @@
     "deaths": true,
     "reason": "The party can be knocked out in combat, which is a game over."
   },
+  "117767": {
+    "deaths": true,
+    "reason": "Fail a level and the ghosts possess you, ending the game."
+  },
   "117820": {
     "deaths": false,
     "reason": "A transport business builder with nothing that can die."
@@ -8494,6 +8506,10 @@
   "137243": {
     "deaths": true,
     "reason": "Elise can be killed in the woods at night, giving a game over."
+  },
+  "137372": {
+    "deaths": true,
+    "reason": "Viewers' Kukoros can be killed in the minigames, such as the infected dying in Quarantine."
   },
   "137451": {
     "deaths": true,
@@ -10203,6 +10219,10 @@
     "deaths": true,
     "reason": "Chai can be knocked out in combat, restarting the fight."
   },
+  "234128": {
+    "deaths": true,
+    "reason": "Let too many bloons through and you run out of lives, losing the game."
+  },
   "234256": {
     "deaths": false,
     "reason": "A racing game. Crashes cost you time, and nothing can kill you."
@@ -10338,6 +10358,10 @@
   "249324": {
     "deaths": true,
     "reason": "Jack can be shot dead by gangsters, restarting from a checkpoint."
+  },
+  "249633": {
+    "deaths": false,
+    "reason": "A merging puzzle game with flags. Nothing can die."
   },
   "250223": {
     "deaths": false,
@@ -10623,6 +10647,10 @@
     "deaths": true,
     "reason": "Ellie and Abby can be killed by infected and humans, restarting the encounter."
   },
+  "278790": {
+    "deaths": true,
+    "reason": "Your ship can be sunk in naval battles, taking you out of the fight."
+  },
   "279051": {
     "deaths": true,
     "reason": "Your Zois can die in many ways, from accidents to old age."
@@ -10682,6 +10710,10 @@
   "281275": {
     "deaths": true,
     "reason": "Lose the shotgun duel and you are shot dead."
+  },
+  "281730": {
+    "deaths": true,
+    "reason": "Make the wrong choices, like the wrong outfit for the stalker, and you die, ending the game."
   },
   "281960": {
     "deaths": false,
@@ -10898,6 +10930,10 @@
   "305246": {
     "deaths": false,
     "reason": "A city builder with no you to die."
+  },
+  "305296": {
+    "deaths": true,
+    "reason": "Zombies can kill you, and Extreme mode kills you in one hit."
   },
   "305989": {
     "deaths": true,
@@ -11290,6 +11326,10 @@
   "346035": {
     "deaths": true,
     "reason": "If the enemies reach the bottom and finish you off, the run is over."
+  },
+  "346148": {
+    "deaths": true,
+    "reason": "Its games include Tetris and a war game, where you can be knocked out."
   },
   "347119": {
     "deaths": true,
