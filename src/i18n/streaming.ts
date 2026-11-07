@@ -957,6 +957,98 @@ const ar: StreamingText = {
   },
 };
 
+const pl: StreamingText = {
+  title: "Użyj tego na swoim streamie",
+  description:
+    "Sprawdź, czy w grze można zginąć, po nazwie kategorii na Twitchu, z poziomu Nightbota, StreamElements, Fossabota lub Streamer.bota.",
+  intro:
+    "Wyślij nam nazwę swojej kategorii na Twitchu, a powiemy ci, czy w tej grze można zginąć. Twój bot może użyć odpowiedzi, by włączyć lub wyłączyć licznik śmierci.",
+
+  request: {
+    heading: "Zapytania",
+    text: "Są dwa adresy: jeden zwraca zdanie do wysłania na czacie, a drugi samą odpowiedź. Każdy to jedno zapytanie GET z nazwą kategorii na końcu. Oba rozpoznają gry tak samo i nie potrzebujesz klucza ani rejestracji.",
+    placeholder: "nazwa kategorii",
+    chat: {
+      heading: "Na czat",
+      text: "Zdanie, które bot może wysłać bez zmian. W tej chwili brzmi tak:",
+      language: (codes) =>
+        `Zdanie jest po angielsku, chyba że dodasz <code>?lang=</code> i jeden z tych kodów: ${codes}. Polecenia na tej stronie już proszą o język, w którym ją czytasz. Powód odpowiedzi jest dołączany, gdy mamy go napisanego w tym języku.`,
+      unknown:
+        "Gdy nie znamy odpowiedzi, zdanie to mówi i prosi o pomoc na GitHubie. Kategoria, która nie jest grą, jak Just Chatting, dostaje zamiast tego żart, za każdym razem inny. Tak czy inaczej odpowiedź nigdy nie jest pusta.",
+    },
+    automation: {
+      heading: "Do automatyzacji",
+      text: "Sama odpowiedź, dla narzędzia, które na jej podstawie działa, na przykład Streamer.bota, który włącza lub wyłącza licznik śmierci.",
+    },
+    repliesIntro: "Odpowiedź to zwykły tekst i jedna z trzech rzeczy:",
+    yes: "W tej grze można zginąć.",
+    no: "W tej grze nie można zginąć.",
+    notFound:
+      "Pusta odpowiedź. Żadna gra nie ma tej nazwy albo nie mamy jeszcze dla niej odpowiedzi.",
+    slugNote:
+      "Zamiast nazwy gry działa też jej slug. Slug to ostatnia część adresu strony gry na tej witrynie, na przykład <code>baldurs-gate-iii</code>.",
+  },
+
+  bots: {
+    heading: "Konfiguracja bota",
+    intro:
+      "Każdy przykład poniżej odczytuje twoją aktualną kategorię i o nią pyta, więc odpowiedź zmienia się razem z grą. Nightbot, StreamElements i Fossabot wysyłają zdanie z adresu na czat. Streamer.bot dostaje samą odpowiedź, by na jej podstawie działać.",
+    streamerBot: {
+      intro: "Dodaj do akcji te dwie podakcje, w tej kolejności:",
+      step1:
+        "<strong>Twitch › User › Get User Info for Target</strong>, z User Login ustawionym na <code>%broadcastUserName%</code>. Dzięki temu twoja kategoria trafi do <code>%game%</code>. Jeśli akcji nie uruchamia wyzwalacz z Twitcha, dodaj przed nią <strong>Add Broadcaster Information</strong>.",
+      step2:
+        "<strong>Core › Network › Fetch URL</strong>, z Variable Name ustawionym na <code>canDie</code> i tym adresem jako URL:",
+      after:
+        "<code>%canDie%</code> zawiera wtedy <code>true</code>, <code>false</code> albo nic, gdy nie ma odpowiedzi. Sprawdź to podakcją If/Else.",
+    },
+    nightbot: {
+      intro: "Wyślij to na czacie, by dodać polecenie <code>!candie</code>:",
+    },
+    streamElements: {
+      intro: "Wyślij to na czacie:",
+    },
+    fossabot: {
+      intro: "Utwórz polecenie z tym jako odpowiedzią:",
+    },
+    other: {
+      heading: "Wszystko inne",
+      text: "Zadziała każde narzędzie, które potrafi pobrać adres internetowy. Źródła przeglądarki i nakładki też mogą go wywołać, z dowolnej strony.",
+    },
+  },
+
+  matching: {
+    heading: "Jak dopasowujemy nazwy",
+    intro:
+      "Nasze nazwy gier pochodzą z IGDB, skąd Twitch też bierze swoje kategorie, więc większość nazw pasuje bez zmian. Wielkość liter, znaki diakrytyczne i interpunkcja są pomijane, a numer kontynuacji można zapisać na dwa sposoby: „3” znajduje „III”, a „III” znajduje „3”. Oto co niektóre nazwy zwracają w tej chwili:",
+    nameColumn: "Wysłana nazwa",
+    replyColumn: "Odpowiedź",
+    whyColumn: "Dlaczego",
+    empty: "404, pusto",
+    notes: {
+      plain:
+        "Zwykła nazwa. Wielkość liter nie ma znaczenia, więc „firewatch” i „FIREWATCH” też działają.",
+      accent:
+        "Znaki diakrytyczne są opcjonalne. „Pokemon Red Version” znajduje tę samą grę.",
+      punctuation: "Interpunkcja jest pomijana, więc dwukropek można pominąć.",
+      apostrophe: "Apostrofy są opcjonalne. „Friday Night Funkin” też działa.",
+      numeral:
+        "Twitch nazywa tę kategorię z cyfrą 3, a w naszych danych jest III. Cyfry rzymskie i zwykłe traktujemy tak samo, więc nazwa z Twitcha i tak ją znajduje.",
+      numeralReverse:
+        "To samo w drugą stronę. W naszych danych ta gra to „Forza Horizon 5”.",
+      slash: "Ukośnik w nazwie działa, zapisany wprost lub jako %2F.",
+      percent:
+        "Znak procentu trzeba wysłać jako %25. Boty robią to za ciebie, gdy używasz ich zmiennej kodującej.",
+      shared:
+        "Kilka gier ma tę nazwę. Dostajesz tę, dla której mamy odpowiedź, i najpopularniejszą z nich.",
+      notGame: "To nie gra, więc nie ma odpowiedzi.",
+      slug: "Slug wzięty z adresu strony gry na tej witrynie. Zawsze znajduje dokładnie tę grę.",
+    },
+    helpQuestion: "Kategoria nic nie znajduje?",
+    help: "Wyszukaj grę na <a>głównej liście</a> i użyj sluga z jej strony.",
+  },
+};
+
 const text: Record<Locale, StreamingText> = {
   en,
   fr,
@@ -966,6 +1058,7 @@ const text: Record<Locale, StreamingText> = {
   ko,
   zh,
   it,
+  pl,
   ru,
   ar,
 };

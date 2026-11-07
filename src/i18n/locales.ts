@@ -20,6 +20,7 @@ export const LOCALES = [
   "ko",
   "zh",
   "it",
+  "pl",
   "ru",
   "ar",
 ] as const;
@@ -39,6 +40,7 @@ export const LOCALE_NAMES: Record<Locale, string> = {
   // its simplified one wherever IGDB has one. See IGDB_NAME_COMMENTS.
   zh: "简体中文",
   it: "Italiano",
+  pl: "Polski",
   ru: "Русский",
   ar: "العربية",
 };
@@ -113,6 +115,7 @@ const LOCALE_BY_COUNTRY: Record<string, Locale> = {
   KR: "ko",
   CN: "zh", TW: "zh", HK: "zh", MO: "zh",
   IT: "it", SM: "it", VA: "it",
+  PL: "pl",
   RU: "ru", BY: "ru", KZ: "ru", KG: "ru",
   SA: "ar", EG: "ar", AE: "ar", DZ: "ar", MA: "ar", IQ: "ar", SD: "ar",
   SY: "ar", YE: "ar", TN: "ar", JO: "ar", LY: "ar", LB: "ar", PS: "ar",

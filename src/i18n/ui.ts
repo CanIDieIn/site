@@ -912,7 +912,99 @@ const ar: Ui = {
   },
 };
 
-const ui: Record<Locale, Ui> = { en, fr, es, de, ja, ko, zh, it, ru, ar };
+// Polish counts take one of three forms (1 gra, 2 gry, 5 gier), so most counts
+// here sit after a colon, which needs none of them. The one that cannot is
+// "of N games", where the genitive is "gry" for one and "gier" otherwise.
+const pl: Ui = {
+  siteName: "Czy można zginąć w...",
+  tagline: "Sprawdź, czy gra może cię zabić.",
+  skipToContent: "Przejdź do treści",
+  languageMenu: "Język",
+  fullStop: ".",
+
+  answers: { yes: "Tak", no: "Nie", unsure: "Nie wiadomo" },
+
+  definition: {
+    question: "Co liczy się jako śmierć?",
+    text: "Twoja postać ginie lub zostaje znokautowana albo przegrywasz całe podejście. Wypadek w wyścigu czy przegrany mecz na punkty się nie liczą.",
+  },
+
+  home: {
+    description:
+      "Przeszukaj setki tysięcy gier wideo i sprawdź, czy można w nich zginąć.",
+    lead: "Wybierz grę, aby sprawdzić, czy można w niej zginąć.",
+    moreNav: "Więcej na tej stronie",
+  },
+
+  cards: {
+    noDeathsTitle: "Gry, w których nie można zginąć",
+    noDeathsText: (count) => `potwierdzone do tej pory: ${count}`,
+    everyGameTitle: "Wszystkie gry",
+    everyGameText: "Przeszukaj cały katalog",
+    streamingTitle: "Streamujesz?",
+    streamingText: "Podłącz swojego bota",
+  },
+
+  noDeaths: {
+    title: "Gry, w których nie można zginąć",
+    description:
+      "Wszystkie gry wideo, w których, jak potwierdziliśmy, nie można zginąć, więc nie ma czego liczyć.",
+    lead: (count) =>
+      `Potwierdzone gry, w których nie ma śmierci do liczenia: ${count}.`,
+  },
+
+  browser: {
+    formLabel: "Znajdź grę",
+    search: "Szukaj po nazwie",
+    sortBy: "Sortuj według",
+    order: "Kolejność",
+    sorts: {
+      popularity: "Popularność",
+      name: "Alfabetycznie",
+      release: "Data premiery",
+    },
+    directions: { asc: "Rosnąco", desc: "Malejąco" },
+    submit: "Szukaj",
+    noMatch: (query) => `Brak gier pasujących do „${query}”.`,
+    none: "Na razie nie ma czego pokazać.",
+    showing: (from, to, total, n, query) =>
+      `Wyświetlono ${from}–${to} z ${total} ${n === 1 ? "gry" : "gier"}${query ? ` pasujących do „${query}”` : ""}.`,
+    clear: "Wyczyść wyszukiwanie",
+    released: "Premiera: ",
+    pagesNav: "Strony wyników",
+    previous: "Wstecz",
+    previousPage: "Poprzednia strona",
+    next: "Dalej",
+    nextPage: "Następna strona",
+    unavailable: (label) => `${label}, niedostępne`,
+    page: "Strona",
+    ofPages: (total) => `z ${total}`,
+    go: "Przejdź",
+    goToPage: "Przejdź do strony",
+  },
+
+  game: {
+    title: (name) => `Czy można zginąć w ${name}?`,
+    notFoundTitle: "Nie znaleziono gry",
+    notFoundText: "Pod tym adresem nie ma żadnej gry.",
+    description: (name, answer) => `Czy można zginąć w ${name}? ${answer}`,
+    answerSentence: {
+      yes: "Tak.",
+      no: "Nie.",
+      unsure: "Jeszcze nie wiemy.",
+    },
+    cardAlt: (name, answer) => `${name} z pieczątką z odpowiedzią: ${answer}.`,
+    knowAnswer: "Znasz odpowiedź?",
+    notRight: "Coś się nie zgadza?",
+    tellUs: "Daj nam znać na GitHubie",
+    suggest: "Zaproponuj poprawkę na GitHubie",
+    gameId: (id) => `To gra o ID ${id}.`,
+    browseAll: "Przeglądaj wszystkie gry",
+    backToNoDeaths: "Wróć do gier, w których nie można zginąć",
+  },
+};
+
+const ui: Record<Locale, Ui> = { en, fr, es, de, ja, ko, zh, it, pl, ru, ar };
 
 /** The site's text in a language. */
 export const uiFor = (locale: Locale): Ui => ui[locale];

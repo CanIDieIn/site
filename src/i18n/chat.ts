@@ -233,6 +233,25 @@ const chat: Record<Locale, ChatText> = {
       },
     },
   },
+  pl: {
+    yes: (name) => `Możesz zginąć w ${name}.`,
+    no: (name) => `Nie możesz zginąć w ${name}.`,
+    unknown:
+      "Nie wiemy, czy w tej grze można zginąć. Daj nam znać na GitHubie!",
+    notGame: {
+      any: [
+        (category) => `W ${category} nic nie ginie, może poza rozmową.`,
+        (category) =>
+          `Zero zgonów w ${category}. Licznik śmierci ma dziś wolne.`,
+        (category) => `Nikt jeszcze nie zginął w ${category}. Sprawdzaliśmy.`,
+      ],
+      byCategory: {
+        IRL: [
+          "IRL? Tu naprawdę można zginąć i nie ma zapisów gry. Uważaj na siebie.",
+        ],
+      },
+    },
+  },
   ru: {
     yes: (name) => `В ${name} можно умереть.`,
     no: (name) => `В ${name} нельзя умереть.`,
